@@ -14,6 +14,13 @@ localDB = defaultConnectInfo {
 connectionMyDB :: IO Connection
 connectionMyDB = connect localDB
 
+createAdmin :: Connection -> IO()
+createAdmin conn = do
+    execute_ conn "CREATE TABLE IF NOT EXISTS admin (\
+                    \login VARCHAR(20) PRIMARY KEY,\
+                    \senha VARCHAR(15) NOT NULL);"
+    return ()
+
 createEstudante :: Connection -> IO()
 createEstudante conn = do
     execute_ conn "CREATE TABLE IF NOT EXISTS estudante (\
@@ -22,8 +29,60 @@ createEstudante conn = do
                     \votante BOOLEAN NOT NULL);"
     return ()
 
+createVotacao :: Connection -> IO()
+createVotacao conn = do
+    execute_ conn "CREATE TABLE IF NOT EXISTS votacao (\
+                    \id SERIAL PRIMARY KEY,\
+                    \data VARCHAR(15) NOT NULL,\
+                    \encerrada BOOLEAN NOT NULL,\
+                    \abstencoes INTEGER,\
+                    \nulos INTEGER);"
+    return ()
+
+createChapa :: Connection -> IO()
+createChapa conn = do
+    execute_ conn "CREATE TABLE IF NOT EXISTS chapa (\
+                    \id SERIAL PRIMARY KEY,\
+                    \nome VARCHAR(50) NOT NULL,\
+                    \numero INTEGER NOT NULL,\
+                    \idVotacao INTEGER NOT NULL,\
+                    \numDeVotos INTEGER NOT NULL,\
+                    \FOREIGN KEY idVotacao REFERENCES votacao id);"
+    return ()
+
+
+createEstudanteChapa :: Connection -> IO()
+createEstudanteChapa conn = do
+    execute_ conn "CREATE TABLE IF NOT EXISTS estudante_chapa (\
+                    \id SERIAL PRIMARY KEY,\
+                    \idEstudante VARCHAR(50) NOT NULL,\
+                    \idChapa SERIAL NOT NULL,\
+                    \diretoria VARCHAR(15) NOT NULL,\
+                    \FOREIGN KEY idEstudante REFERENCES estudante matricula,\
+                    \FOREIGN KEY idChapa REFERENCES chapa id);"
+    return ()
+
+createVoto :: Connection -> IO()
+createVoto conn = do
+    execute_ conn "CREATE TABLE IF NOT EXISTS voto (\
+                    \id SERIAL PRIMARY KEY,\
+                    \idEstudante VARCHAR(50) NOT NULL,\
+                    \idVotacao INTEGER NOT NULL,\
+                    \FOREIGN KEY idEstudante REFERENCES estudante matricula,\
+                    \FOREIGN KEY idVotacao REFERENCES votacao id);"
+    return ()
+
+
+
 iniciandoDatabase :: IO Connection
 iniciandoDatabase = do
 		c <- connectionMyDB
+        
+        createAdmin c
 		createEstudante c
-		return c
+		createVotacao c
+		createChapa c
+		createEstudanteChapa c
+		createVoto c
+		
+        return c
