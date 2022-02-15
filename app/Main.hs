@@ -1,4 +1,9 @@
 module Main where
+import Database.PostgreSQL.Simple
+import LocalDB.ConnectionDB
 
-main :: IO ()
-main = putStrLn "Hello, Haskell!"
+main :: IO()
+main = do
+    putStrLn "Criando base de dados..."
+    conn <- iniciandoDatabase
+    putStrLn "Base de dados criada"
