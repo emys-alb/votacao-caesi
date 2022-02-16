@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Controllers.AdminController where
 import Database.PostgreSQL.Simple
 
