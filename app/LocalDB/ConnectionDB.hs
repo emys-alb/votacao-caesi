@@ -47,7 +47,7 @@ createChapa conn = do
                     \numero INTEGER NOT NULL,\
                     \idVotacao INTEGER NOT NULL,\
                     \numDeVotos INTEGER NOT NULL,\
-                    \FOREIGN KEY idVotacao REFERENCES votacao id);"
+                    \FOREIGN KEY (idVotacao) REFERENCES votacao (id));"
     return ()
 
 
@@ -56,10 +56,10 @@ createEstudanteChapa conn = do
     execute_ conn "CREATE TABLE IF NOT EXISTS estudante_chapa (\
                     \id SERIAL PRIMARY KEY,\
                     \idEstudante VARCHAR(50) NOT NULL,\
-                    \idChapa SERIAL NOT NULL,\
+                    \idChapa INTEGER NOT NULL,\
                     \diretoria VARCHAR(15) NOT NULL,\
-                    \FOREIGN KEY idEstudante REFERENCES estudante matricula,\
-                    \FOREIGN KEY idChapa REFERENCES chapa id);"
+                    \FOREIGN KEY (idEstudante) REFERENCES estudante (matricula),\
+                    \FOREIGN KEY (idChapa) REFERENCES chapa (id));"
     return ()
 
 createVoto :: Connection -> IO()
@@ -68,21 +68,19 @@ createVoto conn = do
                     \id SERIAL PRIMARY KEY,\
                     \idEstudante VARCHAR(50) NOT NULL,\
                     \idVotacao INTEGER NOT NULL,\
-                    \FOREIGN KEY idEstudante REFERENCES estudante matricula,\
-                    \FOREIGN KEY idVotacao REFERENCES votacao id);"
+                    \FOREIGN KEY (idEstudante) REFERENCES estudante (matricula),\
+                    \FOREIGN KEY (idVotacao) REFERENCES votacao (id));"
     return ()
 
 
 
 iniciandoDatabase :: IO Connection
 iniciandoDatabase = do
-		c <- connectionMyDB
-        
-        createAdmin c
-		createEstudante c
-		createVotacao c
-		createChapa c
-		createEstudanteChapa c
-		createVoto c
-		
-        return c
+    c <- connectionMyDB
+    createAdmin c
+    createEstudante c
+    createVotacao c
+    createChapa c
+    createEstudanteChapa c
+    createVoto c
+    return c
