@@ -32,6 +32,7 @@ removeHeaders = snd
 -- Function to read the CSV
 parseCsv :: FilePath -> IO (Either ErrorMsg CsvData)
 parseCsv filePath = do
+  print "Parse csv"
   fileExists <- doesFileExist filePath
   if fileExists
     then decodeByName <$> BL.readFile filePath
@@ -40,5 +41,5 @@ parseCsv filePath = do
 leEstudantes :: FilePath -> IO (Either ErrorMsg (V.Vector EstudanteCSV))
 leEstudantes filePath =
   (fmap . fmap) -- lift the function twice
-    removeHeaders -- remove headers and filter stocks
+    removeHeaders -- remove headers 
       (parseCsv filePath) -- read CSV from file path
