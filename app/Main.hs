@@ -2,7 +2,6 @@ module Main where
 import Database.PostgreSQL.Simple
 import LocalDB.ConnectionDB
 import Controllers.AdminController
-import Controllers.EstudanteController
 import Controllers.VotacaoController
 
 main :: IO()

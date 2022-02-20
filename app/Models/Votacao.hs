@@ -2,20 +2,19 @@
 module Models.Votacao where
 import Database.PostgreSQL.Simple
 
-data Votacao = Votacao (
+data Votacao = Votacao {
     id :: Int,
-    data:: String,
+    dataVotacao:: String,
     encerrada:: Bool,
     abstencoes:: Int,
     nulos:: Int
-) deriving (Show, Read, Eq)
+ } deriving (Show, Read, Eq)
 
-novaVotacao :: Connection -> String -> IO()
-novaVotacao conn dataVotacao =
+novaVotacao :: Connection -> String -> Bool -> Int -> Int -> IO()
+novaVotacao conn dataVotacao encerrada abstencoes nulos = do
     let comando = "INSERT INTO votacao (data,\
                                        \encerrada,\
                                        \abstencoes,\
                                        \nulos) VALUES (?, ?, ?, ?)"
-    
-    execute conn comando (dataVotacao, False, 0, 0)
+    execute conn comando (dataVotacao, encerrada, abstencoes, nulos)
     return ()
