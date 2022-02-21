@@ -10,4 +10,17 @@ main = do
     putStrLn "Base de dados criada"
     
     putStrLn "O primeiro admin tem login e senha: admin"
-    cadastrarAdmin conn "admin" "admin"
+    --cadastraAdmin conn "" "" "admin" "admin"
+
+    putStrLn "Cadastro de novo administrador"
+    
+    putStrLn "Coloque seu login como administrador"
+    loginAdmin <- getLine
+    putStrLn "Coloque sua senha como administrador"
+    senhaAdmin <- getLine 
+    putStrLn "Coloque o login do administrador"
+    loginNovoAdmin <- getLine 
+    putStrLn "Coloque a senha do administrador"
+    senhaNovoAdmin <- getLine 
+    
+    cadastraAdmin conn loginAdmin senhaAdmin loginNovoAdmin senhaNovoAdmin
