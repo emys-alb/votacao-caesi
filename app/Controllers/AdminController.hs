@@ -7,6 +7,6 @@ cadastraAdmin:: Connection -> String -> String -> String -> String -> IO ()
 cadastraAdmin conn loginAdmin senhaAdmin novoLogin novaSenha = do
     cadastrarAdmin conn loginAdmin senhaAdmin novoLogin novaSenha 
 
-listaAdmin:: Connection -> String -> String -> IO [Admin] 
-listaAdmin conn login senha = do
+verificaAdmin:: Connection -> String -> String -> IO [Admin] 
+verificaAdmin conn login senha = do
     getAdmin conn login senha
