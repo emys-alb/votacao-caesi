@@ -18,3 +18,10 @@ novaVotacao conn dataVotacao encerrada abstencoes nulos = do
                                        \nulos) VALUES (?, ?, ?, ?)"
     execute conn comando (dataVotacao, encerrada, abstencoes, nulos)
     return ()
+
+
+encerra :: Connection -> Int -> IO()
+encerra conn idVotacao = do
+    let comando = "UPDATE votacao SET encerrada = 't' WHERE id = ?;"
+    execute conn comando (Only (idVotacao :: Int))
+    return ()

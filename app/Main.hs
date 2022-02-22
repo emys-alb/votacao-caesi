@@ -20,7 +20,6 @@ main = do
     senhaAdmin <- getLine
     -- nesse ponto deve-se chamar uma funcao que verifique o login e senha do admin
 
-    print "Digite a data da votação:"
-    dataVotacao <- getLine
-
-    cadastraVotacao conn dataVotacao
+    idVotacao <- getLine
+    -- issue encerra votação:
+    encerraVotacao conn (read idVotacao)
