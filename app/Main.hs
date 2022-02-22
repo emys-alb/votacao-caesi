@@ -14,7 +14,7 @@ main = do
     \\n 2 - Cadastra novo administrador"
 
     inputOpcao <- getLine
-    print (menu (inputOpcao conn))
+    menu inputOpcao conn
 
 
 menu :: String -> Connection -> IO ()
