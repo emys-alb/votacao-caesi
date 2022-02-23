@@ -3,6 +3,8 @@ module Models.Admin where
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow
 import Database.PostgreSQL.Simple.FromField
+import Control.Exception (catch, try, SomeException (SomeException))
+import Data.Int
 
 data Admin = Admin {
     login:: String,
@@ -27,8 +29,11 @@ cadastrarAdmin conn loginAdmin senhaAdmin novoLogin novaSenha = do
                 \senha) values (?,?)"
     resultadoAdmin <- getAdmin conn loginAdmin senhaAdmin
     if (resultadoAdmin /= []) || (novoLogin == novaSenha  && novoLogin == "admin")
-        then execute conn q (novoLogin, novaSenha)
-    else
+        then do 
+                cadastro <- try (execute conn q (novoLogin, novaSenha)) :: IO (Either SomeException Int64)
+                case cadastro of
+                    Left err  -> putStrLn $ "Caught exception: " ++ show err
+                    Right val -> print "Administrador cadastrado"
+    else 
         error "Erro no cadastro: Administrador não está cadastrado no sistema"
-
     return ()
