@@ -2,7 +2,7 @@ module Main where
 import Database.PostgreSQL.Simple
 import LocalDB.ConnectionDB
 import Controllers.AdminController
-
+import Controllers.EstudanteController
 
 main :: IO()
 main = do
@@ -11,7 +11,8 @@ main = do
 
     putStrLn "Menu de ativades: \
     \\n 1 - Cadastra o primeiro admin\
-    \\n 2 - Cadastra novo administrador"
+    \\n 2 - Cadastra novo administrador\
+    \\n 3 - Cadastra novo estudante"
 
     inputOpcao <- getLine
     menu inputOpcao conn
@@ -21,6 +22,7 @@ menu :: String -> Connection -> IO ()
 menu opcao conn
     | opcao == "1" = cadastroPrimeiroAdmin conn
     | opcao == "2" = cadastroNovoAdmin conn
+    | opcao == "3" = cadastroNovosEstudantes conn
 
 cadastroPrimeiroAdmin :: Connection -> IO()
 cadastroPrimeiroAdmin conn = do
@@ -41,3 +43,15 @@ cadastroNovoAdmin conn = do
     senhaNovoAdmin <- getLine
 
     cadastraAdmin conn loginAdmin senhaAdmin loginNovoAdmin senhaNovoAdmin
+
+cadastroNovosEstudantes :: Connection -> IO()
+cadastroNovosEstudantes conn = do
+    putStrLn "Cadastro de novos estudantes"
+    putStrLn "Insira seu login como administrador"
+    loginAdmin <- getLine
+    putStrLn "Insira sua senha como administrador"
+    senhaAdmin <- getLine
+    putStrLn "Insira o caminho para o arquivo .csv que deve conter duas colunas (matricula e senha) para cada estudante"
+    caminho <- getLine
+    --adicionar aqui o metodo de verificarAdmin
+    cadastraEstudantes conn caminho
