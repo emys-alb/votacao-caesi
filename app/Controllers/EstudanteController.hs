@@ -4,7 +4,7 @@ import Database.PostgreSQL.Simple (Connection, ConnectInfo)
 import Utils (leEstudantes, EstudanteCSV (matricula, senha))
 import qualified Data.Vector as V
 import Data.Vector (toList)
-import Models.Estudante (cadastraEstudante)
+import Models.Estudante (cadastraEstudante, desativaEstudante)
 
 cadastraEstudantes :: Connection -> String -> IO()
 cadastraEstudantes conn filePath = do
@@ -24,3 +24,8 @@ criaEstudanteBD conn [estudante] = cadastraEstudante conn (matricula estudante) 
 criaEstudanteBD conn (estudante:t) = do
     cadastraEstudante conn (matricula estudante) (senha estudante)
     criaEstudanteBD conn t
+
+desativarEstudante :: Connection -> String -> IO()
+desativarEstudante conn matricula = do
+    desativaEstudante conn matricula
+    return ()
