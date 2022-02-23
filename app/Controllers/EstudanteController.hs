@@ -11,7 +11,7 @@ cadastraEstudantes conn filePath = do
     print ("Iniciando cadastro de estudantes a partir do arquivo " ++ filePath)
     info <- leEstudantes filePath
     case info of
-        Left e -> error $ show e
+        Left e -> putStrLn $ "Caught exception: " ++ show e
         Right estudantes -> do
             print "cadastrando estudantes"
             criaEstudanteBD conn (toList estudantes)
