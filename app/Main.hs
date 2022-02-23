@@ -12,8 +12,18 @@ main = do
     putStrLn "Menu de ativades: \
     \\n 1 - Cadastra o primeiro admin\
     \\n 2 - Cadastra novo administrador\
-    \\n 3 - Cadastra novo estudante\
-    \\n 4 - Editar senha do estudante"
+    \\n 3 - Remove administrador\
+    \\n 4 - Cadastra estudantes\
+    \\n 5 - Edita senha do estudante\
+    \\n 6 - Desativa estudante\
+    \\n 7 - Cadastra votação\
+    \\n 8 - Cadastra chapa\
+    \\n 9 - Edita chapa\
+    \\n 10 - Remove chapa\
+    \\n 11 - Cadastra voto de estudante\
+    \\n 12 - Lista dados da votação\
+    \\n 13 - Lista histórico de votações\
+    \\n 14 - Compara votações"
 
     inputOpcao <- getLine
     menu inputOpcao conn
