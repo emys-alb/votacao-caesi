@@ -14,7 +14,7 @@ data Admin = Admin {
 instance FromRow Admin where
     fromRow = Admin <$> field
                     <*> field
-                    
+
 
 getAdmin :: Connection -> String -> String -> IO [Admin]
 getAdmin conn login senha = do
@@ -29,12 +29,12 @@ cadastrarAdmin conn loginAdmin senhaAdmin novoLogin novaSenha = do
                 \senha) values (?,?)"
     resultadoAdmin <- getAdmin conn loginAdmin senhaAdmin
     if (resultadoAdmin /= []) || (novoLogin == novaSenha  && novoLogin == "admin")
-        then do 
+        then do
                 cadastro <- try (execute conn q (novoLogin, novaSenha)) :: IO (Either SomeException Int64)
                 case cadastro of
                     Left err  -> putStrLn $ "Caught exception: " ++ show err
                     Right val -> print "Administrador cadastrado"
-    else 
+    else
         error "Erro no cadastro: Administrador não está cadastrado no sistema"
     return ()
 
@@ -44,7 +44,8 @@ removerAdmin conn loginAdmin senhaAdmin loginAdminRemovido senhaAdminRemovido = 
             \where login = ? and senha = ?"
 
     resultadoAdmin <- getAdmin conn loginAdmin senhaAdmin
-    if resultadoAdmin /= []
+    adminRemovido <- getAdmin conn loginAdminRemovido senhaAdminRemovido
+    if resultadoAdmin /= [] && adminRemovido /= []
          then do
             remocao <- try (execute conn q (loginAdminRemovido, senhaAdminRemovido)) :: IO (Either SomeException Int64)
             case remocao of
