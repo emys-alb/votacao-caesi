@@ -12,7 +12,8 @@ main = do
     putStrLn "O primeiro admin tem login e senha: admin"
     cadastrarAdmin conn "admin" "admin"
     cadastroNovosEstudantes conn
-
+    editarSenhaEstudante conn
+    
 cadastroNovosEstudantes :: Connection -> IO()
 cadastroNovosEstudantes conn = do
     putStrLn "Cadastro de novos estudantes"
@@ -24,3 +25,14 @@ cadastroNovosEstudantes conn = do
     caminho <- getLine
     --adicionar aqui o metodo de verificarAdmin
     cadastraEstudantes conn caminho
+
+editarSenhaEstudante :: Connection -> IO()
+editarSenhaEstudante conn = do
+    putStrLn "Editar senha do estudante"
+    putStrLn "Insira sua matrícula"
+    matricula <- getLine
+    putStrLn "Insira sua senha atual"
+    senhaAtual <- getLine
+    putStrLn "Insira sua nova senha"
+    novaSenha <- getLine
+    editaSenha conn matricula senhaAtual novaSenha
