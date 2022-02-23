@@ -31,13 +31,13 @@ cadastroNovoAdmin :: Connection -> IO()
 cadastroNovoAdmin conn = do
     putStrLn "Cadastro de novo administrador"
 
-    putStrLn "Coloque seu login como administrador"
+    putStrLn "Insira seu login como administrador"
     loginAdmin <- getLine
-    putStrLn "Coloque sua senha como administrador"
+    putStrLn "Insira sua senha como administrador"
     senhaAdmin <- getLine
-    putStrLn "Coloque o login do administrador"
+    putStrLn "Insira o login do novo administrador"
     loginNovoAdmin <- getLine
-    putStrLn "Coloque a senha do administrador"
+    putStrLn "Insira a senha do novo administrador"
     senhaNovoAdmin <- getLine
 
     cadastraAdmin conn loginAdmin senhaAdmin loginNovoAdmin senhaNovoAdmin
