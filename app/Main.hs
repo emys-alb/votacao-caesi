@@ -27,10 +27,10 @@ main = do
 
     putStrLn "Atualiza senha do administrador"
 
-    putStrLn "Coloque seu login como administrador:"
+    putStrLn "Insira seu login como administrador:"
     loginAdmin <- getLine
-    putStrLn "Senha atual:"
+    putStrLn "Insira a senha atual:"
     senhaAdmin <- getLine 
-    putStrLn "Nova senha:"
+    putStrLn "Insira a nova senha:"
     novaSenhaAdmin <- getLine 
     editaSenhaAdmin conn loginAdmin senhaAdmin novaSenhaAdmin

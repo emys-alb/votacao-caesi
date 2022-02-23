@@ -2,7 +2,6 @@
 module Models.Admin where
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow
-import Database.PostgreSQL.Simple.FromField
  
 data Admin = Admin {
    login:: String,
