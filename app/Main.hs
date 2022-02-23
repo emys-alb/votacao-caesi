@@ -4,37 +4,47 @@ import LocalDB.ConnectionDB
 import Controllers.AdminController
 import Controllers.EstudanteController
 
+mostraOpcoes :: Connection -> IO()
+mostraOpcoes conn = do
+    putStrLn "Menu de atividades: \
+    \\n 1 - Cadastra o primeiro admin\
+    \\n 2 - Cadastra novo administrador\
+    \\n 3 - Remove administrador\
+    \\n 4 - Edita senha do administrador\
+    \\n 5 - Cadastra estudantes\
+    \\n 6 - Edita senha do estudante\
+    \\n 7 - Desativa estudante\
+    \\n 8 - Cadastra votação\
+    \\n 9 - Cadastra chapa\
+    \\n 10 - Edita chapa\
+    \\n 11 - Remove chapa\
+    \\n 12 - Cadastra voto de estudante\
+    \\n 13 - Lista dados da votação\
+    \\n 14 - Lista histórico de votações\
+    \\n 15 - Compara votações\
+    \\n 16 - Sair"
+
+    inputOpcao <- getLine
+    if inputOpcao /= "16" then do
+        menu inputOpcao conn
+        mostraOpcoes conn
+    else
+        putStrLn "Fechando sistema"
+
 main :: IO()
 main = do
     conn <- iniciandoDatabase
     putStrLn "Base de dados criada"
 
-    putStrLn "Menu de ativades: \
-    \\n 1 - Cadastra o primeiro admin\
-    \\n 2 - Cadastra novo administrador\
-    \\n 3 - Remove administrador\
-    \\n 4 - Cadastra estudantes\
-    \\n 5 - Edita senha do estudante\
-    \\n 6 - Desativa estudante\
-    \\n 7 - Cadastra votação\
-    \\n 8 - Cadastra chapa\
-    \\n 9 - Edita chapa\
-    \\n 10 - Remove chapa\
-    \\n 11 - Cadastra voto de estudante\
-    \\n 12 - Lista dados da votação\
-    \\n 13 - Lista histórico de votações\
-    \\n 14 - Compara votações"
-
-    inputOpcao <- getLine
-    menu inputOpcao conn
+    mostraOpcoes conn
 
 
 menu :: String -> Connection -> IO ()
 menu opcao conn
     | opcao == "1" = cadastroPrimeiroAdmin conn
     | opcao == "2" = cadastroNovoAdmin conn
-    | opcao == "3" = cadastroNovosEstudantes conn
-    | opcao == "4" = editarSenhaEstudante conn
+    | opcao == "5" = cadastroNovosEstudantes conn
+    | opcao == "6" = editarSenhaEstudante conn
 
 cadastroPrimeiroAdmin :: Connection -> IO()
 cadastroPrimeiroAdmin conn = do
