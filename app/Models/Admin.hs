@@ -37,3 +37,19 @@ cadastrarAdmin conn loginAdmin senhaAdmin novoLogin novaSenha = do
     else 
         error "Erro no cadastro: Administrador não está cadastrado no sistema"
     return ()
+
+removerAdmin :: Connection -> String -> String -> String -> String -> IO ()
+removerAdmin conn loginAdmin senhaAdmin loginAdminRemovido senhaAdminRemovido = do
+    let q = "delete from admin \
+            \where login = ? and senha = ?"
+
+    resultadoAdmin <- getAdmin conn loginAdmin senhaAdmin
+    if resultadoAdmin /= []
+         then do
+            remocao <- try (execute conn q (loginAdminRemovido, senhaAdminRemovido)) :: IO (Either SomeException Int64)
+            case remocao of
+                Left err  -> putStrLn $ "Caught exception: " ++ show err
+                Right val -> print "Administrador removido"
+    else
+        error "Erro no remoção: Administrador não está cadastrado no sistema"
+    return ()

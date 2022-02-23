@@ -43,6 +43,7 @@ menu :: String -> Connection -> IO ()
 menu opcao conn
     | opcao == "1" = cadastroPrimeiroAdmin conn
     | opcao == "2" = cadastroNovoAdmin conn
+    | opcao == "3" = removeAdministrador conn
     | opcao == "5" = cadastroNovosEstudantes conn
     | opcao == "6" = editarSenhaEstudante conn
 
@@ -65,6 +66,21 @@ cadastroNovoAdmin conn = do
     senhaNovoAdmin <- getLine
 
     cadastraAdmin conn loginAdmin senhaAdmin loginNovoAdmin senhaNovoAdmin
+
+removeAdministrador :: Connection -> IO ()
+removeAdministrador conn = do
+    putStrLn "Remove administrador"
+
+    putStrLn "Insira seu login como administrador"
+    loginAdmin <- getLine
+    putStrLn "Insira sua senha como administrador"
+    senhaAdmin <- getLine
+    putStrLn "Insira o login do administrador a ser removido"
+    loginAdminRemovido <- getLine
+    putStrLn "Insira a senha do administrador a ser removido"
+    senhaAdminRemovido <- getLine
+
+    removeAdmin conn loginAdmin senhaAdmin loginAdminRemovido senhaAdminRemovido
 
 cadastroNovosEstudantes :: Connection -> IO()
 cadastroNovosEstudantes conn = do
