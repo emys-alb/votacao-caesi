@@ -1,86 +1,98 @@
 {-# LANGUAGE OverloadedStrings #-}
+
 module LocalDB.ConnectionDB where
+
 import Database.PostgreSQL.Simple
 
-localDB:: ConnectInfo
-localDB = defaultConnectInfo {
-    connectHost = "ec2-54-235-108-217.compute-1.amazonaws.com",
-    connectDatabase = "dbehln4jerq4b",
-    connectUser = "jzrhucvekfwaal",
-    connectPassword = "fc13fbfff03b8b15a7186f8cabf894bcb3bacee463dd080a803690d72658217d",
-    connectPort = 5432
-}
+localDB :: ConnectInfo
+localDB =
+  defaultConnectInfo
+    { connectHost = "ec2-54-235-108-217.compute-1.amazonaws.com",
+      connectDatabase = "dbehln4jerq4b",
+      connectUser = "jzrhucvekfwaal",
+      connectPassword = "fc13fbfff03b8b15a7186f8cabf894bcb3bacee463dd080a803690d72658217d",
+      connectPort = 5432
+    }
 
 connectionMyDB :: IO Connection
 connectionMyDB = connect localDB
 
-createAdmin :: Connection -> IO()
+createAdmin :: Connection -> IO ()
 createAdmin conn = do
-    execute_ conn "CREATE TABLE IF NOT EXISTS admin (\
-                    \login VARCHAR(20) PRIMARY KEY,\
-                    \senha VARCHAR(15) NOT NULL);"
-    return ()
+  execute_
+    conn
+    "CREATE TABLE IF NOT EXISTS admin (\
+    \login VARCHAR(20) PRIMARY KEY,\
+    \senha VARCHAR(15) NOT NULL);"
+  return ()
 
-createEstudante :: Connection -> IO()
+createEstudante :: Connection -> IO ()
 createEstudante conn = do
-    execute_ conn "CREATE TABLE IF NOT EXISTS estudante (\
-                    \matricula VARCHAR(50) PRIMARY KEY,\
-                    \senha VARCHAR(15) NOT NULL,\
-                    \votante BOOLEAN NOT NULL);"
-    return ()
+  execute_
+    conn
+    "CREATE TABLE IF NOT EXISTS estudante (\
+    \matricula VARCHAR(50) PRIMARY KEY,\
+    \senha VARCHAR(15) NOT NULL,\
+    \votante BOOLEAN NOT NULL);"
+  return ()
 
-createVotacao :: Connection -> IO()
+createVotacao :: Connection -> IO ()
 createVotacao conn = do
-    execute_ conn "CREATE TABLE IF NOT EXISTS votacao (\
-                    \id SERIAL PRIMARY KEY,\
-                    \data VARCHAR(15) NOT NULL,\
-                    \encerrada BOOLEAN NOT NULL,\
-                    \abstencoes INTEGER,\
-                    \nulos INTEGER);"
-    return ()
+  execute_
+    conn
+    "CREATE TABLE IF NOT EXISTS votacao (\
+    \id SERIAL PRIMARY KEY,\
+    \data VARCHAR(15) NOT NULL,\
+    \encerrada BOOLEAN NOT NULL,\
+    \abstencoes INTEGER,\
+    \nulos INTEGER);"
+  return ()
 
-createChapa :: Connection -> IO()
+createChapa :: Connection -> IO ()
 createChapa conn = do
-    execute_ conn "CREATE TABLE IF NOT EXISTS chapa (\
-                    \id SERIAL PRIMARY KEY,\
-                    \nome VARCHAR(50) NOT NULL,\
-                    \numero INTEGER NOT NULL,\
-                    \idVotacao INTEGER NOT NULL,\
-                    \numDeVotos INTEGER NOT NULL,\
-                    \FOREIGN KEY (idVotacao) REFERENCES votacao (id));"
-    return ()
+  execute_
+    conn
+    "CREATE TABLE IF NOT EXISTS chapa (\
+    \id SERIAL PRIMARY KEY,\
+    \nome VARCHAR(50) NOT NULL,\
+    \numero INTEGER NOT NULL,\
+    \idVotacao INTEGER NOT NULL,\
+    \numDeVotos INTEGER NOT NULL,\
+    \FOREIGN KEY (idVotacao) REFERENCES votacao (id));"
+  return ()
 
-
-createEstudanteChapa :: Connection -> IO()
+createEstudanteChapa :: Connection -> IO ()
 createEstudanteChapa conn = do
-    execute_ conn "CREATE TABLE IF NOT EXISTS estudante_chapa (\
-                    \id SERIAL PRIMARY KEY,\
-                    \idEstudante VARCHAR(50) NOT NULL,\
-                    \idChapa INTEGER NOT NULL,\
-                    \diretoria VARCHAR(15) NOT NULL,\
-                    \FOREIGN KEY (idEstudante) REFERENCES estudante (matricula),\
-                    \FOREIGN KEY (idChapa) REFERENCES chapa (id));"
-    return ()
+  execute_
+    conn
+    "CREATE TABLE IF NOT EXISTS estudante_chapa (\
+    \id SERIAL PRIMARY KEY,\
+    \idEstudante VARCHAR(50) NOT NULL,\
+    \idChapa INTEGER NOT NULL,\
+    \diretoria VARCHAR(15) NOT NULL,\
+    \FOREIGN KEY (idEstudante) REFERENCES estudante (matricula),\
+    \FOREIGN KEY (idChapa) REFERENCES chapa (id));"
+  return ()
 
-createVoto :: Connection -> IO()
+createVoto :: Connection -> IO ()
 createVoto conn = do
-    execute_ conn "CREATE TABLE IF NOT EXISTS voto (\
-                    \id SERIAL PRIMARY KEY,\
-                    \idEstudante VARCHAR(50) NOT NULL,\
-                    \idVotacao INTEGER NOT NULL,\
-                    \FOREIGN KEY (idEstudante) REFERENCES estudante (matricula),\
-                    \FOREIGN KEY (idVotacao) REFERENCES votacao (id));"
-    return ()
-
-
+  execute_
+    conn
+    "CREATE TABLE IF NOT EXISTS voto (\
+    \id SERIAL PRIMARY KEY,\
+    \idEstudante VARCHAR(50) NOT NULL,\
+    \idVotacao INTEGER NOT NULL,\
+    \FOREIGN KEY (idEstudante) REFERENCES estudante (matricula),\
+    \FOREIGN KEY (idVotacao) REFERENCES votacao (id));"
+  return ()
 
 iniciandoDatabase :: IO Connection
 iniciandoDatabase = do
-    c <- connectionMyDB
-    createAdmin c
-    createEstudante c
-    createVotacao c
-    createChapa c
-    createEstudanteChapa c
-    createVoto c
-    return c
+  c <- connectionMyDB
+  createAdmin c
+  createEstudante c
+  createVotacao c
+  createChapa c
+  createEstudanteChapa c
+  createVoto c
+  return c
