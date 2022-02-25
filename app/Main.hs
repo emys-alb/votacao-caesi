@@ -77,8 +77,7 @@ cadastroNovosEstudantes conn = do
     senhaAdmin <- getLine
     putStrLn "Insira o caminho para o arquivo .csv que deve conter duas colunas (matricula e senha) para cada estudante"
     caminho <- getLine
-    --adicionar aqui o metodo de verificarAdmin
-    cadastraEstudantes conn caminho
+    cadastraEstudantes conn loginAdmin senhaAdmin caminho
 
 desativaEstudante :: Connection -> IO()
 desativaEstudante conn = do
@@ -89,8 +88,7 @@ desativaEstudante conn = do
     senhaAdmin <- getLine
     putStrLn "Insira a matrícula do estudante a ser desativado"
     matricula <- getLine
-    --adicionar aqui o metodo de verificarAdmin
-    desativarEstudante conn matricula
+    desativarEstudante conn loginAdmin senhaAdmin matricula
 editarSenhaEstudante :: Connection -> IO()
 editarSenhaEstudante conn = do
     putStrLn "Editar senha do estudante"

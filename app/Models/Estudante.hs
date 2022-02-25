@@ -29,6 +29,7 @@ cadastraEstudante conn matricula senha = do
         Left err  -> putStrLn $ "Caught exception: " ++ show err
         Right val -> putStrLn "Estudante cadastrado"
         
+desativaEstudante :: Connection -> String -> IO()
 desativaEstudante conn matricula = do
     print ("Desativando estudante de matricula " ++ matricula)
     let q = "update estudante set votante=? \
@@ -37,7 +38,9 @@ desativaEstudante conn matricula = do
     case result of
         Left err  -> putStrLn $ "Caught exception: " ++ show err
         Right val -> print "Estudante desativado"
+        
 editaSenhaEstudante :: Connection -> String -> String -> String -> IO()
+editaSenhaEstudante conn matricula senhaAtual novaSenha = do
     let q = "update estudante set senha = ? \
             \where matricula = ? and senha = ?"
     result <- try (execute conn q (novaSenha, matricula, senhaAtual)) :: IO (Either SomeException Int64)
