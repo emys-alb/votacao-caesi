@@ -4,7 +4,9 @@ import Database.PostgreSQL.Simple (Connection, ConnectInfo)
 import Utils (leEstudantes, EstudanteCSV (matricula, senha))
 import qualified Data.Vector as V
 import Data.Vector (toList)
-import Models.Estudante (cadastraEstudante, desativaEstudante)
+import Models.Estudante (cadastraEstudante, getEstudante, editaSenhaEstudante, desativaEstudante, Estudante (Estudante))
+import Control.Exception
+import Data.Int
 
 cadastraEstudantes :: Connection -> String -> IO()
 cadastraEstudantes conn filePath = do
@@ -29,3 +31,11 @@ desativarEstudante :: Connection -> String -> IO()
 desativarEstudante conn matricula = do
     desativaEstudante conn matricula
     return ()
+editaSenha :: Connection -> String -> String -> String -> IO()
+editaSenha conn matricula senhaAtual novaSenha = do
+    info <- try (getEstudante conn matricula senhaAtual) :: IO (Either SomeException [Estudante])
+    case info of
+        Left e -> putStrLn $ "Caught exception: " ++ show e
+        Right estudante -> do
+            if null estudante then putStrLn "Matricula ou senha incorretos"
+            else editaSenhaEstudante conn matricula senhaAtual novaSenha
