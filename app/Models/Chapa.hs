@@ -10,8 +10,8 @@ import Models.Admin
 data Chapa = Chapa
   { nome :: String,
     numero :: Int,
-    idVotacao :: Int, --precisa implementar isso
-    numDeVotos :: Int --precisa ver se é necessario
+    idVotacao :: Int,
+    numDeVotos :: Int
   }
   deriving (Show, Read, Eq)
 

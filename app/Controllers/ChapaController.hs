@@ -1,8 +1,5 @@
 module Controllers.ChapaController where
 
---verificar se existe um admin (tlvez)
---permitir insert
-
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple (Connection, execute)
 import Models.Admin
