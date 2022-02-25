@@ -3,7 +3,6 @@ import Database.PostgreSQL.Simple
 import LocalDB.ConnectionDB
 import Controllers.AdminController
 import Controllers.EstudanteController
-import Models.Votacao
 
 mostraOpcoes :: Connection -> IO()
 mostraOpcoes conn = do
@@ -46,15 +45,6 @@ menu opcao conn
     | opcao == "2" = cadastroNovoAdmin conn
     | opcao == "5" = cadastroNovosEstudantes conn
     | opcao == "6" = editarSenhaEstudante conn
-    | opcao == "17" = teste conn
-
-
-teste :: Connection -> IO ()
-teste conn = do
-    putStrLn  "id votacao"
-    id <- getLine
-    getVotacaoById conn (read id)
-    return ()
 
 
 cadastroPrimeiroAdmin :: Connection -> IO()
