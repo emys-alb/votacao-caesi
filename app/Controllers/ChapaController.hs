@@ -1,14 +1,15 @@
 module Controllers.ChapaController where
 
+--verificar se existe um admin (tlvez)
+--permitir insert
 
-import Models.Votacao
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple (Connection, execute)
-cadastrarChapa :: Connection -> String -> Int -> Int -> Int-> IO ()
---verificar se existe um admin (tlvez)
---permitir insert 
+import Models.Admin
+import Models.Chapa
 
-cadastrarChapa conn nomeChapa numeroChapa getIdVotacaoChapa(data) numDeVotosChapa = do 
-    let i = "INSERT INTO chapa(nomeChapa,\numeroChapa,\getIdVotacao,\numDeVotosChapa) values (?,?,?,?)"
-    execute conn i (getAdimin,nomeChapa,numeroChapa,getIdVotacao,numDeVotosChapa)
-    return()
+--import Models.Votacao
+
+cadastraChapa :: Connection -> String -> String -> String -> Int -> Int -> IO ()
+cadastraChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa = do
+  cadastrarChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa

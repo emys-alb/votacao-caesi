@@ -1,12 +1,16 @@
 module Main where
+
+import Controllers.AdminController
+import Controllers.ChapaController
+import Controllers.EstudanteController
 import Database.PostgreSQL.Simple
 import LocalDB.ConnectionDB
-import Controllers.AdminController
-import Controllers.EstudanteController
+import Models.Admin (Admin (login, senha))
 
-mostraOpcoes :: Connection -> IO()
+mostraOpcoes :: Connection -> IO ()
 mostraOpcoes conn = do
-    putStrLn "Menu de atividades: \
+  putStrLn
+    "Menu de atividades: \
     \\n 1 - Cadastra o primeiro admin\
     \\n 2 - Cadastra novo administrador\
     \\n 3 - Remove administrador\
@@ -24,67 +28,82 @@ mostraOpcoes conn = do
     \\n 15 - Compara votações\
     \\n 16 - Sair"
 
-    inputOpcao <- getLine
-    if inputOpcao /= "16" then do
-        menu inputOpcao conn
-        mostraOpcoes conn
-    else
-        putStrLn "Fechando sistema"
+  inputOpcao <- getLine
+  if inputOpcao /= "16"
+    then do
+      menu inputOpcao conn
+      mostraOpcoes conn
+    else putStrLn "Fechando sistema"
 
-main :: IO()
+main :: IO ()
 main = do
-    conn <- iniciandoDatabase
-    putStrLn "Base de dados criada"
+  conn <- iniciandoDatabase
+  putStrLn "Base de dados criada"
 
-    mostraOpcoes conn
-
+  mostraOpcoes conn
 
 menu :: String -> Connection -> IO ()
 menu opcao conn
-    | opcao == "1" = cadastroPrimeiroAdmin conn
-    | opcao == "2" = cadastroNovoAdmin conn
-    | opcao == "5" = cadastroNovosEstudantes conn
-    | opcao == "6" = editarSenhaEstudante conn
+  | opcao == "1" = cadastroPrimeiroAdmin conn
+  | opcao == "2" = cadastroNovoAdmin conn
+  | opcao == "5" = cadastroNovosEstudantes conn
+  | opcao == "6" = editarSenhaEstudante conn
+  | opcao == "9" = cadastraChapas conn
 
-cadastroPrimeiroAdmin :: Connection -> IO()
+cadastroPrimeiroAdmin :: Connection -> IO ()
 cadastroPrimeiroAdmin conn = do
-    putStrLn "O primeiro admin tem login e senha: admin"
-    cadastraAdmin conn "" "" "admin" "admin"
+  putStrLn "O primeiro admin tem login e senha: admin"
+  cadastraAdmin conn "" "" "admin" "admin"
 
-cadastroNovoAdmin :: Connection -> IO()
+cadastroNovoAdmin :: Connection -> IO ()
 cadastroNovoAdmin conn = do
-    putStrLn "Cadastro de novo administrador"
+  putStrLn "Cadastro de novo administrador"
 
-    putStrLn "Insira seu login como administrador"
-    loginAdmin <- getLine
-    putStrLn "Insira sua senha como administrador"
-    senhaAdmin <- getLine
-    putStrLn "Insira o login do novo administrador"
-    loginNovoAdmin <- getLine
-    putStrLn "Insira a senha do novo administrador"
-    senhaNovoAdmin <- getLine
+  putStrLn "Insira seu login como administrador"
+  loginAdmin <- getLine
+  putStrLn "Insira sua senha como administrador"
+  senhaAdmin <- getLine
+  putStrLn "Insira o login do novo administrador"
+  loginNovoAdmin <- getLine
+  putStrLn "Insira a senha do novo administrador"
+  senhaNovoAdmin <- getLine
 
-    cadastraAdmin conn loginAdmin senhaAdmin loginNovoAdmin senhaNovoAdmin
+  cadastraAdmin conn loginAdmin senhaAdmin loginNovoAdmin senhaNovoAdmin
 
-cadastroNovosEstudantes :: Connection -> IO()
+cadastroNovosEstudantes :: Connection -> IO ()
 cadastroNovosEstudantes conn = do
-    putStrLn "Cadastro de novos estudantes"
-    putStrLn "Insira seu login como administrador"
-    loginAdmin <- getLine
-    putStrLn "Insira sua senha como administrador"
-    senhaAdmin <- getLine
-    putStrLn "Insira o caminho para o arquivo .csv que deve conter duas colunas (matricula e senha) para cada estudante"
-    caminho <- getLine
-    --adicionar aqui o metodo de verificarAdmin
-    cadastraEstudantes conn caminho
+  putStrLn "Cadastro de novos estudantes"
+  putStrLn "Insira seu login como administrador"
+  loginAdmin <- getLine
+  putStrLn "Insira sua senha como administrador"
+  senhaAdmin <- getLine
+  putStrLn "Insira o caminho para o arquivo .csv que deve conter duas colunas (matricula e senha) para cada estudante"
+  caminho <- getLine
+  --adicionar aqui o metodo de verificarAdmin
+  cadastraEstudantes conn caminho
 
-editarSenhaEstudante :: Connection -> IO()
+editarSenhaEstudante :: Connection -> IO ()
 editarSenhaEstudante conn = do
-    putStrLn "Editar senha do estudante"
-    putStrLn "Insira sua matrícula"
-    matricula <- getLine
-    putStrLn "Insira sua senha atual"
-    senhaAtual <- getLine
-    putStrLn "Insira sua nova senha"
-    novaSenha <- getLine
-    editaSenha conn matricula senhaAtual novaSenha
+  putStrLn "Editar senha do estudante"
+  putStrLn "Insira sua matrícula"
+  matricula <- getLine
+  putStrLn "Insira sua senha atual"
+  senhaAtual <- getLine
+  putStrLn "Insira sua nova senha"
+  novaSenha <- getLine
+  editaSenha conn matricula senhaAtual novaSenha
+
+cadastraChapas :: Connection -> IO ()
+cadastraChapas conn = do
+  putStrLn "Cadastrar Chapa"
+  putStrLn "Insira o login do Admin:"
+  loginAdmin <- getLine
+  putStrLn "Insira sua senha:"
+  senhaAdmin <- getLine
+  putStrLn "Insira o nome da chapa:"
+  nomeChapa <- getLine
+  putStrLn "Insira o número da chapa"
+  numeroChapa <- getLine
+  putStrLn "Insira o ID da votação"
+  idVotacaoChapa <- getLine
+  cadastraChapa conn loginAdmin senhaAdmin nomeChapa (read numeroChapa) (read idVotacaoChapa)
