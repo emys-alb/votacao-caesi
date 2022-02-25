@@ -1,6 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Models.Votacao where
 import Database.PostgreSQL.Simple
+import Database.PostgreSQL.Simple.FromRow
+import Database.PostgreSQL.Simple.FromField
 import Control.Exception
 import Data.Int
 
@@ -11,6 +13,13 @@ data Votacao = Votacao {
     abstencoes:: Int,
     nulos:: Int
  } deriving (Show, Read, Eq)
+
+instance FromRow Votacao where
+    fromRow = Votacao <$> field
+                      <*> field
+                      <*> field
+                      <*> field
+                      <*> field
 
 novaVotacao :: Connection -> String -> Bool -> Int -> Int -> IO()
 novaVotacao conn dataVotacao encerrada abstencoes nulos = do
@@ -35,3 +44,9 @@ encerra conn idVotacao = do
         Left err  -> putStrLn $ "Caught exception: " ++ show err
         Right val -> print "Votacao encerrada"
     return ()
+
+getVotacaoById :: Connection -> Int -> IO [Votacao]
+getVotacaoById conn idVotacao = do
+    let comando = "SELECT * FROM votacao WHERE id = ?"
+
+    query conn comando (Only (idVotacao :: Int)) :: IO [Votacao]
