@@ -30,3 +30,16 @@ novaVotacao conn loginAdmin senhaAdmin dataVotacao encerrada abstencoes nulos = 
     else
         error "Erro no cadastro de nova votacao: Administrador não está cadastrado no sistema"
     return ()
+
+getVotacaoById :: Connection -> Int -> IO [Votacao]
+getVotacaoById conn idVotacao = do
+    let comando = "SELECT * FROM votacao WHERE id = ?"
+
+    query conn comando (Only (idVotacao :: Int)) :: IO [Votacao]
+
+isVotacaoEncerrada :: Connection -> Int -> IO Bool
+isVotacaoEncerrada conn idVotacao = do 
+    votacaoList <- getVotacaoById conn idVotacao
+    let votacao = head votacaoList
+
+    return (encerrada votacao)
