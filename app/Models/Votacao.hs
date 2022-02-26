@@ -13,6 +13,13 @@ data Votacao = Votacao {
     nulos:: Int
  } deriving (Show, Read, Eq)
 
+instance FromRow Votacao where
+    fromRow = Votacao <$> field
+                      <*> field
+                      <*> field
+                      <*> field
+                      <*> field
+
 novaVotacao :: Connection -> String -> String -> String -> Bool -> Int -> Int -> IO()
 novaVotacao conn loginAdmin senhaAdmin dataVotacao encerrada abstencoes nulos = do
     let comando = "INSERT INTO votacao (data,\
