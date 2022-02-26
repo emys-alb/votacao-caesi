@@ -54,13 +54,9 @@ criaRelacaoEstudanteVotacao conn matricula idVotacao = do
     
     return ()
 
-cadastrarVoto :: Connection -> String -> String -> Int -> Int -> IO()
-cadastrarVoto conn matricula senha idVotacao numChapa = do
-    let q = "update  set senha = ? \
-            \where matricula = ? and senha = ?"
-    result <- try (execute conn q (novaSenha, matricula, senhaAtual)) :: IO (Either SomeException Int64)
-    case result of
-        Left err  -> putStrLn $ "Caught exception: " ++ show err
-        Right val -> putStrLn "Senha atualizada"
+isEstudanteVotante :: Connection -> String -> String -> IO Bool
+isEstudanteVotante conn matricula senha = do 
+    estudanteList <- getEstudante conn matricula senha
+    let estudante = head estudanteList
 
-    return ()
+    return (votante estudante)
