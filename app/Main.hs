@@ -3,6 +3,7 @@ import Database.PostgreSQL.Simple
 import LocalDB.ConnectionDB
 import Controllers.AdminController
 import Controllers.EstudanteController
+import Controllers.VotacaoController
 import Models.Estudante (Estudante(matricula))
 
 mostraOpcoes :: Connection -> IO()
@@ -99,3 +100,15 @@ editarSenhaEstudante conn = do
     putStrLn "Insira sua nova senha"
     novaSenha <- getLine
     editaSenha conn matricula senhaAtual novaSenha
+
+cadastroVotacao :: Connection -> IO()
+cadastroVotacao conn = do
+    putStrLn "Cadastrar uma nova votação"
+    putStrLn "Insira seu login como administrador"
+    loginAdmin <- getLine
+    putStrLn "Insira sua senha como administrador"
+    senhaAdmin <- getLine
+    putStrLn "Insira a data da nova votação"
+    dataVotacao <- getLine
+
+    cadastraVotacao conn loginAdmin senhaAdmin dataVotacao
