@@ -43,6 +43,16 @@ getEstudante conn matricula senha = do
     let q = "select * from estudante where matricula = ? and senha = ?"
     query conn q (matricula::String, senha::String) :: IO[Estudante]
 
+criaRelacaoEstudanteVotacao :: Connection -> String -> Int -> IO ()
+criaRelacaoEstudanteVotacao conn matricula idVotacao = do
+    let q = "insert into voto (idEstudante,\
+                \idVotacao) values (?,?)"
+    result <- try (execute conn q (matricula, idVotacao)) :: IO (Either SomeException Int64)
+    case result of
+        Left err  -> putStrLn $ "Caught exception: " ++ show err
+        Right val -> putStrLn "Voto cadastrado"
+    
+    return ()
 
 cadastrarVoto :: Connection -> String -> String -> Int -> Int -> IO()
 cadastrarVoto conn matricula senha idVotacao numChapa = do
