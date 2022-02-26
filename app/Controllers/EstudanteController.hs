@@ -35,3 +35,12 @@ editaSenha conn matricula senhaAtual novaSenha = do
         Right estudante -> do
             if null estudante then putStrLn "Matricula ou senha incorretos"
             else editaSenhaEstudante conn matricula senhaAtual novaSenha
+
+cadastraVoto :: Connection -> String -> String -> Int -> Int -> IO()
+cadastraVoto conn matricula senha idVotacao numChapa = do
+    info <- try (cadastrarVoto conn matricula senha idVotacao numChapa) :: IO (Either SomeException [Estudante])
+    case info of
+        Left e -> putStrLn $ "Caught exception: " ++ show e
+        Right estudante -> do
+            if null estudante then putStrLn "Matricula ou senha incorretos"
+            else editaSenhaEstudante conn matricula senhaAtual novaSenha

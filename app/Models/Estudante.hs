@@ -42,3 +42,15 @@ getEstudante :: Connection -> String -> String -> IO [Estudante]
 getEstudante conn matricula senha = do
     let q = "select * from estudante where matricula = ? and senha = ?"
     query conn q (matricula::String, senha::String) :: IO[Estudante]
+
+
+cadastrarVoto :: Connection -> String -> String -> Int -> Int -> IO()
+cadastrarVoto conn matricula senha idVotacao numChapa = do
+    let q = "update  set senha = ? \
+            \where matricula = ? and senha = ?"
+    result <- try (execute conn q (novaSenha, matricula, senhaAtual)) :: IO (Either SomeException Int64)
+    case result of
+        Left err  -> putStrLn $ "Caught exception: " ++ show err
+        Right val -> putStrLn "Senha atualizada"
+
+    return ()
