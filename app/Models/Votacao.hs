@@ -2,6 +2,7 @@
 module Models.Votacao where
 import Models.Admin
 import Database.PostgreSQL.Simple
+import Database.PostgreSQL.Simple.FromRow
 import Control.Exception
 import Data.Int
 
