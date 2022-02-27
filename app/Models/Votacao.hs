@@ -51,3 +51,4 @@ isVotacaoEncerrada conn idVotacao = do
     let votacao = head votacaoList
 
     return (encerrada votacao)
+
