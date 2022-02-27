@@ -8,6 +8,7 @@ import Models.Estudante (cadastraEstudante, getEstudante, editaSenhaEstudante, E
 import Control.Exception
 import Data.Int
 import Models.Chapa
+import Controllers.VotacaoController
 
 cadastraEstudantes :: Connection -> String -> IO()
 cadastraEstudantes conn filePath = do

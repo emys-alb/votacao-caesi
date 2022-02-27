@@ -109,9 +109,9 @@ cadastroVotacao conn = do
 
 printChapas :: [ChapaVisualization] -> IO ()
 printChapas [] = putStrLn ""
-printChapas [chapa] = putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Chapa numero " ++ show (numeroChapa chapa)  ++ "- " ++ nomeChapa chapa)
+printChapas [chapa] = putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Chapa numero " ++ show (numeroChapa chapa)  ++ " - " ++ nomeChapa chapa)
 printChapas (chapa:t) = do
-    putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Chapa numero " ++ show (numeroChapa chapa)  ++ "- " ++ nomeChapa chapa)
+    putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Chapa numero " ++ show (numeroChapa chapa)  ++ " - " ++ nomeChapa chapa)
     printChapas t
 
 cadastraVotoEstudante :: Connection -> IO ()
