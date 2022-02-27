@@ -68,10 +68,13 @@ criaRelacaoEstudanteVotacao conn matricula idVotacao = do
 
 isEstudanteVotante :: Connection -> String -> String -> IO Bool
 isEstudanteVotante conn matricula senha = do
-    estudanteList <- getEstudante conn matricula senha
-    let estudante = head estudanteList
-
-    return (votante estudante)
+    info <- try (getEstudante conn matricula senha) :: IO (Either SomeException [Estudante])
+    case info of
+        Left e -> do 
+            putStrLn $ "Caught exception: " ++ show e
+            return False
+        Right estudanteList -> do
+            return (not (null estudanteList) && votante (head estudanteList))
 
 
 verificaEstudanteNaoVotou :: Connection -> String -> Int -> IO Bool

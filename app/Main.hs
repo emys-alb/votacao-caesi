@@ -49,6 +49,7 @@ menu opcao conn
     | opcao == "5" = cadastroNovosEstudantes conn
     | opcao == "6" = editarSenhaEstudante conn
     | opcao == "8" = cadastroVotacao conn
+    | opcao == "12" = cadastraVotoEstudante conn
     | otherwise = putStrLn "Opção inválida"
 
 cadastroPrimeiroAdmin :: Connection -> IO()
@@ -108,7 +109,26 @@ cadastroVotacao conn = do
 
 printChapas :: [ChapaVisualization] -> IO ()
 printChapas [] = putStrLn ""
-printChapas [chapa] = putStrLn ("Chapa numero " ++ show (numeroChapa chapa)  ++ "- " ++ nomeChapa chapa)
+printChapas [chapa] = putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Chapa numero " ++ show (numeroChapa chapa)  ++ "- " ++ nomeChapa chapa)
 printChapas (chapa:t) = do
-    putStrLn ("Chapa numero " ++ show (numeroChapa chapa)  ++ "- " ++ nomeChapa chapa)
+    putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Chapa numero " ++ show (numeroChapa chapa)  ++ "- " ++ nomeChapa chapa)
     printChapas t
+
+cadastraVotoEstudante :: Connection -> IO ()
+cadastraVotoEstudante conn = do
+    putStrLn "Insira sua matricula"
+    matricula <- getLine
+    putStrLn "Insira sua senha"
+    senha <- getLine
+    chapas <- getChapasVotacaoAtiva conn
+    printChapas chapas
+    putStrLn "Insira id da votacao"
+    idVotacao <- getLine
+    putStrLn "Insira o numero da chapa escolhida"
+    putStrLn "Caso deseje votar nulo, digite n"
+    numeroChapa <- getLine
+
+    -- if numeroChapa == 'n' then
+
+    cadastraVoto conn matricula senha (read idVotacao) (read numeroChapa)
+    

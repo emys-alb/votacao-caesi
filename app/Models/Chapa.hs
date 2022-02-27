@@ -8,7 +8,9 @@ import Control.Exception
 import Data.Int
 
 data Chapa = Chapa
-  { nome :: String,
+  { 
+    chapaId :: Int,
+    nome :: String,
     numero :: Int,
     idVotacao :: Int,
     numDeVotos :: Int
@@ -20,27 +22,35 @@ instance FromRow Chapa where
                       <*> field
                       <*> field
                       <*> field
+                      <*> field
 
 
 data ChapaVisualization = ChapaVisualization
-  { nomeChapa :: String,
-    numeroChapa :: Int
+  { 
+    idChapa :: Int,
+    nomeChapa :: String,
+    numeroChapa :: Int,
+    votacaoId :: Int
   }
   deriving (Show, Read, Eq)
 
 instance FromRow ChapaVisualization where
     fromRow = ChapaVisualization <$> field
                       <*> field
+                      <*> field
+                      <*> field
+
+getChapaVotacaoAtiva :: Connection -> Int -> Int -> IO [Chapa]
+getChapaVotacaoAtiva conn idVotacao numeroChapa = do
+    let q = "select c.id, c.nome, c.numero, c.idVotacao, c.numDeVotos from chapa as c, votacao as v \
+            \where c.idVotacao=v.id and v.encerrada=false and c.numero=? and v.id=?"
+    query conn q (numeroChapa :: Int, idVotacao :: Int) :: IO[Chapa]
 
 getChapasVotacaoAtiva :: Connection -> IO [ChapaVisualization]
 getChapasVotacaoAtiva conn = do
-    let q = "select c.nome, c.numero from chapa as c, votacao as v where c.idVotacao=v.id and v.encerrada=false"
+    let q = "select c.id, c.nome, c.numero, v.id from chapa as c, votacao as v where c.idVotacao=v.id and v.encerrada=false"
 
-    query_ conn q :: IO [ChapaVisualization]
-    -- case result of
-    --     Left err  -> putStrLn $ "Caught exception: " ++ show err
-    --     Right val -> if val == 0 then putStrLn "Chapa não encontrada" else putStrLn "Numero de votos atualizado"
-    
+    query_ conn q :: IO [ChapaVisualization]    
 
 adicionaVoto :: Connection -> Int -> IO ()
 adicionaVoto conn id = do

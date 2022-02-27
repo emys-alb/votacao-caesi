@@ -4,9 +4,10 @@ import Database.PostgreSQL.Simple (Connection, ConnectInfo)
 import Utils (leEstudantes, EstudanteCSV (matricula, senha))
 import qualified Data.Vector as V
 import Data.Vector (toList)
-import Models.Estudante (cadastraEstudante, getEstudante, editaSenhaEstudante, Estudante (Estudante))
+import Models.Estudante (cadastraEstudante, getEstudante, editaSenhaEstudante, Estudante (Estudante), isEstudanteVotante, criaRelacaoEstudanteVotacao)
 import Control.Exception
 import Data.Int
+import Models.Chapa
 
 cadastraEstudantes :: Connection -> String -> IO()
 cadastraEstudantes conn filePath = do
@@ -36,11 +37,21 @@ editaSenha conn matricula senhaAtual novaSenha = do
             if null estudante then putStrLn "Matricula ou senha incorretos"
             else editaSenhaEstudante conn matricula senhaAtual novaSenha
 
--- cadastraVoto :: Connection -> String -> String -> Int -> Int -> IO()
--- cadastraVoto conn matricula senha idVotacao numChapa = do
---     info <- try (cadastrarVoto conn matricula senha idVotacao numChapa) :: IO (Either SomeException [Estudante])
---     case info of
---         Left e -> putStrLn $ "Caught exception: " ++ show e
---         Right estudante -> do
---             if null estudante then putStrLn "Matricula ou senha incorretos"
---             else editaSenhaEstudante conn matricula senhaAtual novaSenha
+cadastraVoto :: Connection -> String -> String -> Int -> Int -> IO()
+cadastraVoto conn matricula senha idVotacao numeroChapa = do
+    isVotante <- isEstudanteVotante conn matricula senha
+
+    if isVotante then putStrLn "Estudante verificado"
+    else do
+        putStrLn "Estudante inexistente ou inativo"
+        return ()
+
+    resultado <- try (getChapaVotacaoAtiva conn numeroChapa idVotacao) :: IO (Either SomeException [Chapa])
+    case resultado of
+        Left e -> putStrLn $ "Caught exception: " ++ show e
+        Right chapaList -> do
+            if null chapaList then putStrLn "Chapa não encontrada ou votação encerrada"
+            else do
+                let chapa = head chapaList
+                criaRelacaoEstudanteVotacao conn matricula idVotacao
+                adicionaVoto conn (chapaId chapa)
