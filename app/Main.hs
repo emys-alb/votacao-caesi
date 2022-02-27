@@ -4,6 +4,8 @@ import LocalDB.ConnectionDB
 import Controllers.AdminController
 import Controllers.EstudanteController
 import Controllers.VotacaoController
+import Controllers.ChapaController
+import Models.Chapa
 
 mostraOpcoes :: Connection -> IO()
 mostraOpcoes conn = do
@@ -47,6 +49,7 @@ menu opcao conn
     | opcao == "5" = cadastroNovosEstudantes conn
     | opcao == "6" = editarSenhaEstudante conn
     | opcao == "8" = cadastroVotacao conn
+    | otherwise = putStrLn "Opção inválida"
 
 cadastroPrimeiroAdmin :: Connection -> IO()
 cadastroPrimeiroAdmin conn = do
@@ -102,3 +105,10 @@ cadastroVotacao conn = do
     dataVotacao <- getLine
 
     cadastraVotacao conn loginAdmin senhaAdmin dataVotacao
+
+printChapas :: [ChapaVisualization] -> IO ()
+printChapas [] = putStrLn ""
+printChapas [chapa] = putStrLn ("Chapa numero " ++ show (numeroChapa chapa)  ++ "- " ++ nomeChapa chapa)
+printChapas (chapa:t) = do
+    putStrLn ("Chapa numero " ++ show (numeroChapa chapa)  ++ "- " ++ nomeChapa chapa)
+    printChapas t
