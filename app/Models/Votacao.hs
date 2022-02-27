@@ -52,3 +52,13 @@ isVotacaoEncerrada conn idVotacao = do
 
     return (encerrada votacao)
 
+adicionaVotoNulo :: Connection -> Int -> IO ()
+adicionaVotoNulo conn idVotacao = do
+    let q = "update votacao set nulos = nulos + 1 \
+            \where id = ?"
+    result <- try (execute conn q (Only (idVotacao :: Int))) :: IO (Either SomeException Int64)
+    case result of
+        Left err  -> putStrLn $ "Caught exception: " ++ show err
+        Right val -> if val == 0 then putStrLn "Votação não encontrada" else putStrLn "Numero de votos atualizado"
+    
+    return ()
