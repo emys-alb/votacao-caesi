@@ -40,6 +40,16 @@ instance FromRow ChapaVisualization where
                       <*> field
                       <*> field
 
+
+newtype VotosVisualization = VotosVisualization
+  { 
+    votos :: Int
+  }
+  deriving (Show, Read, Eq)
+
+instance FromRow VotosVisualization where
+    fromRow = VotosVisualization <$> field
+
 getChapaVotacaoAtiva :: Connection -> Int -> Int -> IO [Chapa]
 getChapaVotacaoAtiva conn idVotacao numeroChapa = do
     let q = "select c.id, c.nome, c.numero, c.idVotacao, c.numDeVotos from chapa as c, votacao as v \
@@ -62,3 +72,12 @@ adicionaVoto conn id = do
         Right val -> if val == 0 then putStrLn "Chapa não encontrada" else putStrLn "Numero de votos atualizado"
     
     return ()
+
+getVotosChapasByVotacao :: Connection -> Int -> IO Int
+getVotosChapasByVotacao conn idVotacao = do
+  let q = "select sum(numDeVotos) as votos from chapa where idVotacao=? group by (idVotacao)"
+  result <- try (query conn q (Only (idVotacao :: Int))) :: IO (Either SomeException [VotosVisualization])
+  case result of
+        Left err -> return (-1)
+        Right votosList -> return (votos (head votosList))
+    
