@@ -58,3 +58,14 @@ cadastraVoto conn matricula senha idVotacao numeroChapa = do
                         criaRelacaoEstudanteVotacao conn matricula idVotacao
                         adicionaVoto conn (chapaId chapa)
                     else putStrLn "O estudante já cadastrou seu voto nesta votação"
+
+
+cadastraVotoNulo :: Connection -> String -> String -> Int  -> IO()
+cadastraVotoNulo conn matricula senha idVotacao = do
+    isVotante <- isEstudanteVotante conn matricula senha
+
+    if not isVotante then putStrLn "Estudante inexistente ou inativo"
+    else do
+        putStrLn "Estudante verificado"
+        adicionaVotosNulo conn idVotacao
+        criaRelacaoEstudanteVotacao conn matricula idVotacao

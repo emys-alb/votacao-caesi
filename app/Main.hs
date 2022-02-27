@@ -128,6 +128,6 @@ cadastraVotoEstudante conn = do
     putStrLn "Caso deseje votar nulo, digite n"
     numeroChapa <- getLine
 
-    if numeroChapa == "n" then adicionaVotosNulo conn (read idVotacao)
+    if numeroChapa == "n" then cadastraVotoNulo conn matricula senha (read idVotacao)
     else cadastraVoto conn matricula senha (read idVotacao) (read numeroChapa)
     
