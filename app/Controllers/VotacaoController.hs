@@ -10,3 +10,9 @@ cadastraVotacao conn loginAdmin senhaAdmin dataVotacao = do
         Left err -> putStrLn $ "Caught exception: " ++ show err
         Right val -> print "Votacao cadastrada"
     return ()
+
+adicionaVotosNulo :: Connection -> Int -> IO ()
+adicionaVotosNulo conn idVotacao = do
+    adicionaVotoNulo conn idVotacao
+    
+    return ()
