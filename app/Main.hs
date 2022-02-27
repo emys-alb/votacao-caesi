@@ -48,6 +48,7 @@ menu opcao conn
     | opcao == "5" = cadastroNovosEstudantes conn
     | opcao == "6" = editarSenhaEstudante conn
     | opcao == "7" = desativaEstudante conn
+    | opcao == "8" = cadastroVotacao conn
 
 cadastroPrimeiroAdmin :: Connection -> IO()
 cadastroPrimeiroAdmin conn = do
