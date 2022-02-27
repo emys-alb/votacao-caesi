@@ -17,6 +17,18 @@ instance FromRow Estudante where
                         <*> field
                         <*> field
 
+data Voto = Voto {
+    id:: Int,
+    idEstudante:: String,
+    idVotacao:: Int
+} deriving (Show, Read, Eq)
+
+instance FromRow Voto where
+    fromRow = Voto <$> field
+                        <*> field
+                        <*> field
+
+
 cadastraEstudante :: Connection -> String -> String -> IO()
 cadastraEstudante conn matricula senha = do
     print ("cadastrando estudante de matricula " ++ matricula)
@@ -26,7 +38,7 @@ cadastraEstudante conn matricula senha = do
     case result of
         Left err  -> putStrLn $ "Caught exception: " ++ show err
         Right val -> putStrLn "Estudante cadastrado"
-        
+
 editaSenhaEstudante :: Connection -> String -> String -> String -> IO()
 editaSenhaEstudante conn matricula senhaAtual novaSenha = do
     let q = "update estudante set senha = ? \
@@ -51,12 +63,21 @@ criaRelacaoEstudanteVotacao conn matricula idVotacao = do
     case result of
         Left err  -> putStrLn $ "Caught exception: " ++ show err
         Right val -> putStrLn "Voto cadastrado"
-    
+
     return ()
 
 isEstudanteVotante :: Connection -> String -> String -> IO Bool
-isEstudanteVotante conn matricula senha = do 
+isEstudanteVotante conn matricula senha = do
     estudanteList <- getEstudante conn matricula senha
     let estudante = head estudanteList
 
     return (votante estudante)
+
+
+verificaEstudanteNaoVotou :: Connection -> String -> Int -> IO Bool
+verificaEstudanteNaoVotou conn idEstudante idVotacao = do
+    let comando = "SELECT * FROM voto WHERE idEstudante = ? and idVotacao = ?"
+
+    listaVotos <- query conn comando (idEstudante :: String, idVotacao :: Int) :: IO [Voto]
+
+    return (null listaVotos)
