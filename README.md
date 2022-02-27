@@ -35,9 +35,16 @@ O sistema tem dois atores: os administradores do sistema e o estudante. Os admin
 
 ## ⚠️ Pré-requisitos para usar o sistema ⚠️
 Devem estar instalados na máquina:
-- [GHC](https://www.haskell.org/ghc/): the Glasgow Haskell Compiler
-- [cabal-install](https://cabal.readthedocs.io/): the Cabal installation tool for managing Haskell software
+- [GHC 8.10.7](https://www.haskell.org/ghc/): the Glasgow Haskell Compiler
+- [cabal 3.6.2.0](https://cabal.readthedocs.io/): the Cabal installation tool for managing Haskell software
 - [PostgreSQL](https://www.postgresql.org/)
+
+Dependências isoladas do C que foram baixadas: 
+```bash
+    sudo apt-get install libgmp3-dev
+    sudo apt install -y libpq-dev
+```
+
 
 ## Usando o sistema
 ```bash
