@@ -4,6 +4,7 @@ import LocalDB.ConnectionDB
 import Controllers.AdminController
 import Controllers.EstudanteController
 import Controllers.VotacaoController
+import Models.Estudante (Estudante(matricula))
 
 mostraOpcoes :: Connection -> IO()
 mostraOpcoes conn = do
@@ -46,6 +47,7 @@ menu opcao conn
     | opcao == "2" = cadastroNovoAdmin conn
     | opcao == "5" = cadastroNovosEstudantes conn
     | opcao == "6" = editarSenhaEstudante conn
+    | opcao == "7" = desativaEstudante conn
     | opcao == "8" = cadastroVotacao conn
 
 cadastroPrimeiroAdmin :: Connection -> IO()
@@ -77,9 +79,18 @@ cadastroNovosEstudantes conn = do
     senhaAdmin <- getLine
     putStrLn "Insira o caminho para o arquivo .csv que deve conter duas colunas (matricula e senha) para cada estudante"
     caminho <- getLine
-    --adicionar aqui o metodo de verificarAdmin
-    cadastraEstudantes conn caminho
+    cadastraEstudantes conn loginAdmin senhaAdmin caminho
 
+desativaEstudante :: Connection -> IO()
+desativaEstudante conn = do
+    putStrLn "Desativação de estudante"
+    putStrLn "Insira seu login como administrador"
+    loginAdmin <- getLine
+    putStrLn "Insira sua senha como administrador"
+    senhaAdmin <- getLine
+    putStrLn "Insira a matrícula do estudante a ser desativado"
+    matricula <- getLine
+    desativarEstudante conn loginAdmin senhaAdmin matricula
 editarSenhaEstudante :: Connection -> IO()
 editarSenhaEstudante conn = do
     putStrLn "Editar senha do estudante"
