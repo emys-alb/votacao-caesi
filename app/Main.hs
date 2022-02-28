@@ -113,3 +113,4 @@ cadastroVotacao conn = do
     dataVotacao <- getLine
 
     cadastraVotacao conn loginAdmin senhaAdmin dataVotacao
+
