@@ -1,10 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Models.Admin where
+
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow
-import Database.PostgreSQL.Simple.FromField
+
 import Control.Exception (catch, try, SomeException (SomeException))
-import Data.Int
+import Data.Int ( Int64 )
 
 data Admin = Admin {
     login:: String,
@@ -21,7 +22,12 @@ getAdmin conn login senha = do
     let q = "select a.login, a.senha \
             \from admin a \
             \where a.login = ? AND a.senha = ?"
-    query conn q (login, senha):: IO [Admin]
+    query conn q (login, senha) :: IO [Admin]
+
+getAdminByLogin :: Connection ->  String -> IO [Admin]
+getAdminByLogin conn login = do
+    let q = "select * from admin where login = ?"
+    query conn q (Only login) :: IO [Admin]
 
 cadastrarAdmin :: Connection -> String -> String -> String -> String-> IO ()
 cadastrarAdmin conn loginAdmin senhaAdmin novoLogin novaSenha = do
@@ -38,19 +44,20 @@ cadastrarAdmin conn loginAdmin senhaAdmin novoLogin novaSenha = do
         error "Erro no cadastro: Administrador não está cadastrado no sistema"
     return ()
 
-removerAdmin :: Connection -> String -> String -> String -> String -> IO ()
-removerAdmin conn loginAdmin senhaAdmin loginAdminRemovido senhaAdminRemovido = do
+removerAdmin :: Connection -> String -> String -> String -> IO ()
+removerAdmin conn loginAdmin senhaAdmin loginAdminRemovido = do
     let q = "delete from admin \
-            \where login = ? and senha = ?"
+            \where login = ?"
 
     resultadoAdmin <- getAdmin conn loginAdmin senhaAdmin
-    adminRemovido <- getAdmin conn loginAdminRemovido senhaAdminRemovido
-    if resultadoAdmin /= [] && adminRemovido /= []
+    resultadoAdminRemovido <- getAdminByLogin conn loginAdminRemovido
+
+    if resultadoAdmin /= [] && resultadoAdminRemovido /= []
          then do
-            remocao <- try (execute conn q (loginAdminRemovido, senhaAdminRemovido)) :: IO (Either SomeException Int64)
+            remocao <- try (execute conn q (Only loginAdminRemovido)) :: IO (Either SomeException Int64)
             case remocao of
                 Left err  -> putStrLn $ "Caught exception: " ++ show err
                 Right val -> print "Administrador removido"
     else
-        error "Erro no remoção: Administrador não está cadastrado no sistema"
+        putStrLn "Erro no remoção: Administrador não está cadastrado no sistema"
     return ()

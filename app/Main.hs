@@ -77,10 +77,8 @@ removeAdministrador conn = do
     senhaAdmin <- getLine
     putStrLn "Insira o login do administrador a ser removido"
     loginAdminRemovido <- getLine
-    putStrLn "Insira a senha do administrador a ser removido"
-    senhaAdminRemovido <- getLine
 
-    removeAdmin conn loginAdmin senhaAdmin loginAdminRemovido senhaAdminRemovido
+    removeAdmin conn loginAdmin senhaAdmin loginAdminRemovido
 
 cadastroNovosEstudantes :: Connection -> IO()
 cadastroNovosEstudantes conn = do

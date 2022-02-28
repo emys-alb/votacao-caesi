@@ -12,6 +12,6 @@ cadastraAdmin:: Connection -> String -> String -> String -> String -> IO ()
 cadastraAdmin conn loginAdmin senhaAdmin novoLogin novaSenha = do
     cadastrarAdmin conn loginAdmin senhaAdmin novoLogin novaSenha 
 
-removeAdmin:: Connection -> String -> String -> String -> String -> IO ()
-removeAdmin conn loginAdmin senhaAdmin loginAdminRemovido senhaAdminRemovido = do
-    removerAdmin conn loginAdmin senhaAdmin loginAdminRemovido senhaAdminRemovido
+removeAdmin:: Connection -> String -> String -> String -> IO ()
+removeAdmin conn loginAdmin senhaAdmin loginAdminRemovido = do
+    removerAdmin conn loginAdmin senhaAdmin loginAdminRemovido
