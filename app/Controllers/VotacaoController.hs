@@ -14,3 +14,7 @@ cadastraVotacao conn loginAdmin senhaAdmin dataVotacao = do
         Left err -> putStrLn $ "Caught exception: " ++ show err
         Right val -> print "Votacao cadastrada"
     return ()
+
+comparaVotacao :: Connection -> Int -> Int -> IO [Votacao]
+comparaVotacao conn idPrimeira idSegunda = do
+    comparacao conn idPrimeira idSegunda

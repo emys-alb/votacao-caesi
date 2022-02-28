@@ -49,6 +49,7 @@ menu opcao conn
     | opcao == "6" = editarSenhaEstudante conn
     | opcao == "7" = desativaEstudante conn
     | opcao == "8" = cadastroVotacao conn
+    | opcao == "15" = comparacaoEleicoes conn
 
 cadastroPrimeiroAdmin :: Connection -> IO()
 cadastroPrimeiroAdmin conn = do
@@ -113,4 +114,17 @@ cadastroVotacao conn = do
     dataVotacao <- getLine
 
     cadastraVotacao conn loginAdmin senhaAdmin dataVotacao
+
+comparacaoEleicoes :: Connection -> IO()
+comparacaoEleicoes conn = do
+    putStrLn "Comparar duas eleicoes"
+
+    putStrLn "Insira o ID da primeira votacao"
+    idPrimeira <- getLine
+    putStrLn "Insira o ID da segunda votacao"
+    idSegunda <- getLine
+
+    comparacao <- comparaVotacao conn (read idPrimeira) (read idSegunda)
+
+    print comparacao
 

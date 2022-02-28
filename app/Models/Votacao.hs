@@ -56,3 +56,9 @@ getVotacaoById conn idVotacao = do
     let comando = "SELECT * FROM votacao WHERE id = ?"
 
     query conn comando (Only (idVotacao :: Int)) :: IO [Votacao]
+
+comparacao :: Connection -> Int -> Int -> IO [Votacao]
+comparacao conn idPrimeira idSegunda = do
+    let comando = "SELECT * FROM votacao WHERE id = ? OR id = ?"
+
+    query conn comando (idPrimeira, idSegunda) :: IO [Votacao]
