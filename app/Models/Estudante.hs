@@ -4,6 +4,8 @@ module Models.Estudante where
 import Database.PostgreSQL.Simple
 import Control.Exception
 import Data.Int
+import Data.Bool (bool)
+import Text.Read (Lexeme(String))
 import Database.PostgreSQL.Simple.FromRow
 
 data Estudante = Estudante {
@@ -26,6 +28,16 @@ cadastraEstudante conn matricula senha = do
     case result of
         Left err  -> putStrLn $ "Caught exception: " ++ show err
         Right val -> putStrLn "Estudante cadastrado"
+        
+desativaEstudante :: Connection -> String -> IO()
+desativaEstudante conn matricula = do
+    putStrLn ("Desativando estudante de matricula " ++ matricula)
+    let q = "update estudante set votante=? \
+            \where estudante.matricula=?"
+    result <- try (execute conn q (False :: Bool, matricula :: String)) :: IO (Either SomeException Int64)
+    case result of
+        Left err  -> putStrLn $ "Caught exception: " ++ show err
+        Right val -> if val == 0 then putStrLn "Estudante inexistente" else putStrLn "Estudante desativado"
         
 editaSenhaEstudante :: Connection -> String -> String -> String -> IO()
 editaSenhaEstudante conn matricula senhaAtual novaSenha = do
