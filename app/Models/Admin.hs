@@ -34,7 +34,7 @@ cadastrarAdmin conn loginAdmin senhaAdmin novoLogin novaSenha = do
                     Left err  -> putStrLn $ "Caught exception: " ++ show err
                     Right val -> print "Administrador cadastrado"
     else 
-        error "Erro no cadastro: Administrador não está cadastrado no sistema"
+        putStrLn "Erro no cadastro: Administrador não está cadastrado no sistema \n"
     return ()
 
 editarSenhaAdmin :: Connection -> String -> String -> String-> IO ()
@@ -51,4 +51,4 @@ editarSenhaAdmin conn loginAdmin senhaAdmin novaSenhaAdmin = do
                     Left err  -> putStrLn $ "Caught exception: " ++ show err
                     Right val -> print "Senha alterada com sucesso"
    else
-       error "Erro atualizando senha: Administrador não está cadastrado no sistema"
+        putStrLn "Erro atualizando senha: Administrador não está cadastrado no sistema \n"
