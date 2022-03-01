@@ -6,6 +6,7 @@ import Controllers.EstudanteController
 import Controllers.VotacaoController
 import Controllers.ChapaController
 import Models.Chapa
+import Models.Estudante (Estudante(matricula))
 
 mostraOpcoes :: Connection -> IO()
 mostraOpcoes conn = do
@@ -46,6 +47,7 @@ menu :: String -> Connection -> IO ()
 menu opcao conn
     | opcao == "1" = cadastroPrimeiroAdmin conn
     | opcao == "2" = cadastroNovoAdmin conn
+    | opcao == "4" = editaSenhaAdmins conn
     | opcao == "5" = cadastroNovosEstudantes conn
     | opcao == "6" = editarSenhaEstudante conn
     | opcao == "7" = desativaEstudante conn
@@ -72,6 +74,18 @@ cadastroNovoAdmin conn = do
     senhaNovoAdmin <- getLine
 
     cadastraAdmin conn loginAdmin senhaAdmin loginNovoAdmin senhaNovoAdmin
+
+editaSenhaAdmins :: Connection -> IO()
+editaSenhaAdmins conn = do
+    putStrLn "Atualiza senha do administrador"
+
+    putStrLn "Insira seu login como administrador:"
+    loginAdmin <- getLine
+    putStrLn "Insira a senha atual:"
+    senhaAdmin <- getLine 
+    putStrLn "Insira a nova senha:"
+    novaSenhaAdmin <- getLine 
+    editaSenhaAdmin conn loginAdmin senhaAdmin novaSenhaAdmin
 
 cadastroNovosEstudantes :: Connection -> IO()
 cadastroNovosEstudantes conn = do

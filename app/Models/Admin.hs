@@ -2,15 +2,14 @@
 module Models.Admin where
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow
-import Database.PostgreSQL.Simple.FromField
 import Control.Exception (catch, try, SomeException (SomeException))
 import Data.Int
 
 data Admin = Admin {
-    login:: String,
-    senha:: String
+   login:: String,
+   senha:: String
 } deriving (Show, Read, Eq)
-
+ 
 instance FromRow Admin where
     fromRow = Admin <$> field
                     <*> field
@@ -35,5 +34,21 @@ cadastrarAdmin conn loginAdmin senhaAdmin novoLogin novaSenha = do
                     Left err  -> putStrLn $ "Caught exception: " ++ show err
                     Right val -> print "Administrador cadastrado"
     else 
-        error "Erro no cadastro: Administrador não está cadastrado no sistema"
+        putStrLn "Erro no cadastro: Administrador não está cadastrado no sistema \n"
     return ()
+
+editarSenhaAdmin :: Connection -> String -> String -> String-> IO ()
+editarSenhaAdmin conn loginAdmin senhaAdmin novaSenhaAdmin = do
+   let q = "update admin \
+           \set senha = ? \
+           \where login = ?"
+   
+   resultadoAdmin <- getAdmin conn loginAdmin senhaAdmin
+   if resultadoAdmin /= []
+       then do
+            edicao <- try (execute conn q (novaSenhaAdmin, loginAdmin)) ::IO (Either SomeException Int64)
+            case edicao of
+                    Left err  -> putStrLn $ "Caught exception: " ++ show err
+                    Right val -> print "Senha alterada com sucesso"
+   else
+        putStrLn "Erro atualizando senha: Administrador não está cadastrado no sistema \n"
