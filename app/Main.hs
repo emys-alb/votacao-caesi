@@ -47,6 +47,7 @@ menu :: String -> Connection -> IO ()
 menu opcao conn
     | opcao == "1" = cadastroPrimeiroAdmin conn
     | opcao == "2" = cadastroNovoAdmin conn
+    | opcao == "3" = removeAdministrador conn
     | opcao == "4" = editaSenhaAdmins conn
     | opcao == "5" = cadastroNovosEstudantes conn
     | opcao == "6" = editarSenhaEstudante conn
@@ -75,6 +76,19 @@ cadastroNovoAdmin conn = do
 
     cadastraAdmin conn loginAdmin senhaAdmin loginNovoAdmin senhaNovoAdmin
 
+removeAdministrador :: Connection -> IO ()
+removeAdministrador conn = do
+    putStrLn "Remove administrador"
+
+    putStrLn "Insira seu login como administrador"
+    loginAdmin <- getLine
+    putStrLn "Insira sua senha como administrador"
+    senhaAdmin <- getLine
+    putStrLn "Insira o login do administrador a ser removido"
+    loginAdminRemovido <- getLine
+
+    removeAdmin conn loginAdmin senhaAdmin loginAdminRemovido
+
 editaSenhaAdmins :: Connection -> IO()
 editaSenhaAdmins conn = do
     putStrLn "Atualiza senha do administrador"
@@ -97,7 +111,7 @@ cadastroNovosEstudantes conn = do
     putStrLn "Insira o caminho para o arquivo .csv que deve conter duas colunas (matricula e senha) para cada estudante"
     caminho <- getLine
     cadastraEstudantes conn loginAdmin senhaAdmin caminho
-
+    
 desativaEstudante :: Connection -> IO()
 desativaEstudante conn = do
     putStrLn "Desativação de estudante"
@@ -155,4 +169,3 @@ cadastraVotoEstudante conn = do
 
     if numeroChapa == "n" then cadastraVotoNulo conn matricula senha (read idVotacao)
     else cadastraVoto conn matricula senha (read idVotacao) (read numeroChapa)
-    
