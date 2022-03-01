@@ -135,3 +135,44 @@ cadastrarChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa =
     else error "Erro no cadastro Chapa: Administrador não está cadastrado no sistema"
 
   return ()
+
+editarNomeChapa :: Connection -> String -> String -> Int -> String -> IO ()
+editarNomeChapa conn login senha idChapa novoNome = do
+  let q = "update chapa \
+          \set nome = ? \
+          \where id = ?"
+
+  chapa <- getChapaById conn idChapa
+  admin <- getAdmin conn login senha
+  if chapa /= []
+    then do 
+      if admin /= []
+        then do
+          edicao <- try (execute conn q (novoNome, idChapa)) :: IO (Either SomeException Int64)
+          case edicao of
+            Left err  -> putStrLn $ "Caught exception: " ++ show err
+            Right val -> print "Nome da chapa alterado com sucesso"
+      else
+        putStrLn "Erro atualizando chapa: Administrador não está cadastrado no sistema"
+  else
+      putStrLn "Erro atualizando chapa: Chapa não está cadastrada no sistema"
+
+editarNumeroChapa :: Connection -> String -> String -> Int -> Int -> IO ()
+editarNumeroChapa conn login senha idChapa novoNumero = do
+  let q = "update chapa \
+      \set numero = ? \
+      \where id = ?"
+  chapa <- getChapaById conn idChapa
+  admin <- getAdmin conn login senha
+  if chapa /= []
+    then do 
+      if admin /= []
+        then do
+          edicao <- try (execute conn q (novoNumero::Int, idChapa)) :: IO (Either SomeException Int64)
+          case edicao of
+            Left err  -> putStrLn $ "Caught exception: " ++ show err
+            Right val -> putStrLn "Número da chapa alterado com sucesso"
+      else
+        putStrLn "Erro atualizando chapa: Administrador não está cadastrado no sistema"
+  else
+    putStrLn "Erro atualizando chapa: Chapa não está cadastrada no sistema"

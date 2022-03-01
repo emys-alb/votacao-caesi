@@ -36,3 +36,11 @@ cadastraEstudanteEmChapa conn loginAdmin senhaAdmin matricula idChapa diretoria 
 cadastraChapa :: Connection -> String -> String -> String -> Int -> Int -> IO ()
 cadastraChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa = do
   cadastrarChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa
+
+editaNomeChapa :: Connection -> String -> String -> Int -> String -> IO ()
+editaNomeChapa conn login senha idChapa novoNome = do
+    editarNomeChapa conn login senha idChapa novoNome
+
+editaNumeroChapa :: Connection -> String -> String -> Int -> Int -> IO ()
+editaNumeroChapa conn login senha idChapa novoNumero = do
+    editarNumeroChapa conn login senha idChapa novoNumero

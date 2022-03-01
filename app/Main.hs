@@ -56,6 +56,7 @@ menu opcao conn
     | opcao == "8" = cadastroVotacao conn
     | opcao == "9" = cadastraChapas conn
     | opcao == "10" = cadastroEstudanteChapa conn
+    | opcao == "11" = editaChapa conn
     | opcao == "13" = cadastraVotoEstudante conn
     | otherwise = putStrLn "Opção inválida"
 
@@ -164,11 +165,43 @@ cadastraChapas conn = do
   idVotacaoChapa <- getLine
   cadastraChapa conn loginAdmin senhaAdmin nomeChapa (read numeroChapa) (read idVotacaoChapa)
 
+editaChapa :: Connection -> IO ()
+editaChapa conn = do
+    putStrLn "Editar Chapa"
+    
+    chapas <- getChapasVotacaoAtiva conn
+    printChapas chapas
+
+    putStrLn "\nInsira o login do Admin:"
+    loginAdmin <- getLine
+    putStrLn "Insira sua senha:"
+    senhaAdmin <- getLine
+    putStrLn "Insira o ID da chapa"
+    idChapa <- getLine
+   
+    putStrLn "Insira: \
+            \\n 1 - para editar nome da chapa\
+            \\n 2 - para editar o numero da chapa"
+    
+    opcao <- getLine
+    if opcao == "1"
+        then do 
+            putStrLn "Insira o novo nome da chapa"
+            novoNome <- getLine 
+            editaNomeChapa conn loginAdmin senhaAdmin (read idChapa) novoNome
+    else if opcao == "2"
+        then do
+            putStrLn "Insira o novo numero da chapa"
+            novoNumero <- getLine 
+            editaNumeroChapa conn loginAdmin senhaAdmin (read idChapa) (read novoNumero)
+    else
+        putStrLn "Opção inválida"
+
 printChapas :: [ChapaVisualization] -> IO ()
 printChapas [] = putStrLn ""
-printChapas [chapa] = putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Chapa numero " ++ show (numeroChapa chapa)  ++ " - " ++ nomeChapa chapa)
+printChapas [chapa] = putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Id da Chapa " ++ show (idChapa chapa)  ++  " - Chapa numero " ++ show (numeroChapa chapa)  ++ " - " ++ nomeChapa chapa)
 printChapas (chapa:t) = do
-    putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Chapa numero " ++ show (numeroChapa chapa)  ++ " - " ++ nomeChapa chapa)
+    putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Id da Chapa " ++ show (idChapa chapa)  ++ " - Chapa numero " ++ show (numeroChapa chapa)  ++ " - " ++ nomeChapa chapa)
     printChapas t
 
 cadastraVotoEstudante :: Connection -> IO ()
