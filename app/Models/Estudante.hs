@@ -54,3 +54,8 @@ getEstudante :: Connection -> String -> String -> IO [Estudante]
 getEstudante conn matricula senha = do
     let q = "select * from estudante where matricula = ? and senha = ?"
     query conn q (matricula::String, senha::String) :: IO[Estudante]
+
+getEstudanteByMatricula :: Connection -> String -> IO [Estudante]
+getEstudanteByMatricula conn matricula = do
+    let q = "select * from estudante where matricula = ?"
+    query conn q (Only matricula) :: IO[Estudante]

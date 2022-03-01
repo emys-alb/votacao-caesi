@@ -57,8 +57,10 @@ createEstudanteChapa conn = do
                     \id SERIAL PRIMARY KEY,\
                     \idEstudante VARCHAR(50) NOT NULL,\
                     \idChapa INTEGER NOT NULL,\
-                    \diretoria VARCHAR(15) NOT NULL,\
+                    \idVotacao INTEGER NOT NULL,\
+                    \diretoria VARCHAR(50) NOT NULL,\
                     \FOREIGN KEY (idEstudante) REFERENCES estudante (matricula),\
+                    \FOREIGN KEY (idVotacao) REFERENCES votacao (id),\
                     \FOREIGN KEY (idChapa) REFERENCES chapa (id));"
     return ()
 
