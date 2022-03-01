@@ -6,9 +6,9 @@ import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow
 import Control.Exception
 import Data.Int
-
+import Models.Admin
 data Chapa = Chapa
-  { 
+  {
     chapaId :: Int,
     nome :: String,
     numero :: Int,
@@ -26,7 +26,7 @@ instance FromRow Chapa where
 
 
 data ChapaVisualization = ChapaVisualization
-  { 
+  {
     idChapa :: Int,
     nomeChapa :: String,
     numeroChapa :: Int,
@@ -39,13 +39,13 @@ instance FromRow ChapaVisualization where
                           <*> field
                           <*> field
                           <*> field
-                          
+
 data EstudanteChapa = EstudanteChapa
   {
     id :: Int,
     idEstudante :: String,
-    idChapa :: Int,
-    votacaoId :: Int,
+    chapa :: Int,
+    votacao :: Int,
     diretoria :: String
   }
   deriving (Show, Read, Eq)
@@ -59,7 +59,7 @@ instance FromRow EstudanteChapa where
 
 
 newtype VotosVisualization = VotosVisualization
-  { 
+  {
     votos :: Int
   }
   deriving (Show, Read, Eq)
@@ -77,7 +77,7 @@ getChapasVotacaoAtiva :: Connection -> IO [ChapaVisualization]
 getChapasVotacaoAtiva conn = do
     let q = "select c.id, c.nome, c.numero, v.id from chapa as c, votacao as v where c.idVotacao=v.id and v.encerrada=false"
 
-    query_ conn q :: IO [ChapaVisualization]    
+    query_ conn q :: IO [ChapaVisualization]
 
 adicionaVoto :: Connection -> Int -> IO ()
 adicionaVoto conn id = do
@@ -87,7 +87,7 @@ adicionaVoto conn id = do
     case result of
         Left err  -> putStrLn $ "Caught exception: " ++ show err
         Right val -> if val == 0 then putStrLn "Chapa não encontrada" else putStrLn "Numero de votos atualizado"
-    
+
     return ()
 
 getVotosChapasByVotacao :: Connection -> Int -> IO Int
@@ -97,7 +97,7 @@ getVotosChapasByVotacao conn idVotacao = do
   case result of
         Left err -> return (-1)
         Right votosList -> return (votos (head votosList))
-    
+
 cadastraEstudanteChapa :: Connection -> String -> Int -> Int -> String -> IO()
 cadastraEstudanteChapa conn matricula idChapa idVotacao diretoria = do
   resultado <- verificaEstudanteJaCandidatoNaVotacao conn matricula idVotacao
@@ -119,3 +119,19 @@ verificaEstudanteJaCandidatoNaVotacao :: Connection -> String -> Int -> IO [Estu
 verificaEstudanteJaCandidatoNaVotacao conn matricula idVotacao = do
   let q = "select * from estudante_chapa where idEstudante = ? and idVotacao = ?"
   query conn q (matricula, idVotacao) :: IO[EstudanteChapa]
+
+cadastrarChapa :: Connection -> String -> String -> String -> Int -> Int -> IO ()
+cadastrarChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa = do
+  let i = "INSERT INTO chapa(nome,numero,idVotacao,numDeVotos) values (?,?,?,?)"
+  admin <- getAdmin conn loginAdmin senhaAdmin
+  --idVotacao <-
+  let inicia = 0
+  if admin /= []
+    then do
+      cadastroChapa <- try (execute conn i (nomeChapa, numeroChapa, idVotacaoChapa, inicia :: Int)) :: IO (Either SomeException Int64)
+      case cadastroChapa of
+        Left err -> putStrLn $ "Caught exception: " ++ show err
+        Right val -> print "Chapa cadastrada"
+    else error "Erro no cadastro Chapa: Administrador não está cadastrado no sistema"
+
+  return ()

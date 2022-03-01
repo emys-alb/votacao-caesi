@@ -22,7 +22,7 @@ instance FromRow Estudante where
 data Voto = Voto {
     id:: Int,
     idEstudante:: String,
-    idVotacao:: Int
+    id_votacao:: Int
 } deriving (Show, Read, Eq)
 
 instance FromRow Voto where

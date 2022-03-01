@@ -54,6 +54,7 @@ menu opcao conn
     | opcao == "6" = editarSenhaEstudante conn
     | opcao == "7" = desativaEstudante conn
     | opcao == "8" = cadastroVotacao conn
+    | opcao == "9" = cadastraChapas conn
     | opcao == "10" = cadastroEstudanteChapa conn
     | opcao == "13" = cadastraVotoEstudante conn
     | otherwise = putStrLn "Opção inválida"
@@ -147,6 +148,21 @@ cadastroVotacao conn = do
     dataVotacao <- getLine
 
     cadastraVotacao conn loginAdmin senhaAdmin dataVotacao
+
+cadastraChapas :: Connection -> IO ()
+cadastraChapas conn = do
+  putStrLn "Cadastrar Chapa"
+  putStrLn "Insira o login do Admin:"
+  loginAdmin <- getLine
+  putStrLn "Insira sua senha:"
+  senhaAdmin <- getLine
+  putStrLn "Insira o nome da chapa:"
+  nomeChapa <- getLine
+  putStrLn "Insira o número da chapa"
+  numeroChapa <- getLine
+  putStrLn "Insira o ID da votação"
+  idVotacaoChapa <- getLine
+  cadastraChapa conn loginAdmin senhaAdmin nomeChapa (read numeroChapa) (read idVotacaoChapa)
 
 printChapas :: [ChapaVisualization] -> IO ()
 printChapas [] = putStrLn ""
