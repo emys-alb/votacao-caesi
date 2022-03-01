@@ -47,6 +47,8 @@ menu :: String -> Connection -> IO ()
 menu opcao conn
     | opcao == "1" = cadastroPrimeiroAdmin conn
     | opcao == "2" = cadastroNovoAdmin conn
+    | opcao == "3" = removeAdministrador conn
+    | opcao == "4" = editaSenhaAdmins conn
     | opcao == "5" = cadastroNovosEstudantes conn
     | opcao == "6" = editarSenhaEstudante conn
     | opcao == "7" = desativaEstudante conn
@@ -74,6 +76,19 @@ cadastroNovoAdmin conn = do
 
     cadastraAdmin conn loginAdmin senhaAdmin loginNovoAdmin senhaNovoAdmin
 
+removeAdministrador :: Connection -> IO ()
+removeAdministrador conn = do
+    putStrLn "Remove administrador"
+
+    putStrLn "Insira seu login como administrador"
+    loginAdmin <- getLine
+    putStrLn "Insira sua senha como administrador"
+    senhaAdmin <- getLine
+    putStrLn "Insira o login do administrador a ser removido"
+    loginAdminRemovido <- getLine
+
+    removeAdmin conn loginAdmin senhaAdmin loginAdminRemovido
+
 cadastroNovosEstudantes :: Connection -> IO()
 cadastroNovosEstudantes conn = do
     putStrLn "Cadastro de novos estudantes"
@@ -85,6 +100,18 @@ cadastroNovosEstudantes conn = do
     caminho <- getLine
     cadastraEstudantes conn loginAdmin senhaAdmin caminho
 
+editaSenhaAdmins :: Connection -> IO()
+editaSenhaAdmins conn = do
+    putStrLn "Atualiza senha do administrador"
+
+    putStrLn "Insira seu login como administrador:"
+    loginAdmin <- getLine
+    putStrLn "Insira a senha atual:"
+    senhaAdmin <- getLine 
+    putStrLn "Insira a nova senha:"
+    novaSenhaAdmin <- getLine 
+    editaSenhaAdmin conn loginAdmin senhaAdmin novaSenhaAdmin
+    
 desativaEstudante :: Connection -> IO()
 desativaEstudante conn = do
     putStrLn "Desativação de estudante"
@@ -95,6 +122,7 @@ desativaEstudante conn = do
     putStrLn "Insira a matrícula do estudante a ser desativado"
     matricula <- getLine
     desativarEstudante conn loginAdmin senhaAdmin matricula
+
 editarSenhaEstudante :: Connection -> IO()
 editarSenhaEstudante conn = do
     putStrLn "Editar senha do estudante"
