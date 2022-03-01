@@ -96,3 +96,8 @@ verificaEstudanteNaoVotou conn idEstudante idVotacao = do
     listaVotos <- query conn comando (idEstudante :: String, idVotacao :: Int) :: IO [Voto]
 
     return (null listaVotos)
+    
+getEstudanteByMatricula :: Connection -> String -> IO [Estudante]
+getEstudanteByMatricula conn matricula = do
+    let q = "select * from estudante where matricula = ?"
+    query conn q (Only matricula) :: IO[Estudante]
