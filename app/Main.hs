@@ -4,6 +4,7 @@ import LocalDB.ConnectionDB
 import Controllers.AdminController
 import Controllers.EstudanteController
 import Controllers.VotacaoController
+import Controllers.ChapaController
 import Models.Estudante (Estudante(matricula))
 
 mostraOpcoes :: Connection -> IO()
@@ -18,16 +19,17 @@ mostraOpcoes conn = do
     \\n 7 - Desativa estudante\
     \\n 8 - Cadastra votação\
     \\n 9 - Cadastra chapa\
-    \\n 10 - Edita chapa\
-    \\n 11 - Remove chapa\
-    \\n 12 - Cadastra voto de estudante\
-    \\n 13 - Lista dados da votação\
-    \\n 14 - Lista histórico de votações\
-    \\n 15 - Compara votações\
-    \\n 16 - Sair"
+    \\n 10 - Cadastra estudante em chapa\
+    \\n 11 - Edita chapa\
+    \\n 12 - Remove chapa\
+    \\n 13 - Cadastra voto de estudante\
+    \\n 14 - Lista dados da votação\
+    \\n 15 - Lista histórico de votações\
+    \\n 16 - Compara votações\
+    \\n 17 - Sair"
 
     inputOpcao <- getLine
-    if inputOpcao /= "16" then do
+    if inputOpcao /= "17" then do
         menu inputOpcao conn
         mostraOpcoes conn
     else
@@ -51,6 +53,8 @@ menu opcao conn
     | opcao == "6" = editarSenhaEstudante conn
     | opcao == "7" = desativaEstudante conn
     | opcao == "8" = cadastroVotacao conn
+    | opcao == "10" = cadastroEstudanteChapa conn
+    | otherwise = putStrLn "Opção inválida"
 
 cadastroPrimeiroAdmin :: Connection -> IO()
 cadastroPrimeiroAdmin conn = do
@@ -95,7 +99,6 @@ cadastroNovosEstudantes conn = do
     putStrLn "Insira o caminho para o arquivo .csv que deve conter duas colunas (matricula e senha) para cada estudante"
     caminho <- getLine
     cadastraEstudantes conn loginAdmin senhaAdmin caminho
-
 
 editaSenhaAdmins :: Connection -> IO()
 editaSenhaAdmins conn = do
@@ -142,4 +145,19 @@ cadastroVotacao conn = do
     dataVotacao <- getLine
 
     cadastraVotacao conn loginAdmin senhaAdmin dataVotacao
-    
+
+cadastroEstudanteChapa :: Connection -> IO ()
+cadastroEstudanteChapa conn = do
+    putStrLn "Cadastro de estudante em chapa"
+    putStrLn "Insira seu login como administrador"
+    loginAdmin <- getLine
+    putStrLn "Insira sua senha como administrador"
+    senhaAdmin <- getLine
+    putStrLn "Insira a matricula do estudante"
+    matricula <- getLine
+    putStrLn "Insira o id da chapa"
+    idChapa <- getLine
+    putStrLn "Insira a diretoria do estudante candidato"
+    diretoria <- getLine
+
+    cadastraEstudanteEmChapa conn loginAdmin senhaAdmin matricula (read idChapa) diretoria
