@@ -11,3 +11,7 @@ verificaAdmin conn login senha = do
 cadastraAdmin:: Connection -> String -> String -> String -> String -> IO ()
 cadastraAdmin conn loginAdmin senhaAdmin novoLogin novaSenha = do
     cadastrarAdmin conn loginAdmin senhaAdmin novoLogin novaSenha 
+
+editaSenhaAdmin:: Connection -> String -> String -> String -> IO ()
+editaSenhaAdmin conn loginAdmin senhaAdmin novaSenhaAdmin = do
+   editarSenhaAdmin conn loginAdmin senhaAdmin novaSenhaAdmin

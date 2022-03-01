@@ -45,6 +45,7 @@ menu :: String -> Connection -> IO ()
 menu opcao conn
     | opcao == "1" = cadastroPrimeiroAdmin conn
     | opcao == "2" = cadastroNovoAdmin conn
+    | opcao == "4" = editaSenhaAdmins conn
     | opcao == "5" = cadastroNovosEstudantes conn
     | opcao == "6" = editarSenhaEstudante conn
     | opcao == "7" = desativaEstudante conn
@@ -81,6 +82,19 @@ cadastroNovosEstudantes conn = do
     caminho <- getLine
     cadastraEstudantes conn loginAdmin senhaAdmin caminho
 
+
+editaSenhaAdmins :: Connection -> IO()
+editaSenhaAdmins conn = do
+    putStrLn "Atualiza senha do administrador"
+
+    putStrLn "Insira seu login como administrador:"
+    loginAdmin <- getLine
+    putStrLn "Insira a senha atual:"
+    senhaAdmin <- getLine 
+    putStrLn "Insira a nova senha:"
+    novaSenhaAdmin <- getLine 
+    editaSenhaAdmin conn loginAdmin senhaAdmin novaSenhaAdmin
+    
 desativaEstudante :: Connection -> IO()
 desativaEstudante conn = do
     putStrLn "Desativação de estudante"
@@ -91,6 +105,7 @@ desativaEstudante conn = do
     putStrLn "Insira a matrícula do estudante a ser desativado"
     matricula <- getLine
     desativarEstudante conn loginAdmin senhaAdmin matricula
+
 editarSenhaEstudante :: Connection -> IO()
 editarSenhaEstudante conn = do
     putStrLn "Editar senha do estudante"
@@ -113,4 +128,4 @@ cadastroVotacao conn = do
     dataVotacao <- getLine
 
     cadastraVotacao conn loginAdmin senhaAdmin dataVotacao
-
+    
