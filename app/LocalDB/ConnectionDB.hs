@@ -1,6 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module LocalDB.ConnectionDB where
 import Database.PostgreSQL.Simple
+import Control.Exception
+import Data.Int
 
 localDB:: ConnectInfo
 localDB = defaultConnectInfo {
@@ -74,7 +76,14 @@ createVoto conn = do
                     \FOREIGN KEY (idVotacao) REFERENCES votacao (id));"
     return ()
 
-
+adicionaConstraintChapa :: Connection -> IO ()
+adicionaConstraintChapa conn = do
+    result <- try (execute_ conn "ALTER TABLE chapa ADD CONSTRAINT chapa_numero_idvotacao_key \
+                                \UNIQUE (numero, idVotacao);") :: IO (Either SqlError Int64)
+    case result of
+        Left err  -> putStrLn $ "NOTICE: " ++ show (sqlErrorMsg err)
+        Right val -> putStrLn "Constraint added"
+    return ()
 
 iniciandoDatabase :: IO Connection
 iniciandoDatabase = do
@@ -85,4 +94,5 @@ iniciandoDatabase = do
     createChapa c
     createEstudanteChapa c
     createVoto c
+    adicionaConstraintChapa c
     return c

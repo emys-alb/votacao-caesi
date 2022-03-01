@@ -5,6 +5,7 @@ import Controllers.AdminController
 import Controllers.EstudanteController
 import Controllers.VotacaoController
 import Controllers.ChapaController
+import Models.Chapa
 import Models.Estudante (Estudante(matricula))
 
 mostraOpcoes :: Connection -> IO()
@@ -54,6 +55,7 @@ menu opcao conn
     | opcao == "7" = desativaEstudante conn
     | opcao == "8" = cadastroVotacao conn
     | opcao == "10" = cadastroEstudanteChapa conn
+    | opcao == "13" = cadastraVotoEstudante conn
     | otherwise = putStrLn "Opção inválida"
 
 cadastroPrimeiroAdmin :: Connection -> IO()
@@ -89,17 +91,6 @@ removeAdministrador conn = do
 
     removeAdmin conn loginAdmin senhaAdmin loginAdminRemovido
 
-cadastroNovosEstudantes :: Connection -> IO()
-cadastroNovosEstudantes conn = do
-    putStrLn "Cadastro de novos estudantes"
-    putStrLn "Insira seu login como administrador"
-    loginAdmin <- getLine
-    putStrLn "Insira sua senha como administrador"
-    senhaAdmin <- getLine
-    putStrLn "Insira o caminho para o arquivo .csv que deve conter duas colunas (matricula e senha) para cada estudante"
-    caminho <- getLine
-    cadastraEstudantes conn loginAdmin senhaAdmin caminho
-
 editaSenhaAdmins :: Connection -> IO()
 editaSenhaAdmins conn = do
     putStrLn "Atualiza senha do administrador"
@@ -111,6 +102,17 @@ editaSenhaAdmins conn = do
     putStrLn "Insira a nova senha:"
     novaSenhaAdmin <- getLine 
     editaSenhaAdmin conn loginAdmin senhaAdmin novaSenhaAdmin
+
+cadastroNovosEstudantes :: Connection -> IO()
+cadastroNovosEstudantes conn = do
+    putStrLn "Cadastro de novos estudantes"
+    putStrLn "Insira seu login como administrador"
+    loginAdmin <- getLine
+    putStrLn "Insira sua senha como administrador"
+    senhaAdmin <- getLine
+    putStrLn "Insira o caminho para o arquivo .csv que deve conter duas colunas (matricula e senha) para cada estudante"
+    caminho <- getLine
+    cadastraEstudantes conn loginAdmin senhaAdmin caminho
     
 desativaEstudante :: Connection -> IO()
 desativaEstudante conn = do
@@ -146,6 +148,30 @@ cadastroVotacao conn = do
 
     cadastraVotacao conn loginAdmin senhaAdmin dataVotacao
 
+printChapas :: [ChapaVisualization] -> IO ()
+printChapas [] = putStrLn ""
+printChapas [chapa] = putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Chapa numero " ++ show (numeroChapa chapa)  ++ " - " ++ nomeChapa chapa)
+printChapas (chapa:t) = do
+    putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Chapa numero " ++ show (numeroChapa chapa)  ++ " - " ++ nomeChapa chapa)
+    printChapas t
+
+cadastraVotoEstudante :: Connection -> IO ()
+cadastraVotoEstudante conn = do
+    putStrLn "Insira sua matricula"
+    matricula <- getLine
+    putStrLn "Insira sua senha"
+    senha <- getLine
+    chapas <- getChapasVotacaoAtiva conn
+    printChapas chapas
+    putStrLn "Insira id da votacao"
+    idVotacao <- getLine
+    putStrLn "Insira o numero da chapa escolhida"
+    putStrLn "Caso deseje votar nulo, digite n"
+    numeroChapa <- getLine
+
+    if numeroChapa == "n" then cadastraVotoNulo conn matricula senha (read idVotacao)
+    else cadastraVoto conn matricula senha (read idVotacao) (read numeroChapa)
+
 cadastroEstudanteChapa :: Connection -> IO ()
 cadastroEstudanteChapa conn = do
     putStrLn "Cadastro de estudante em chapa"
@@ -161,3 +187,4 @@ cadastroEstudanteChapa conn = do
     diretoria <- getLine
 
     cadastraEstudanteEmChapa conn loginAdmin senhaAdmin matricula (read idChapa) diretoria
+

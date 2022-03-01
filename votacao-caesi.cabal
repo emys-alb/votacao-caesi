@@ -41,10 +41,12 @@ executable votacao-caesi
     default-language: Haskell2010
     other-modules:    LocalDB.ConnectionDB
                       Models.Admin
-                      Models.Estudante
-                      Models.Chapa  
+                      Models.Estudante 
+                      Models.Votacao
+                      Models.Chapa
                       Controllers.AdminController
                       Controllers.EstudanteController
+                      Controllers.VotacaoController
                       Controllers.ChapaController
                       Utils
 

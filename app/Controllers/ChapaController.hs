@@ -1,10 +1,17 @@
 module Controllers.ChapaController where
 
 import Database.PostgreSQL.Simple
-import Control.Exception
 import Models.Chapa
+import Control.Exception
 import Models.Estudante
 import Models.Admin
+
+adicionaVotoChapa :: Connection -> Int -> IO ()
+adicionaVotoChapa conn idChapa = do
+  adicionaVoto conn idChapa
+
+getChapas :: Connection -> IO [ChapaVisualization]
+getChapas = getChapasVotacaoAtiva
 
 cadastraEstudanteEmChapa :: Connection -> String -> String -> String -> Int -> String -> IO()
 cadastraEstudanteEmChapa conn loginAdmin senhaAdmin matricula idChapa diretoria = do
