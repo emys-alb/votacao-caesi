@@ -121,7 +121,23 @@ getChapaById conn idChapa = do
 verificaEstudanteJaCandidatoNaVotacao :: Connection -> String -> Int -> IO [EstudanteChapa]
 verificaEstudanteJaCandidatoNaVotacao conn matricula idVotacao = do
   let q = "select * from estudante_chapa where idEstudante = ? and idVotacao = ?"
-  query conn q (matricula, idVotacao) :: IO [EstudanteChapa]
+  query conn q (matricula, idVotacao) :: IO[EstudanteChapa]
+
+verificaEstudanteEstaNaChapa :: Connection -> String -> Int -> IO [EstudanteChapa]
+verificaEstudanteEstaNaChapa conn matricula idChapa = do
+  let q = "select * from estudante_chapa where idEstudante = ? and idChapa = ?"
+  query conn q (matricula, idChapa) :: IO[EstudanteChapa]
+
+removeEstudanteChapa :: Connection -> String -> Int -> IO()
+removeEstudanteChapa conn matricula idChapa = do
+  resultado <- verificaEstudanteEstaNaChapa conn matricula idChapa
+  if not (null resultado) then do
+    let q = "delete from estudante_chapa where idEstudante = ? and idChapa = ?"
+    result <- try (execute conn q (matricula, idChapa)) :: IO (Either SomeException Int64)
+    case result of
+        Left err  -> putStrLn $ "Caught exception: " ++ show err
+        Right val -> putStrLn "Estudante removido da chapa"
+  else putStrLn "Estudante não está cadastrado nessa chapa"
 
 cadastrarChapa :: Connection -> String -> String -> String -> Int -> Int -> IO ()
 cadastrarChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa = do
