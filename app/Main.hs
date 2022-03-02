@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 module Main where
 
 import Controllers.AdminController
@@ -109,6 +110,8 @@ cadastraChapas conn = do
   idVotacaoChapa <- getLine
   cadastraChapa conn loginAdmin senhaAdmin nomeChapa (read numeroChapa) (read idVotacaoChapa)
 =======
+=======
+>>>>>>> e74cb813063d907189a98ce4ef04a1644fa17113
 module Main where
 import Database.PostgreSQL.Simple
 import LocalDB.ConnectionDB
@@ -165,7 +168,9 @@ menu opcao conn
     | opcao == "6" = editarSenhaEstudante conn
     | opcao == "7" = desativaEstudante conn
     | opcao == "8" = cadastroVotacao conn
+    | opcao == "9" = cadastraChapas conn
     | opcao == "10" = cadastroEstudanteChapa conn
+    | opcao == "11" = editaChapa conn
     | opcao == "13" = cadastraVotoEstudante conn
     | otherwise = putStrLn "Opção inválida"
 
@@ -260,13 +265,63 @@ cadastroVotacao conn = do
     cadastraVotacao conn loginAdmin senhaAdmin dataVotacao
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> a4d71d430b9bc33ae66a2ce1da983eb7946c9c02
 =======
+=======
+cadastraChapas :: Connection -> IO ()
+cadastraChapas conn = do
+  putStrLn "Cadastrar Chapa"
+  putStrLn "Insira o login do Admin:"
+  loginAdmin <- getLine
+  putStrLn "Insira sua senha:"
+  senhaAdmin <- getLine
+  putStrLn "Insira o nome da chapa:"
+  nomeChapa <- getLine
+  putStrLn "Insira o número da chapa"
+  numeroChapa <- getLine
+  putStrLn "Insira o ID da votação"
+  idVotacaoChapa <- getLine
+  cadastraChapa conn loginAdmin senhaAdmin nomeChapa (read numeroChapa) (read idVotacaoChapa)
+
+editaChapa :: Connection -> IO ()
+editaChapa conn = do
+    putStrLn "Editar Chapa"
+    
+    chapas <- getChapasVotacaoAtiva conn
+    printChapas chapas
+
+    putStrLn "\nInsira o login do Admin:"
+    loginAdmin <- getLine
+    putStrLn "Insira sua senha:"
+    senhaAdmin <- getLine
+    putStrLn "Insira o ID da chapa"
+    idChapa <- getLine
+   
+    putStrLn "Insira: \
+            \\n 1 - para editar nome da chapa\
+            \\n 2 - para editar o numero da chapa"
+    
+    opcao <- getLine
+    if opcao == "1"
+        then do 
+            putStrLn "Insira o novo nome da chapa"
+            novoNome <- getLine 
+            editaNomeChapa conn loginAdmin senhaAdmin (read idChapa) novoNome
+    else if opcao == "2"
+        then do
+            putStrLn "Insira o novo numero da chapa"
+            novoNumero <- getLine 
+            editaNumeroChapa conn loginAdmin senhaAdmin (read idChapa) (read novoNumero)
+    else
+        putStrLn "Opção inválida"
+
+>>>>>>> e74cb813063d907189a98ce4ef04a1644fa17113
 printChapas :: [ChapaVisualization] -> IO ()
 printChapas [] = putStrLn ""
-printChapas [chapa] = putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Chapa numero " ++ show (numeroChapa chapa)  ++ " - " ++ nomeChapa chapa)
+printChapas [chapa] = putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Id da Chapa " ++ show (idChapa chapa)  ++  " - Chapa numero " ++ show (numeroChapa chapa)  ++ " - " ++ nomeChapa chapa)
 printChapas (chapa:t) = do
-    putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Chapa numero " ++ show (numeroChapa chapa)  ++ " - " ++ nomeChapa chapa)
+    putStrLn ("Votacao id " ++ show (votacaoId chapa) ++ " - Id da Chapa " ++ show (idChapa chapa)  ++ " - Chapa numero " ++ show (numeroChapa chapa)  ++ " - " ++ nomeChapa chapa)
     printChapas t
 
 cadastraVotoEstudante :: Connection -> IO ()
@@ -302,4 +357,7 @@ cadastroEstudanteChapa conn = do
 
     cadastraEstudanteEmChapa conn loginAdmin senhaAdmin matricula (read idChapa) diretoria
 
+<<<<<<< HEAD
 >>>>>>> f3f48a1db1132c5e41caebf9f462a7bab658cd47
+=======
+>>>>>>> e74cb813063d907189a98ce4ef04a1644fa17113

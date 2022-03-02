@@ -1,17 +1,7 @@
 module Controllers.ChapaController where
 
 import Database.PostgreSQL.Simple
-<<<<<<< HEAD
-import Database.PostgreSQL.Simple (Connection, execute)
-import Models.Admin
-import Models.Chapa
 
---import Models.Votacao
-
-cadastraChapa :: Connection -> String -> String -> String -> Int -> Int -> IO ()
-cadastraChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa = do
-  cadastrarChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa
-=======
 import Models.Chapa
 import Control.Exception
 import Models.Estudante
@@ -43,4 +33,19 @@ cadastraEstudanteEmChapa conn loginAdmin senhaAdmin matricula idChapa diretoria 
                                 else cadastraEstudanteChapa conn matricula idChapa (idVotacao (head chapa)) diretoria
     else
         putStrLn "Administrador não está cadastrado no sistema"
+<<<<<<< HEAD
 >>>>>>> f3f48a1db1132c5e41caebf9f462a7bab658cd47
+=======
+
+cadastraChapa :: Connection -> String -> String -> String -> Int -> Int -> IO ()
+cadastraChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa = do
+  cadastrarChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa
+
+editaNomeChapa :: Connection -> String -> String -> Int -> String -> IO ()
+editaNomeChapa conn login senha idChapa novoNome = do
+    editarNomeChapa conn login senha idChapa novoNome
+
+editaNumeroChapa :: Connection -> String -> String -> Int -> Int -> IO ()
+editaNumeroChapa conn login senha idChapa novoNumero = do
+    editarNumeroChapa conn login senha idChapa novoNumero
+>>>>>>> e74cb813063d907189a98ce4ef04a1644fa17113
