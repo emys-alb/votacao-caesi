@@ -8,6 +8,7 @@ import Control.Exception (SomeException (SomeException), catch, try)
 import Data.Int
 import Database.PostgreSQL.Simple
 import Models.Admin
+import Models.Votacao
 
 data Chapa = Chapa
   { nome :: String,
@@ -216,3 +217,20 @@ editarNumeroChapa conn login senha idChapa novoNumero = do
   else
     putStrLn "Erro atualizando chapa: Chapa não está cadastrada no sistema"
 >>>>>>> e74cb813063d907189a98ce4ef04a1644fa17113
+
+removerChapa :: Connection -> String -> String -> Int -> IO ()
+removerChapa conn loginAdmin senhaAdmin idChapaRemocao = do
+  let remove = "DROP TABLE idChapaRemocao = ?"
+
+  admin <- getAdmin conn loginAdmin senhaAdmin
+  idChapa <- getVotacaoById conn idChapaRemocao
+
+  if admin /= [] && idChapa /= []
+    then do
+            remocao <- try (execute conn remove (Only idChapaRemocao)) :: IO (Either SomeException Int64)
+            case remocao of
+                Left err  -> putStrLn $ "Caught exception: " ++ show err
+                Right val -> print "Chapa removida"
+    else
+        putStrLn "Erro na remoção: Administrador não está cadastrado no sistema ou ID da chapa esta incorreto"
+    return ()
