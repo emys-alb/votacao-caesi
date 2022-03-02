@@ -44,8 +44,8 @@ instance FromRow ChapaVisualization where
 data EstudanteChapa = EstudanteChapa
   { id :: Int,
     idEstudante :: String,
-    idChapa :: Int,
-    votacaoId :: Int,
+    chapa :: Int,
+    votacao :: Int,
     diretoria :: String
   }
   deriving (Show, Read, Eq)
@@ -135,7 +135,7 @@ cadastrarChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa =
       case cadastroChapa of
         Left err -> putStrLn $ "Caught exception: " ++ show err
         Right val -> print "Chapa cadastrada"
-    else error "Erro no cadastro Chapa: Administrador não está cadastrado no sistema"
+    else putStrLn "Erro no cadastro Chapa: Administrador ou votação não estão cadastrados no sistema"
 
   return ()
 
