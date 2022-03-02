@@ -56,3 +56,21 @@ getVotacaoById conn idVotacao = do
     let comando = "SELECT * FROM votacao WHERE id = ?"
 
     query conn comando (Only (idVotacao :: Int)) :: IO [Votacao]
+
+isVotacaoEncerrada :: Connection -> Int -> IO Bool
+isVotacaoEncerrada conn idVotacao = do 
+    votacaoList <- getVotacaoById conn idVotacao
+    let votacao = head votacaoList
+
+    return (encerrada votacao)
+
+adicionaVotoNulo :: Connection -> Int -> IO ()
+adicionaVotoNulo conn idVotacao = do
+    let q = "update votacao set nulos = nulos + 1 \
+            \where id = ?"
+    result <- try (execute conn q (Only (idVotacao :: Int))) :: IO (Either SomeException Int64)
+    case result of
+        Left err  -> putStrLn $ "Caught exception: " ++ show err
+        Right val -> if val == 0 then putStrLn "Votação não encontrada" else putStrLn "Numero de votos atualizado"
+    
+    return ()

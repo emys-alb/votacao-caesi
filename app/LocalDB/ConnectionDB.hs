@@ -3,6 +3,8 @@
 module LocalDB.ConnectionDB where
 
 import Database.PostgreSQL.Simple
+import Control.Exception
+import Data.Int
 
 localDB :: ConnectInfo
 localDB =
@@ -63,6 +65,7 @@ createChapa conn = do
 
 createEstudanteChapa :: Connection -> IO ()
 createEstudanteChapa conn = do
+<<<<<<< HEAD
   execute_
     conn
     "CREATE TABLE IF NOT EXISTS estudante_chapa (\
@@ -73,9 +76,22 @@ createEstudanteChapa conn = do
     \FOREIGN KEY (idEstudante) REFERENCES estudante (matricula),\
     \FOREIGN KEY (idChapa) REFERENCES chapa (id));"
   return ()
+=======
+    execute_ conn "CREATE TABLE IF NOT EXISTS estudante_chapa (\
+                    \id SERIAL PRIMARY KEY,\
+                    \idEstudante VARCHAR(50) NOT NULL,\
+                    \idChapa INTEGER NOT NULL,\
+                    \idVotacao INTEGER NOT NULL,\
+                    \diretoria VARCHAR(50) NOT NULL,\
+                    \FOREIGN KEY (idEstudante) REFERENCES estudante (matricula),\
+                    \FOREIGN KEY (idVotacao) REFERENCES votacao (id),\
+                    \FOREIGN KEY (idChapa) REFERENCES chapa (id));"
+    return ()
+>>>>>>> f3f48a1db1132c5e41caebf9f462a7bab658cd47
 
 createVoto :: Connection -> IO ()
 createVoto conn = do
+<<<<<<< HEAD
   execute_
     conn
     "CREATE TABLE IF NOT EXISTS voto (\
@@ -96,3 +112,33 @@ iniciandoDatabase = do
   createEstudanteChapa c
   createVoto c
   return c
+=======
+    execute_ conn "CREATE TABLE IF NOT EXISTS voto (\
+                    \id SERIAL PRIMARY KEY,\
+                    \idEstudante VARCHAR(50) NOT NULL,\
+                    \idVotacao INTEGER NOT NULL,\
+                    \FOREIGN KEY (idEstudante) REFERENCES estudante (matricula),\
+                    \FOREIGN KEY (idVotacao) REFERENCES votacao (id));"
+    return ()
+
+adicionaConstraintChapa :: Connection -> IO ()
+adicionaConstraintChapa conn = do
+    result <- try (execute_ conn "ALTER TABLE chapa ADD CONSTRAINT chapa_numero_idvotacao_key \
+                                \UNIQUE (numero, idVotacao);") :: IO (Either SqlError Int64)
+    case result of
+        Left err  -> putStrLn $ "NOTICE: " ++ show (sqlErrorMsg err)
+        Right val -> putStrLn "Constraint added"
+    return ()
+
+iniciandoDatabase :: IO Connection
+iniciandoDatabase = do
+    c <- connectionMyDB
+    createAdmin c
+    createEstudante c
+    createVotacao c
+    createChapa c
+    createEstudanteChapa c
+    createVoto c
+    adicionaConstraintChapa c
+    return c
+>>>>>>> f3f48a1db1132c5e41caebf9f462a7bab658cd47
