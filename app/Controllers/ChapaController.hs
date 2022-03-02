@@ -32,3 +32,18 @@ cadastraEstudanteEmChapa conn loginAdmin senhaAdmin matricula idChapa diretoria 
                                 else cadastraEstudanteChapa conn matricula idChapa (idVotacao (head chapa)) diretoria
     else
         putStrLn "Administrador não está cadastrado no sistema"
+<<<<<<< HEAD
+=======
+
+cadastraChapa :: Connection -> String -> String -> String -> Int -> Int -> IO ()
+cadastraChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa = do
+  cadastrarChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa
+
+editaNomeChapa :: Connection -> String -> String -> Int -> String -> IO ()
+editaNomeChapa conn login senha idChapa novoNome = do
+    editarNomeChapa conn login senha idChapa novoNome
+
+editaNumeroChapa :: Connection -> String -> String -> Int -> Int -> IO ()
+editaNumeroChapa conn login senha idChapa novoNumero = do
+    editarNumeroChapa conn login senha idChapa novoNumero
+>>>>>>> e74cb813063d907189a98ce4ef04a1644fa17113
