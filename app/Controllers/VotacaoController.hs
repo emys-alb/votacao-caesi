@@ -18,3 +18,9 @@ cadastraVotacao conn loginAdmin senhaAdmin dataVotacao = do
 comparaVotacao :: Connection -> Int -> Int -> IO [Votacao]
 comparaVotacao conn idPrimeira idSegunda = do
     comparacao conn idPrimeira idSegunda
+
+adicionaVotosNulo :: Connection -> Int -> IO ()
+adicionaVotosNulo conn idVotacao = do
+    adicionaVotoNulo conn idVotacao
+    
+    return ()
