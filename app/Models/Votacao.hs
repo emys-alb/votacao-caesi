@@ -7,6 +7,9 @@ import Database.PostgreSQL.Simple.FromField
 import Models.Admin
 import Control.Exception
 import Data.Int
+import Models.Estudante (getQtdEstudantesVotantes)
+-- import Controllers.ChapaController (getVotosEmChapas)
+
 
 data Votacao = Votacao {
     id :: Int,
@@ -38,14 +41,14 @@ novaVotacao conn loginAdmin senhaAdmin dataVotacao encerrada abstencoes nulos = 
                     Left err  -> putStrLn $ "Caught exception: " ++ show err
                     Right val -> print "Votacao cadastrada"
     else
-        error "Erro no cadastro de nova votacao: Administrador não está cadastrado no sistema"
+        putStrLn "Erro no cadastro de nova votacao: Administrador não está cadastrado no sistema"
     return ()
 
-encerra :: Connection -> Int -> IO()
-encerra conn idVotacao = do
-    let comando = "UPDATE votacao SET encerrada = 't' WHERE id = ?;"
+encerra :: Connection -> Int -> Int -> IO()
+encerra conn idVotacao abst = do
+    let comando = "UPDATE votacao SET encerrada = 't', abstencoes = ? WHERE id = ?;"
 
-    result <- try (execute conn comando (Only (idVotacao :: Int))) :: IO (Either SomeException Int64)
+    result <- try (execute conn comando (abst, idVotacao)) :: IO (Either SomeException Int64)
     case result of
         Left err  -> putStrLn $ "Caught exception: " ++ show err
         Right val -> print "Votacao encerrada"
@@ -57,8 +60,21 @@ getVotacaoById conn idVotacao = do
 
     query conn comando (Only (idVotacao :: Int)) :: IO [Votacao]
 
+comparacao :: Connection -> Int -> Int -> IO [Votacao]
+comparacao conn idPrimeira idSegunda = do
+    let comando = "SELECT * FROM votacao WHERE id = ? OR id = ?"
+
+    query conn comando (idPrimeira, idSegunda) :: IO [Votacao]
+
+getQtdVotosNulos :: Connection -> Int -> IO Int
+getQtdVotosNulos conn idVotacao = do
+    votacaoList <- getVotacaoById conn idVotacao
+    let votacao = head votacaoList
+
+    return (nulos votacao)
+
 isVotacaoEncerrada :: Connection -> Int -> IO Bool
-isVotacaoEncerrada conn idVotacao = do 
+isVotacaoEncerrada conn idVotacao = do
     votacaoList <- getVotacaoById conn idVotacao
     let votacao = head votacaoList
 
