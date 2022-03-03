@@ -61,6 +61,7 @@ menu opcao conn
     | opcao == "10" = cadastroEstudanteChapa conn
     | opcao == "11" = removerEstudanteDaChapa conn
     | opcao == "12" = editaChapa conn
+    | opcao == "13" = removeChapas conn
     | opcao == "14" = cadastraVotoEstudante conn
     | opcao == "15" = encerrarVotacao conn
     | opcao == "16" = listaDadosVotacao conn
@@ -360,3 +361,14 @@ removerEstudanteDaChapa conn = do
     idChapa <- getLine
 
     removeEstudanteDaChapa conn loginAdmin senhaAdmin matricula (read idChapa)
+
+removeChapas :: Connection -> IO ()
+removeChapas conn = do
+    putStrLn "\nRemove chapa\n"
+    putStrLn "Insira seu login como administrador"
+    loginAdmin <- getLine
+    putStrLn "Insira sua senha como administrador"
+    senhaAdmin <- getLine
+    putStrLn "Insira id da chapa a ser removida"
+    idChapaRemocao <- getLine
+    removeChapa conn loginAdmin senhaAdmin (read idChapaRemocao)

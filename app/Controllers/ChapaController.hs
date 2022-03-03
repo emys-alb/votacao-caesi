@@ -2,16 +2,18 @@ module Controllers.ChapaController where
 
 import Control.Exception
 import Database.PostgreSQL.Simple
-import Models.Admin
 import Models.Chapa
+import Models.Admin
 import Models.Estudante
+import Models.Votacao
+import Control.Exception
 
 adicionaVotoChapa :: Connection -> Int -> IO ()
 adicionaVotoChapa conn idChapa = do
   adicionaVoto conn idChapa
 
 getChapas :: Connection -> IO [ChapaVisualization]
-getChapas = getChapasVotacaoAtiva
+getChapas conn = getChapasVotacaoAtiva conn
 
 cadastraEstudanteEmChapa :: Connection -> String -> String -> String -> Int -> String -> IO ()
 cadastraEstudanteEmChapa conn loginAdmin senhaAdmin matricula idChapa diretoria = do
@@ -54,7 +56,7 @@ removeEstudanteDaChapa conn loginAdmin senhaAdmin matricula idChapa = do
                                 else removeEstudanteChapa conn matricula idChapa
     else
         putStrLn "Administrador não está cadastrado no sistema"
-                
+
 cadastraChapa :: Connection -> String -> String -> String -> Int -> Int -> IO ()
 cadastraChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa = do
   cadastrarChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa
@@ -65,7 +67,11 @@ editaNomeChapa conn login senha idChapa novoNome = do
 
 editaNumeroChapa :: Connection -> String -> String -> Int -> Int -> IO ()
 editaNumeroChapa conn login senha idChapa novoNumero = do
-  editarNumeroChapa conn login senha idChapa novoNumero
+    editarNumeroChapa conn login senha idChapa novoNumero
+
+removeChapa :: Connection -> String -> String -> Int -> IO ()
+removeChapa conn loginAdmin senhaAdmin idChapaRemocao = do
+  removerChapa conn loginAdmin senhaAdmin idChapaRemocao
 
 getVotosEmChapas :: Connection -> Int -> IO Int
 getVotosEmChapas conn idVotacao = do
