@@ -228,3 +228,21 @@ removerChapa conn loginAdmin senhaAdmin idChapaRemocao = do
   else
     putStrLn "Erro na remoção: Administrador não está cadastrado no sistema ou ID da chapa esta incorreto"
   return ()
+
+verificaEmpateChapas :: [Chapa] -> Bool
+verificaEmpateChapas [] = True
+verificaEmpateChapas [chapa] = False
+verificaEmpateChapas (chapa1:chapa2:t) = numDeVotos chapa1 == numDeVotos chapa2
+
+votacaoEmpatou :: Connection -> Int -> IO Bool
+votacaoEmpatou conn idVotacao = do
+  let comando = "SELECT * FROM chapa WHERE idVotacao = ? ORDER BY numDeVotos DESC"
+
+  chapasVotacao <- query conn comando (Only idVotacao) :: IO [Chapa]
+  return (verificaEmpateChapas chapasVotacao)
+
+getChapasByVotacao :: Connection -> Int -> IO [Chapa]
+getChapasByVotacao conn idVotacao = do
+  let comando = "SELECT * FROM chapa WHERE idVotacao = ? ORDER BY numDeVotos DESC"
+
+  query conn comando (Only idVotacao) :: IO [Chapa]

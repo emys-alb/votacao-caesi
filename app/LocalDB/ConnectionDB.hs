@@ -47,7 +47,8 @@ createVotacao conn = do
     \data VARCHAR(15) NOT NULL,\
     \encerrada BOOLEAN NOT NULL,\
     \abstencoes INTEGER,\
-    \nulos INTEGER);"
+    \nulos INTEGER,\
+    \empate BOOLEAN);"
   return ()
 
 createChapa :: Connection -> IO ()
