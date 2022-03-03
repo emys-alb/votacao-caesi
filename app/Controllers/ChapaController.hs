@@ -45,3 +45,11 @@ editaNomeChapa conn login senha idChapa novoNome = do
 editaNumeroChapa :: Connection -> String -> String -> Int -> Int -> IO ()
 editaNumeroChapa conn login senha idChapa novoNumero = do
   editarNumeroChapa conn login senha idChapa novoNumero
+
+getChapaVencedora :: Connection -> Int -> IO String
+getChapaVencedora conn idVotacao = do
+  chapaVencedora conn idVotacao
+
+getQtdVotosVencedora :: Connection -> Int -> IO Int
+getQtdVotosVencedora conn idVotacao = do
+  qtdVotosVencedora conn idVotacao

@@ -63,8 +63,15 @@ comparacao conn idPrimeira idSegunda = do
 
     query conn comando (idPrimeira, idSegunda) :: IO [Votacao]
 
+getQtdVotosNulos :: Connection -> Int -> IO Int
+getQtdVotosNulos conn idVotacao = do
+    votacaoList <- getVotacaoById conn idVotacao
+    let votacao = head votacaoList
+
+    return (nulos votacao)
+
 isVotacaoEncerrada :: Connection -> Int -> IO Bool
-isVotacaoEncerrada conn idVotacao = do 
+isVotacaoEncerrada conn idVotacao = do
     votacaoList <- getVotacaoById conn idVotacao
     let votacao = head votacaoList
 

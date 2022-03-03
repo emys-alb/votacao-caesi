@@ -177,3 +177,21 @@ editarNumeroChapa conn login senha idChapa novoNumero = do
             Right val -> putStrLn "Número da chapa alterado com sucesso"
         else putStrLn "Erro atualizando chapa: Administrador não está cadastrado no sistema"
     else putStrLn "Erro atualizando chapa: Chapa não está cadastrada no sistema"
+
+chapaVencedora :: Connection -> Int -> IO String
+chapaVencedora conn idVotacao = do
+  let comando = "SELECT * FROM chapa WHERE idVotacao = ? ORDER BY numDeVotos"
+
+  chapasVotacao <- query conn comando (Only (idVotacao :: Int)) :: IO [Chapa]
+  
+  let vencedora = head chapasVotacao
+  return (nome vencedora)
+
+qtdVotosVencedora :: Connection -> Int -> IO Int
+qtdVotosVencedora conn idVotacao = do
+  let comando = "SELECT * FROM chapa WHERE idVotacao = ? ORDER BY numDeVotos"
+
+  chapasVotacao <- query conn comando (Only (idVotacao :: Int)) :: IO [Chapa]
+  
+  let vencedora = head chapasVotacao
+  return (numDeVotos vencedora)

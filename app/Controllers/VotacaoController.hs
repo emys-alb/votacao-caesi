@@ -2,6 +2,7 @@ module Controllers.VotacaoController where
 import Database.PostgreSQL.Simple
 import Control.Exception
 import Models.Votacao
+import Models.Chapa (getVotosChapasByVotacao)
 
 encerraVotacao :: Connection -> Int -> IO()
 encerraVotacao conn idVotacao = do
@@ -24,3 +25,9 @@ adicionaVotosNulo conn idVotacao = do
     adicionaVotoNulo conn idVotacao
     
     return ()
+
+getTotalVotosVotacao :: Connection -> Int -> IO Int
+getTotalVotosVotacao conn id = do
+    votosValidos <- getVotosChapasByVotacao conn id
+    votosNulos <- getQtdVotosNulos conn id
+    return (votosValidos + votosNulos)

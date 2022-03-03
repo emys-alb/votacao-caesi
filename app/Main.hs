@@ -58,7 +58,7 @@ menu opcao conn
     | opcao == "10" = cadastroEstudanteChapa conn
     | opcao == "11" = editaChapa conn
     | opcao == "13" = cadastraVotoEstudante conn
-    | opcao == "15" = comparacaoEleicoes conn
+    | opcao == "16" = comparacaoEleicoes conn
     | otherwise = putStrLn "Opção inválida"
 
 cadastroPrimeiroAdmin :: Connection -> IO()
@@ -160,9 +160,21 @@ comparacaoEleicoes conn = do
     putStrLn "Insira o ID da segunda votacao"
     idSegunda <- getLine
 
-    comparacao <- comparaVotacao conn (read idPrimeira) (read idSegunda)
+    totalVotosPrimeira <- getTotalVotosVotacao conn (read idPrimeira)
+    totalVotosSegunda <- getTotalVotosVotacao conn (read idSegunda)
 
-    print comparacao
+    putStrLn "TOTAL DE VOTOS"
+    print ("Votacao " ++ idPrimeira ++ ": " ++ show totalVotosPrimeira ++ " votos")
+    print ("Votacao " ++ idSegunda ++ ": " ++ show totalVotosSegunda ++ " votos")
+
+    vencedoraPrimeira <- getChapaVencedora conn (read idPrimeira)
+    votosVencedoraPrimeira <- getQtdVotosVencedora conn (read idPrimeira)
+    vencedoraSegunda <- getChapaVencedora conn (read idSegunda)
+    votosVencedoraSegunda <- getQtdVotosVencedora conn (read idSegunda)
+
+    putStrLn "CHAPA VENCEDORA"
+    putStrLn ("Votacao " ++ idPrimeira ++ ": " ++ show vencedoraPrimeira ++ ": " ++ show votosVencedoraPrimeira ++ " votos")
+    putStrLn ("Votacao " ++ idSegunda ++ ": " ++ show vencedoraSegunda ++ ": " ++ show votosVencedoraSegunda ++ " votos")
 
 cadastraChapas :: Connection -> IO ()
 cadastraChapas conn = do
