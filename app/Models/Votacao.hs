@@ -12,15 +12,17 @@ import Models.Estudante (getQtdEstudantesVotantes)
 
 
 data Votacao = Votacao {
-    id :: Int,
+    id_votacao :: Int,
     dataVotacao:: String,
     encerrada:: Bool,
     abstencoes:: Int,
-    nulos:: Int
+    nulos:: Int,
+    empate:: Bool
  } deriving (Show, Read, Eq)
 
 instance FromRow Votacao where
     fromRow = Votacao <$> field
+                      <*> field
                       <*> field
                       <*> field
                       <*> field
@@ -44,11 +46,11 @@ novaVotacao conn loginAdmin senhaAdmin dataVotacao encerrada abstencoes nulos = 
         putStrLn "Erro no cadastro de nova votacao: Administrador não está cadastrado no sistema"
     return ()
 
-encerra :: Connection -> Int -> Int -> IO()
-encerra conn idVotacao abst = do
-    let comando = "UPDATE votacao SET encerrada = 't', abstencoes = ? WHERE id = ?;"
+encerra :: Connection -> Int -> Int -> Bool -> IO()
+encerra conn idVotacao abst empatou = do
+    let comando = "UPDATE votacao SET encerrada = 't', abstencoes = ?, empate = ? WHERE id = ?;"
 
-    result <- try (execute conn comando (abst, idVotacao)) :: IO (Either SomeException Int64)
+    result <- try (execute conn comando (abst, empatou, idVotacao)) :: IO (Either SomeException Int64)
     case result of
         Left err  -> putStrLn $ "Caught exception: " ++ show err
         Right val -> print "Votacao encerrada"
