@@ -115,8 +115,4 @@ iniciandoDatabase = do
   createEstudanteChapa c
   createVoto c
   adicionaConstraintChapa c
-<<<<<<< HEAD
   return c
-=======
-  return c
->>>>>>> c884ba99d39462d246e8fe81480c94802f6ee748
