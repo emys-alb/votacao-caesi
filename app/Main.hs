@@ -184,41 +184,69 @@ comparacaoEleicoes conn = do
 
     if null primeira || null segunda then putStrLn "Votação não encontrada"
     else do
-      primeiraEncerrada <- votacaoEncerrada conn (read idPrimeira)
-      segundaEncerrada <- votacaoEncerrada conn (read idSegunda)
-
-      if not (primeiraEncerrada && segundaEncerrada) then putStrLn "Só é possível fazer comparações de votações encerradas"
+      if empate (head primeira) || empate (head segunda) then putStrLn "Não é possível fazer a comparação de votações pois uma das votações resultou em um empate"
       else do
-        totalVotosPrimeira <- getTotalVotosVotacao conn (read idPrimeira)
-        totalVotosSegunda <- getTotalVotosVotacao conn (read idSegunda)
+        primeiraEncerrada <- votacaoEncerrada conn (read idPrimeira)
+        segundaEncerrada <- votacaoEncerrada conn (read idSegunda)
 
-        putStrLn "TOTAL DE VOTOS"
-        print ("Votacao " ++ idPrimeira ++ ": " ++ show totalVotosPrimeira ++ " votos")
-        print ("Votacao " ++ idSegunda ++ ": " ++ show totalVotosSegunda ++ " votos")
-        
-        putStrLn "VOTOS NULOS"
-        print ("Votacao " ++ idPrimeira ++ ": " ++ show (nulos (head primeira)) ++ " votos nulos")
-        print ("Votacao " ++ idSegunda ++ ": " ++ show (nulos (head segunda)) ++ " votos nulos")
+        if not (primeiraEncerrada && segundaEncerrada) then putStrLn "Só é possível fazer comparações de votações encerradas"
+        else do
+            totalVotosPrimeira <- getTotalVotosVotacao conn (read idPrimeira)
+            totalVotosSegunda <- getTotalVotosVotacao conn (read idSegunda)
 
-        putStrLn "ABSTENÇÕES"
-        print ("Votacao " ++ idPrimeira ++ ": " ++ show (abstencoes (head primeira)) ++ " abstenções")
-        print ("Votacao " ++ idSegunda ++ ": " ++ show (abstencoes (head segunda)) ++ " abstenções")
+            putStrLn "TOTAL DE VOTOS"
+            print ("Votacao " ++ idPrimeira ++ ": " ++ show totalVotosPrimeira ++ " votos")
+            print ("Votacao " ++ idSegunda ++ ": " ++ show totalVotosSegunda ++ " votos")
+            
+            putStrLn "VOTOS NULOS"
+            print ("Votacao " ++ idPrimeira ++ ": " ++ show (nulos (head primeira)) ++ " votos nulos")
+            print ("Votacao " ++ idSegunda ++ ": " ++ show (nulos (head segunda)) ++ " votos nulos")
 
-        vencedoraPrimeira <- getChapaVencedora conn (read idPrimeira)
-        votosVencedoraPrimeira <- getQtdVotosVencedora conn (read idPrimeira)
-        vencedoraSegunda <- getChapaVencedora conn (read idSegunda)
-        votosVencedoraSegunda <- getQtdVotosVencedora conn (read idSegunda)
+            putStrLn "ABSTENÇÕES"
+            print ("Votacao " ++ idPrimeira ++ ": " ++ show (abstencoes (head primeira)) ++ " abstenções")
+            print ("Votacao " ++ idSegunda ++ ": " ++ show (abstencoes (head segunda)) ++ " abstenções")
 
-        putStrLn "CHAPA VENCEDORA"
-        putStrLn ("Votacao " ++ idPrimeira ++ ": " ++ show vencedoraPrimeira ++ ": " ++ show votosVencedoraPrimeira ++ " votos")
-        putStrLn ("Votacao " ++ idSegunda ++ ": " ++ show vencedoraSegunda ++ ": " ++ show votosVencedoraSegunda ++ " votos")
+            vencedoraPrimeira <- getChapaVencedora conn (read idPrimeira)
+            votosVencedoraPrimeira <- getQtdVotosVencedora conn (read idPrimeira)
+            vencedoraSegunda <- getChapaVencedora conn (read idSegunda)
+            votosVencedoraSegunda <- getQtdVotosVencedora conn (read idSegunda)
+
+            putStrLn "CHAPA VENCEDORA"
+            putStrLn ("Votacao " ++ idPrimeira ++ ": " ++ show vencedoraPrimeira ++ ": " ++ show votosVencedoraPrimeira ++ " votos")
+            putStrLn ("Votacao " ++ idSegunda ++ ": " ++ show vencedoraSegunda ++ ": " ++ show votosVencedoraSegunda ++ " votos")
+
+
+printVotosChapas :: [Chapa] -> IO ()
+printVotosChapas [] = putStrLn ""
+printVotosChapas [chapa] = putStrLn (nome chapa ++ " - " ++ show (numDeVotos chapa)  ++  " votos")
+printVotosChapas (chapa:t) = do
+    putStrLn (nome chapa ++ " - " ++ show (numDeVotos chapa)  ++  " votos")
+    printVotosChapas t
+
+printVotacoes :: Connection -> [Votacao] -> IO()
+printVotacoes _ [] = putStrLn ""
+printVotacoes conn [votacao] = do
+    putStrLn ("\nID - " ++ show (id_votacao votacao) ++  "\nData - " ++ show (dataVotacao votacao))
+    putStrLn ("Votos nulos - " ++ show (nulos votacao))
+    putStrLn ("Abstenções - " ++ show (abstencoes votacao))
+    chapas <- getChapasDeUmaVotacao conn (id_votacao votacao)
+    printVotosChapas chapas
+    putStrLn ""
+printVotacoes conn (votacao:t) = do
+    putStrLn ("\nID - " ++ show (id_votacao votacao) ++  "\nData - " ++ show (dataVotacao votacao))
+    putStrLn ("Votos nulos - " ++ show (nulos votacao))
+    putStrLn ("Abstenções - " ++ show (abstencoes votacao))
+    chapas <- getChapasDeUmaVotacao conn (id_votacao votacao)
+    printVotosChapas chapas
+    putStrLn ""
+    printVotacoes conn t
 
 listaHistoricoEleicoes :: Connection -> IO()
 listaHistoricoEleicoes conn = do
     putStrLn "Listar histórico de eleicoes"
     historico <- listarTodasVotacoes conn
 
-    print historico
+    printVotacoes conn historico
 
 listaDadosVotacao :: Connection -> IO()
 listaDadosVotacao conn = do
@@ -228,7 +256,7 @@ listaDadosVotacao conn = do
 
     dadosVotacao <- getVotacao conn (read id)
 
-    print dadosVotacao
+    printVotacoes conn dadosVotacao
 
 
 cadastraChapas :: Connection -> IO ()

@@ -2,7 +2,7 @@ module Controllers.VotacaoController where
 import Database.PostgreSQL.Simple
 import Control.Exception
 import Models.Votacao
-import Models.Chapa (getVotosChapasByVotacao)
+import Models.Chapa (getVotosChapasByVotacao, votacaoEmpatou)
 import Models.Estudante (getQtdEstudantesVotantes)
 import Controllers.ChapaController (getVotosEmChapas)
 import Data.Int
@@ -22,7 +22,9 @@ encerraVotacao conn loginAdmin senhaAdmin idVotacao = do
                 votosEmChapas <- getVotosEmChapas conn idVotacao
                 let abst = qtdVotantes - nulos - votosEmChapas
 
-                encerra conn idVotacao abst
+                empatou <- votacaoEmpatou conn idVotacao
+
+                encerra conn idVotacao abst empatou
     else
         putStrLn "Erro ao encerrar votacao: Administrador não está cadastrado no sistema"
 

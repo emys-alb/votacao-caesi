@@ -78,3 +78,5 @@ getChapaVencedora conn idVotacao = do
 getQtdVotosVencedora :: Connection -> Int -> IO Int
 getQtdVotosVencedora conn idVotacao = do
   qtdVotosVencedora conn idVotacao
+
+getChapasDeUmaVotacao = getChapasByVotacao
