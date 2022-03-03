@@ -60,6 +60,7 @@ menu opcao conn
     | opcao == "11" = removerEstudanteDaChapa conn
     | opcao == "12" = editaChapa conn
     | opcao == "14" = cadastraVotoEstudante conn
+    | opcao == "15" = listaDadosVotacao conn
     | opcao == "16" = listaHistoricoEleicoes conn
     | opcao == "17" = comparacaoEleicoes conn
     | otherwise = putStrLn "Opção inválida"
@@ -183,8 +184,19 @@ listaHistoricoEleicoes :: Connection -> IO()
 listaHistoricoEleicoes conn = do
     putStrLn "Listar histórico de eleicoes"
     historico <- listarTodasVotacoes conn
-    
+
     print historico
+
+listaDadosVotacao :: Connection -> IO()
+listaDadosVotacao conn = do
+    putStrLn "Listar dados de uma votação"
+    putStrLn "Insira o ID da Votação"
+    id <- getLine
+
+    dadosVotacao <- getVotacao conn (read id)
+
+    print dadosVotacao
+
 
 cadastraChapas :: Connection -> IO ()
 cadastraChapas conn = do

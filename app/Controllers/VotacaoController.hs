@@ -35,3 +35,7 @@ getTotalVotosVotacao conn id = do
 listarTodasVotacoes :: Connection -> IO [Votacao]
 listarTodasVotacoes conn = do
     getTodasVotacoes conn
+
+getVotacao :: Connection -> Int -> IO [Votacao]
+getVotacao conn idVotacao= do
+    getVotacaoById conn idVotacao
