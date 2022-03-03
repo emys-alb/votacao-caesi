@@ -50,6 +50,10 @@ getTotalVotosVotacao conn id = do
     votosNulos <- getQtdVotosNulos conn id
     return (votosValidos + votosNulos)
 
+listarTodasVotacoes :: Connection -> IO [Votacao]
+listarTodasVotacoes conn = do
+    getTodasVotacoes conn
+
 votacaoEncerrada :: Connection -> Int -> IO Bool
 votacaoEncerrada conn idVotacao  = do
     isVotacaoEncerrada conn idVotacao
