@@ -145,9 +145,9 @@ cadastrarChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa =
   admin <- getAdmin conn loginAdmin senhaAdmin
   idVotacao <- getVotacaoById conn idVotacaoChapa
   let inicia = 0
-  if (admin /= [] && idVotacao /= [])
+  if admin /= [] && idVotacao /= []
     then do
-      cadastroChapa <- try (execute conn i (nomeChapa, numeroChapa, idVotacaoChapa, inicia :: Int)) :: IO (Either SomeException Int64)
+      cadastroChapa <- try (execute conn i (nomeChapa, numeroChapa :: Int, idVotacaoChapa :: Int, inicia :: Int)) :: IO (Either SomeException Int64)
       case cadastroChapa of
         Left err -> putStrLn $ "Caught exception: " ++ show err
         Right val -> print "Chapa cadastrada"
@@ -199,7 +199,7 @@ chapaVencedora conn idVotacao = do
   let comando = "SELECT * FROM chapa WHERE idVotacao = ? ORDER BY numDeVotos DESC"
 
   chapasVotacao <- query conn comando (Only (idVotacao :: Int)) :: IO [Chapa]
-  
+
   let vencedora = head chapasVotacao
   return (nome vencedora)
 
@@ -208,7 +208,7 @@ qtdVotosVencedora conn idVotacao = do
   let comando = "SELECT * FROM chapa WHERE idVotacao = ? ORDER BY numDeVotos DESC"
 
   chapasVotacao <- query conn comando (Only (idVotacao :: Int)) :: IO [Chapa]
-  
+
   let vencedora = head chapasVotacao
   return (numDeVotos vencedora)
 
@@ -225,6 +225,6 @@ removerChapa conn loginAdmin senhaAdmin idChapaRemocao = do
             case remocao of
                 Left err  -> putStrLn $ "Caught exception: " ++ show err
                 Right val -> print "Chapa removida"
-    else
-        putStrLn "Erro na remoção: Administrador não está cadastrado no sistema ou ID da chapa esta incorreto"
-    return ()
+  else
+    putStrLn "Erro na remoção: Administrador não está cadastrado no sistema ou ID da chapa esta incorreto"
+  return ()

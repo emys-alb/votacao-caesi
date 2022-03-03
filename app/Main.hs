@@ -343,4 +343,4 @@ removeChapas conn = do
     senhaAdmin <- getLine
     putStrLn "Insira id da chapa a ser removida"
     idChapaRemocao <- getLine
-    removeChapa conn loginAdmin senhaAdmin idChapaRemocao
+    removeChapa conn loginAdmin senhaAdmin (read idChapaRemocao)
