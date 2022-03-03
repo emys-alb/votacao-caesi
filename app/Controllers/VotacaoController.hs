@@ -31,3 +31,7 @@ getTotalVotosVotacao conn id = do
     votosValidos <- getVotosChapasByVotacao conn id
     votosNulos <- getQtdVotosNulos conn id
     return (votosValidos + votosNulos)
+
+listarTodasVotacoes :: Connection -> IO [Votacao]
+listarTodasVotacoes conn = do
+    getTodasVotacoes conn

@@ -87,3 +87,9 @@ adicionaVotoNulo conn idVotacao = do
         Right val -> if val == 0 then putStrLn "Votação não encontrada" else putStrLn "Numero de votos atualizado"
     
     return ()
+
+getTodasVotacoes :: Connection -> IO [Votacao]
+getTodasVotacoes conn = do
+    let comando = "SELECT * FROM votacao"
+
+    query conn comando () :: IO [Votacao]
