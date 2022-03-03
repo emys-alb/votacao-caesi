@@ -60,7 +60,7 @@ menu opcao conn
     | opcao == "11" = removerEstudanteDaChapa conn
     | opcao == "12" = editaChapa conn
     | opcao == "14" = cadastraVotoEstudante conn
-    | opcao == "16" = comparacaoEleicoes conn
+    | opcao == "17" = comparacaoEleicoes conn
     | otherwise = putStrLn "Opção inválida"
 
 cadastroPrimeiroAdmin :: Connection -> IO()
