@@ -6,6 +6,7 @@ import Controllers.EstudanteController
 import Controllers.VotacaoController
 import Controllers.ChapaController
 import Models.Chapa
+import Models.Votacao
 import Models.Estudante (Estudante(matricula))
 
 mostraOpcoes :: Connection -> IO()
@@ -25,17 +26,18 @@ mostraOpcoes conn = do
     \\n 12 - Edita chapa\
     \\n 13 - Remove chapa\
     \\n 14 - Cadastra voto de estudante\
-    \\n 15 - Lista dados da votação\
-    \\n 16 - Lista histórico de votações\
-    \\n 17 - Compara votações\
-    \\n 18 - Sair"
+    \\n 15 - Encerra votação\
+    \\n 16 - Lista dados da votação\
+    \\n 17 - Lista histórico de votações\
+    \\n 18 - Compara votações\
+    \\n 19 - Sair"
 
     inputOpcao <- getLine
-    if inputOpcao /= "18" then do
+    if inputOpcao /= "19" then do
         menu inputOpcao conn
         mostraOpcoes conn
     else
-        putStrLn "Fechando sistema"
+        putStrLn "\nFechando sistema\n"
 
 main :: IO()
 main = do
@@ -60,9 +62,10 @@ menu opcao conn
     | opcao == "11" = removerEstudanteDaChapa conn
     | opcao == "12" = editaChapa conn
     | opcao == "14" = cadastraVotoEstudante conn
-    | opcao == "15" = listaDadosVotacao conn
-    | opcao == "16" = listaHistoricoEleicoes conn
-    | opcao == "17" = comparacaoEleicoes conn
+    | opcao == "15" = encerrarVotacao conn
+    | opcao == "16" = listaDadosVotacao conn
+    | opcao == "17" = listaHistoricoEleicoes conn
+    | opcao == "18" = comparacaoEleicoes conn
     | otherwise = putStrLn "Opção inválida"
 
 cadastroPrimeiroAdmin :: Connection -> IO()
@@ -72,7 +75,7 @@ cadastroPrimeiroAdmin conn = do
 
 cadastroNovoAdmin :: Connection -> IO()
 cadastroNovoAdmin conn = do
-    putStrLn "Cadastro de novo administrador"
+    putStrLn "\nCadastro de novo administrador\n"
 
     putStrLn "Insira seu login como administrador"
     loginAdmin <- getLine
@@ -87,7 +90,7 @@ cadastroNovoAdmin conn = do
 
 removeAdministrador :: Connection -> IO ()
 removeAdministrador conn = do
-    putStrLn "Remove administrador"
+    putStrLn "\nRemove administrador\n"
 
     putStrLn "Insira seu login como administrador"
     loginAdmin <- getLine
@@ -100,19 +103,19 @@ removeAdministrador conn = do
 
 editaSenhaAdmins :: Connection -> IO()
 editaSenhaAdmins conn = do
-    putStrLn "Atualiza senha do administrador"
+    putStrLn "\nAtualiza senha do administrador\n"
 
     putStrLn "Insira seu login como administrador:"
     loginAdmin <- getLine
     putStrLn "Insira a senha atual:"
-    senhaAdmin <- getLine 
+    senhaAdmin <- getLine
     putStrLn "Insira a nova senha:"
-    novaSenhaAdmin <- getLine 
+    novaSenhaAdmin <- getLine
     editaSenhaAdmin conn loginAdmin senhaAdmin novaSenhaAdmin
 
 cadastroNovosEstudantes :: Connection -> IO()
 cadastroNovosEstudantes conn = do
-    putStrLn "Cadastro de novos estudantes"
+    putStrLn "\nCadastro de novos estudantes\n"
     putStrLn "Insira seu login como administrador"
     loginAdmin <- getLine
     putStrLn "Insira sua senha como administrador"
@@ -120,10 +123,10 @@ cadastroNovosEstudantes conn = do
     putStrLn "Insira o caminho para o arquivo .csv que deve conter duas colunas (matricula e senha) para cada estudante"
     caminho <- getLine
     cadastraEstudantes conn loginAdmin senhaAdmin caminho
-    
+
 desativaEstudante :: Connection -> IO()
 desativaEstudante conn = do
-    putStrLn "Desativação de estudante"
+    putStrLn "\nDesativação de estudante\n"
     putStrLn "Insira seu login como administrador"
     loginAdmin <- getLine
     putStrLn "Insira sua senha como administrador"
@@ -134,7 +137,7 @@ desativaEstudante conn = do
 
 editarSenhaEstudante :: Connection -> IO()
 editarSenhaEstudante conn = do
-    putStrLn "Editar senha do estudante"
+    putStrLn "\nEditar senha do estudante\n"
     putStrLn "Insira sua matrícula"
     matricula <- getLine
     putStrLn "Insira sua senha atual"
@@ -145,7 +148,7 @@ editarSenhaEstudante conn = do
 
 cadastroVotacao :: Connection -> IO()
 cadastroVotacao conn = do
-    putStrLn "Cadastrar uma nova votação"
+    putStrLn "\nCadastrar uma nova votação\n"
     putStrLn "Insira seu login como administrador"
     loginAdmin <- getLine
     putStrLn "Insira sua senha como administrador"
@@ -155,30 +158,60 @@ cadastroVotacao conn = do
 
     cadastraVotacao conn loginAdmin senhaAdmin dataVotacao
 
+encerrarVotacao :: Connection -> IO()
+encerrarVotacao conn = do
+    putStrLn "\nEncerrar votação\n"
+    putStrLn "Insira seu login como administrador"
+    loginAdmin <- getLine
+    putStrLn "Insira sua senha como administrador"
+    senhaAdmin <- getLine
+    putStrLn "Insira o id da votação a ser encerrada"
+    idVotacao <- getLine
+
+    encerraVotacao conn loginAdmin senhaAdmin (read idVotacao)
+
 comparacaoEleicoes :: Connection -> IO()
 comparacaoEleicoes conn = do
-    putStrLn "Comparar duas eleicoes"
+    putStrLn "\nComparar duas eleicoes\n"
 
     putStrLn "Insira o ID da primeira votacao"
     idPrimeira <- getLine
     putStrLn "Insira o ID da segunda votacao"
     idSegunda <- getLine
 
-    totalVotosPrimeira <- getTotalVotosVotacao conn (read idPrimeira)
-    totalVotosSegunda <- getTotalVotosVotacao conn (read idSegunda)
+    primeira <- getVotacao conn (read idPrimeira)
+    segunda <- getVotacao conn (read idSegunda)
 
-    putStrLn "TOTAL DE VOTOS"
-    print ("Votacao " ++ idPrimeira ++ ": " ++ show totalVotosPrimeira ++ " votos")
-    print ("Votacao " ++ idSegunda ++ ": " ++ show totalVotosSegunda ++ " votos")
+    if null primeira || null segunda then putStrLn "Votação não encontrada"
+    else do
+      primeiraEncerrada <- votacaoEncerrada conn (read idPrimeira)
+      segundaEncerrada <- votacaoEncerrada conn (read idSegunda)
 
-    vencedoraPrimeira <- getChapaVencedora conn (read idPrimeira)
-    votosVencedoraPrimeira <- getQtdVotosVencedora conn (read idPrimeira)
-    vencedoraSegunda <- getChapaVencedora conn (read idSegunda)
-    votosVencedoraSegunda <- getQtdVotosVencedora conn (read idSegunda)
+      if not (primeiraEncerrada && segundaEncerrada) then putStrLn "Só é possível fazer comparações de votações encerradas"
+      else do
+        totalVotosPrimeira <- getTotalVotosVotacao conn (read idPrimeira)
+        totalVotosSegunda <- getTotalVotosVotacao conn (read idSegunda)
 
-    putStrLn "CHAPA VENCEDORA"
-    putStrLn ("Votacao " ++ idPrimeira ++ ": " ++ show vencedoraPrimeira ++ ": " ++ show votosVencedoraPrimeira ++ " votos")
-    putStrLn ("Votacao " ++ idSegunda ++ ": " ++ show vencedoraSegunda ++ ": " ++ show votosVencedoraSegunda ++ " votos")
+        putStrLn "TOTAL DE VOTOS"
+        print ("Votacao " ++ idPrimeira ++ ": " ++ show totalVotosPrimeira ++ " votos")
+        print ("Votacao " ++ idSegunda ++ ": " ++ show totalVotosSegunda ++ " votos")
+        
+        putStrLn "VOTOS NULOS"
+        print ("Votacao " ++ idPrimeira ++ ": " ++ show (nulos (head primeira)) ++ " votos nulos")
+        print ("Votacao " ++ idSegunda ++ ": " ++ show (nulos (head segunda)) ++ " votos nulos")
+
+        putStrLn "ABSTENÇÕES"
+        print ("Votacao " ++ idPrimeira ++ ": " ++ show (abstencoes (head primeira)) ++ " abstenções")
+        print ("Votacao " ++ idSegunda ++ ": " ++ show (abstencoes (head segunda)) ++ " abstenções")
+
+        vencedoraPrimeira <- getChapaVencedora conn (read idPrimeira)
+        votosVencedoraPrimeira <- getQtdVotosVencedora conn (read idPrimeira)
+        vencedoraSegunda <- getChapaVencedora conn (read idSegunda)
+        votosVencedoraSegunda <- getQtdVotosVencedora conn (read idSegunda)
+
+        putStrLn "CHAPA VENCEDORA"
+        putStrLn ("Votacao " ++ idPrimeira ++ ": " ++ show vencedoraPrimeira ++ ": " ++ show votosVencedoraPrimeira ++ " votos")
+        putStrLn ("Votacao " ++ idSegunda ++ ": " ++ show vencedoraSegunda ++ ": " ++ show votosVencedoraSegunda ++ " votos")
 
 listaHistoricoEleicoes :: Connection -> IO()
 listaHistoricoEleicoes conn = do
@@ -200,7 +233,7 @@ listaDadosVotacao conn = do
 
 cadastraChapas :: Connection -> IO ()
 cadastraChapas conn = do
-  putStrLn "Cadastrar Chapa"
+  putStrLn "\nCadastrar Chapa\n"
   putStrLn "Insira o login do Admin:"
   loginAdmin <- getLine
   putStrLn "Insira sua senha:"
@@ -215,8 +248,8 @@ cadastraChapas conn = do
 
 editaChapa :: Connection -> IO ()
 editaChapa conn = do
-    putStrLn "Editar Chapa"
-    
+    putStrLn "\nEditar Chapa\n"
+
     chapas <- getChapasVotacaoAtiva conn
     printChapas chapas
 
@@ -226,21 +259,21 @@ editaChapa conn = do
     senhaAdmin <- getLine
     putStrLn "Insira o ID da chapa"
     idChapa <- getLine
-   
+
     putStrLn "Insira: \
             \\n 1 - para editar nome da chapa\
             \\n 2 - para editar o numero da chapa"
-    
+
     opcao <- getLine
     if opcao == "1"
-        then do 
+        then do
             putStrLn "Insira o novo nome da chapa"
-            novoNome <- getLine 
+            novoNome <- getLine
             editaNomeChapa conn loginAdmin senhaAdmin (read idChapa) novoNome
     else if opcao == "2"
         then do
             putStrLn "Insira o novo numero da chapa"
-            novoNumero <- getLine 
+            novoNumero <- getLine
             editaNumeroChapa conn loginAdmin senhaAdmin (read idChapa) (read novoNumero)
     else
         putStrLn "Opção inválida"
@@ -254,6 +287,7 @@ printChapas (chapa:t) = do
 
 cadastraVotoEstudante :: Connection -> IO ()
 cadastraVotoEstudante conn = do
+    putStrLn "\nCadastro de voto de estudante\n"
     putStrLn "Insira sua matricula"
     matricula <- getLine
     putStrLn "Insira sua senha"
@@ -271,7 +305,7 @@ cadastraVotoEstudante conn = do
 
 cadastroEstudanteChapa :: Connection -> IO ()
 cadastroEstudanteChapa conn = do
-    putStrLn "Cadastro de estudante em chapa"
+    putStrLn "\nCadastro de estudante em chapa\n"
     putStrLn "Insira seu login como administrador"
     loginAdmin <- getLine
     putStrLn "Insira sua senha como administrador"
@@ -287,7 +321,7 @@ cadastroEstudanteChapa conn = do
 
 removerEstudanteDaChapa :: Connection -> IO ()
 removerEstudanteDaChapa conn = do
-    putStrLn "Remove de estudante da chapa"
+    putStrLn "\nRemove de estudante da chapa\n"
     putStrLn "Insira seu login como administrador"
     loginAdmin <- getLine
     putStrLn "Insira sua senha como administrador"

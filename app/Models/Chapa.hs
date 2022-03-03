@@ -196,7 +196,7 @@ editarNumeroChapa conn login senha idChapa novoNumero = do
 
 chapaVencedora :: Connection -> Int -> IO String
 chapaVencedora conn idVotacao = do
-  let comando = "SELECT * FROM chapa WHERE idVotacao = ? ORDER BY numDeVotos"
+  let comando = "SELECT * FROM chapa WHERE idVotacao = ? ORDER BY numDeVotos DESC"
 
   chapasVotacao <- query conn comando (Only (idVotacao :: Int)) :: IO [Chapa]
   
@@ -205,7 +205,7 @@ chapaVencedora conn idVotacao = do
 
 qtdVotosVencedora :: Connection -> Int -> IO Int
 qtdVotosVencedora conn idVotacao = do
-  let comando = "SELECT * FROM chapa WHERE idVotacao = ? ORDER BY numDeVotos"
+  let comando = "SELECT * FROM chapa WHERE idVotacao = ? ORDER BY numDeVotos DESC"
 
   chapasVotacao <- query conn comando (Only (idVotacao :: Int)) :: IO [Chapa]
   
