@@ -4,7 +4,7 @@ import Database.PostgreSQL.Simple (Connection, ConnectInfo)
 import Utils (leEstudantes, EstudanteCSV (matricula, senha))
 import qualified Data.Vector as V
 import Data.Vector (toList)
-import Models.Estudante (cadastraEstudante, getEstudante, editaSenhaEstudante, desativaEstudante, Estudante (Estudante), isEstudanteVotante, criaRelacaoEstudanteVotacao, verificaEstudanteNaoVotou)
+import Models.Estudante (cadastraEstudante, getEstudante, editaSenhaEstudante, desativaEstudante, Estudante (Estudante), isEstudanteVotante, criaRelacaoEstudanteVotacao, verificaEstudanteNaoVotou, getQtdEstudantesVotantes)
 import Control.Exception
 import Data.Int
 import Models.Chapa
@@ -89,3 +89,6 @@ cadastraVotoNulo conn matricula senha idVotacao = do
         putStrLn "Estudante verificado"
         adicionaVotosNulo conn idVotacao
         criaRelacaoEstudanteVotacao conn matricula idVotacao
+
+getQuantidadeVotantes :: Connection -> IO Int
+getQuantidadeVotantes = getQtdEstudantesVotantes

@@ -30,6 +30,14 @@ instance FromRow Voto where
                         <*> field
                         <*> field
 
+newtype QtdVotantes = QtdVotantes
+  { votantes :: Int
+  }
+  deriving (Show, Read, Eq)
+
+instance FromRow QtdVotantes where
+  fromRow = QtdVotantes <$> field
+
 
 cadastraEstudante :: Connection -> String -> String -> IO()
 cadastraEstudante conn matricula senha = do
@@ -101,3 +109,11 @@ getEstudanteByMatricula :: Connection -> String -> IO [Estudante]
 getEstudanteByMatricula conn matricula = do
     let q = "select * from estudante where matricula = ?"
     query conn q (Only matricula) :: IO[Estudante]
+
+getQtdEstudantesVotantes :: Connection -> IO Int
+getQtdEstudantesVotantes conn = do
+  let q = "select count(*) as votantes from estudante where votante=true"
+  result <- try (query_ conn q) :: IO (Either SomeException [QtdVotantes])
+  case result of
+    Left err -> return (-1)
+    Right votantesList -> return (votantes (head votantesList))
