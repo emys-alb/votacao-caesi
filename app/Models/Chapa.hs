@@ -147,10 +147,12 @@ cadastrarChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa =
   let inicia = 0
   if admin /= [] && idVotacao /= []
     then do
-      cadastroChapa <- try (execute conn i (nomeChapa, numeroChapa :: Int, idVotacaoChapa :: Int, inicia :: Int)) :: IO (Either SomeException Int64)
-      case cadastroChapa of
-        Left err -> putStrLn $ "Caught exception: " ++ show err
-        Right val -> print "Chapa cadastrada"
+      if encerrada (head idVotacao) then putStrLn "Não é possível cadastrar uma chapa em uma votação encerrada"
+      else do
+        cadastroChapa <- try (execute conn i (nomeChapa, numeroChapa :: Int, idVotacaoChapa :: Int, inicia :: Int)) :: IO (Either SomeException Int64)
+        case cadastroChapa of
+          Left err -> putStrLn $ "Caught exception: " ++ show err
+          Right val -> print "Chapa cadastrada"
     else putStrLn "Erro no cadastro Chapa: Administrador ou votação não estão cadastrados no sistema"
 
   return ()
@@ -214,10 +216,10 @@ qtdVotosVencedora conn idVotacao = do
 
 removerChapa :: Connection -> String -> String -> Int -> IO ()
 removerChapa conn loginAdmin senhaAdmin idChapaRemocao = do
-  let remove = "DROP TABLE idChapaRemocao = ?"
+  let remove = "delete from chapa where id = ?"
 
   admin <- getAdmin conn loginAdmin senhaAdmin
-  idChapa <- getVotacaoById conn idChapaRemocao
+  idChapa <- getChapaById conn idChapaRemocao
 
   if admin /= [] && idChapa /= []
     then do
