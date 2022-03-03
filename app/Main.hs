@@ -21,16 +21,17 @@ mostraOpcoes conn = do
     \\n 8 - Cadastra votação\
     \\n 9 - Cadastra chapa\
     \\n 10 - Cadastra estudante em chapa\
-    \\n 11 - Edita chapa\
-    \\n 12 - Remove chapa\
-    \\n 13 - Cadastra voto de estudante\
-    \\n 14 - Lista dados da votação\
-    \\n 15 - Lista histórico de votações\
-    \\n 16 - Compara votações\
-    \\n 17 - Sair"
+    \\n 11 - Remove estudante da chapa\
+    \\n 12 - Edita chapa\
+    \\n 13 - Remove chapa\
+    \\n 14 - Cadastra voto de estudante\
+    \\n 15 - Lista dados da votação\
+    \\n 16 - Lista histórico de votações\
+    \\n 17 - Compara votações\
+    \\n 18 - Sair"
 
     inputOpcao <- getLine
-    if inputOpcao /= "17" then do
+    if inputOpcao /= "18" then do
         menu inputOpcao conn
         mostraOpcoes conn
     else
@@ -56,8 +57,9 @@ menu opcao conn
     | opcao == "8" = cadastroVotacao conn
     | opcao == "9" = cadastraChapas conn
     | opcao == "10" = cadastroEstudanteChapa conn
-    | opcao == "11" = editaChapa conn
-    | opcao == "13" = cadastraVotoEstudante conn
+    | opcao == "11" = removerEstudanteDaChapa conn
+    | opcao == "12" = editaChapa conn
+    | opcao == "14" = cadastraVotoEstudante conn
     | opcao == "16" = comparacaoEleicoes conn
     | otherwise = putStrLn "Opção inválida"
 
@@ -263,3 +265,16 @@ cadastroEstudanteChapa conn = do
 
     cadastraEstudanteEmChapa conn loginAdmin senhaAdmin matricula (read idChapa) diretoria
 
+removerEstudanteDaChapa :: Connection -> IO ()
+removerEstudanteDaChapa conn = do
+    putStrLn "Remove de estudante da chapa"
+    putStrLn "Insira seu login como administrador"
+    loginAdmin <- getLine
+    putStrLn "Insira sua senha como administrador"
+    senhaAdmin <- getLine
+    putStrLn "Insira a matricula do estudante"
+    matricula <- getLine
+    putStrLn "Insira o id da chapa"
+    idChapa <- getLine
+
+    removeEstudanteDaChapa conn loginAdmin senhaAdmin matricula (read idChapa)
