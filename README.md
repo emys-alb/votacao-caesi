@@ -19,10 +19,12 @@ O sistema tem dois atores: os administradores do sistema e o estudante. Os admin
 4. Cadastrar estudantes
 5. Desativar estudantes
 6. Cadastrar chapas
-7. Editar informação das chapas
-8. Remover chapas
-9. Cadastrar votação
-10. Encerrar votações
+7. Cadastrar estudante em chapa
+8. Remover estudante da chapa
+9. Editar informação das chapas
+10. Remover chapas
+11. Cadastrar votação
+12. Encerrar votações
 
 ### Cabe ao estudante:
 1. Votar
@@ -58,23 +60,34 @@ Dependências isoladas do C que foram baixadas:
 Será apresentado o seguinte menu de atividades:
 
 ```python
-Menu de atividades:
-    1 - Cadastra o primeiro admin
-    2 - Cadastra novo administrador
-    3 - Remove administrador
-    4 - Edita senha do administrador
-    5 - Cadastra estudantes
-    6 - Edita senha do estudante
-    7 - Desativa estudante
-    8 - Cadastra votação
-    9 - Cadastra chapa
-    10 - Edita chapa
-    11 - Remove chapa
-    12 - Cadastra voto de estudante
-    13 - Lista dados da votação
-    14 - Lista histórico de votações
-    15 - Compara votações
-    16 - Sair
+Menu de atividades: 
+ 1 - Cadastra o primeiro admin
+ 2 - Cadastra novo administrador
+ 3 - Remove administrador
+ 4 - Edita senha do administrador
+ 5 - Cadastra estudantes
+ 6 - Edita senha do estudante
+ 7 - Desativa estudante
+ 8 - Cadastra votação
+ 9 - Cadastra chapa
+ 10 - Cadastra estudante em chapa
+ 11 - Remove estudante da chapa
+ 12 - Edita chapa
+ 13 - Remove chapa
+ 14 - Cadastra voto de estudante
+ 15 - Encerra votação
+ 16 - Lista dados da votação
+ 17 - Lista histórico de votações
+ 18 - Compara votações
+ 19 - Sair
 ```
 
 O sistema precisa de pelo menos 1 administrador registrado para ter acesso a demais funcionalidades, para isso deve escolher a opção 1. Em seguida está livre para usar as demais funcionalidades apresentadas no menu de atividades.
+
+### Para acessar o banco de dados 📂
+
+Mantemos todas nossas informações em um banco de dados, é possivel acessá-lo remotamente com o seguinte comando:
+```
+psql -h "ec2-54-235-108-217.compute-1.amazonaws.com" -p 5432 -d "dbehln4jerq4b" -U "jzrhucvekfwaal"
+Password for user jzrhucvekfwaal: fc13fbfff03b8b15a7186f8cabf894bcb3bacee463dd080a803690d72658217d
+```

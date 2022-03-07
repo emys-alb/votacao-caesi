@@ -28,17 +28,18 @@ instance FromRow Votacao where
                       <*> field
                       <*> field
 
-novaVotacao :: Connection -> String -> String -> String -> Bool -> Int -> Int -> IO()
-novaVotacao conn loginAdmin senhaAdmin dataVotacao encerrada abstencoes nulos = do
+novaVotacao :: Connection -> String -> String -> String -> Bool -> Int -> Int -> Bool -> IO()
+novaVotacao conn loginAdmin senhaAdmin dataVotacao encerrada abstencoes nulos empate = do
     let comando = "INSERT INTO votacao (data,\
                                        \encerrada,\
                                        \abstencoes,\
-                                       \nulos) VALUES (?, ?, ?, ?)"
+                                       \nulos,\
+                                       \empate) VALUES (?, ?, ?, ?, ?)"
 
     resultadoAdmin <- getAdmin conn loginAdmin senhaAdmin
     if (resultadoAdmin /= [])
         then do
-                result <- try (execute conn comando (dataVotacao, encerrada, abstencoes, nulos)) :: IO (Either SomeException Int64)
+                result <- try (execute conn comando (dataVotacao, encerrada, abstencoes, nulos, empate)) :: IO (Either SomeException Int64)
                 case result of
                     Left err  -> putStrLn $ "Caught exception: " ++ show err
                     Right val -> print "Votacao cadastrada"

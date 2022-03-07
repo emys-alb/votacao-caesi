@@ -145,12 +145,14 @@ cadastrarChapa conn loginAdmin senhaAdmin nomeChapa numeroChapa idVotacaoChapa =
   admin <- getAdmin conn loginAdmin senhaAdmin
   idVotacao <- getVotacaoById conn idVotacaoChapa
   let inicia = 0
-  if (admin /= [] && idVotacao /= [])
+  if admin /= [] && idVotacao /= []
     then do
-      cadastroChapa <- try (execute conn i (nomeChapa, numeroChapa, idVotacaoChapa, inicia :: Int)) :: IO (Either SomeException Int64)
-      case cadastroChapa of
-        Left err -> putStrLn $ "Caught exception: " ++ show err
-        Right val -> print "Chapa cadastrada"
+      if encerrada (head idVotacao) then putStrLn "Não é possível cadastrar uma chapa em uma votação encerrada"
+      else do
+        cadastroChapa <- try (execute conn i (nomeChapa, numeroChapa :: Int, idVotacaoChapa :: Int, inicia :: Int)) :: IO (Either SomeException Int64)
+        case cadastroChapa of
+          Left err -> putStrLn $ "Caught exception: " ++ show err
+          Right val -> print "Chapa cadastrada"
     else putStrLn "Erro no cadastro Chapa: Administrador ou votação não estão cadastrados no sistema"
 
   return ()
@@ -211,6 +213,23 @@ qtdVotosVencedora conn idVotacao = do
 
   let vencedora = head chapasVotacao
   return (numDeVotos vencedora)
+
+removerChapa :: Connection -> String -> String -> Int -> IO ()
+removerChapa conn loginAdmin senhaAdmin idChapaRemocao = do
+  let remove = "delete from chapa where id = ?"
+
+  admin <- getAdmin conn loginAdmin senhaAdmin
+  idChapa <- getChapaById conn idChapaRemocao
+
+  if admin /= [] && idChapa /= []
+    then do
+            remocao <- try (execute conn remove (Only idChapaRemocao)) :: IO (Either SomeException Int64)
+            case remocao of
+                Left err  -> putStrLn $ "Caught exception: " ++ show err
+                Right val -> print "Chapa removida"
+  else
+    putStrLn "Erro na remoção: Administrador não está cadastrado no sistema ou ID da chapa esta incorreto"
+  return ()
 
 verificaEmpateChapas :: [Chapa] -> Bool
 verificaEmpateChapas [] = True

@@ -30,7 +30,7 @@ encerraVotacao conn loginAdmin senhaAdmin idVotacao = do
 
 cadastraVotacao :: Connection -> String -> String -> String -> IO()
 cadastraVotacao conn loginAdmin senhaAdmin dataVotacao = do
-    result <- try (novaVotacao conn loginAdmin senhaAdmin dataVotacao False 0 0) :: IO (Either SomeException ())
+    result <- try (novaVotacao conn loginAdmin senhaAdmin dataVotacao False 0 0 False) :: IO (Either SomeException ())
     case result of
         Left err -> putStrLn $ "Caught exception: " ++ show err
         Right val -> print "Votacao cadastrada"
