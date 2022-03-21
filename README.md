@@ -48,10 +48,11 @@ Dependências isoladas do C que foram baixadas:
 ```
 
 
-## Usando o sistema
+## Usando o sistema funcional
 ```bash
     git clone https://github.com/emys-alb/votacao-caesi.git
     cd votacao-caesi/
+    cd funcional/
     
     cabal build
     cabal run
