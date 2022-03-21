@@ -204,8 +204,8 @@ comparacaoEleicoes conn = do
             print ("Votacao " ++ idSegunda ++ ": " ++ show (nulos (head segunda)) ++ " votos nulos")
 
             putStrLn "ABSTENÇÕES"
-            print ("Votacao " ++ idPrimeira ++ ": " ++ show (abstencoes (head primeira)) ++ " abstenções")
-            print ("Votacao " ++ idSegunda ++ ": " ++ show (abstencoes (head segunda)) ++ " abstenções")
+            putStrLn ("Votacao " ++ idPrimeira ++ ": " ++ show (abstencoes (head primeira)) ++ " abstenções")
+            putStrLn ("Votacao " ++ idSegunda ++ ": " ++ show (abstencoes (head segunda)) ++ " abstenções")
 
             vencedoraPrimeira <- getChapaVencedora conn (read idPrimeira)
             votosVencedoraPrimeira <- getQtdVotosVencedora conn (read idPrimeira)
