@@ -1,4 +1,4 @@
-ler_csv(Arquivo,Lists):-
+read_csv(Arquivo,Lists):-
     atom_concat('./Dados/', Arquivo, Path),
     csv_read_file(Path, Rows, []),
     rows_to_lists(Rows, Lists).
@@ -33,4 +33,3 @@ remove(X, [H|T], [H|T1]):- remove(X,T,T1).
 
 remove_by_index(0,[_|T],T).
 remove_by_index(I,[H|T],[H|T1]):- X is I - 1, remove_by_index(X, T, T1).
-
