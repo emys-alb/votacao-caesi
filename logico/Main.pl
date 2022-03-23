@@ -41,6 +41,7 @@ opcoes_menu_estudante() :-
     writeln("[2] Cadastra voto de estudante"),
     writeln("[3] Voltar para o menu principal\n").
 
+%Opcoes Principais
 opcao_escolhida_principal(1) :- 
     writeln("Login Admin"),
     writeln("Insira seu login:"),
@@ -55,6 +56,19 @@ opcao_escolhida_principal(1) :-
 opcao_escolhida_principal(6) :- 
     writeln("Encerrando o sistema"),
     halt.
+
+% Opcoes Admin
+opcao_escolhida_admin(1) :- 
+    writeln("Cadastro Admin"),
+    writeln("Insira login do novo admin:"),
+    read(Login),
+    writeln("Insira senha do novo admin:"),
+    read(Senha),
+    cadastro_admin(Login, Senha, R), 
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
+
 
 opcao_escolhida_admin(9) :- 
     opcoes_menu_principal,

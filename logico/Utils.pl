@@ -33,3 +33,7 @@ remove(X, [H|T], [H|T1]):- remove(X,T,T1).
 
 remove_by_index(0,[_|T],T).
 remove_by_index(I,[H|T],[H|T1]):- X is I - 1, remove_by_index(X, T, T1).
+
+eh_vazia(Lista) :-
+    length(Lista, X),
+    X =:= 0.
