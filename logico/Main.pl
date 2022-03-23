@@ -1,5 +1,6 @@
 :- (initialization main).
 :-include('./Utils.pl').
+:-include('Controller/AdminController.pl').
 
 main :- 
     menu_principal,
@@ -11,6 +12,7 @@ menu_principal :-
     opcao_escolhida_principal(Opcao).
 
 opcoes_menu_principal() :-
+    tty_clear,
     writeln("MENU PRINCIPAL"),
     writeln("[1] Login como administrador"),
     writeln("[2] Login como estudante"),
@@ -39,5 +41,22 @@ opcoes_menu_estudante() :-
     writeln("[2] Cadastra voto de estudante"),
     writeln("[3] Voltar para o menu principal\n").
 
-opcao_escolhida_principal(1). % login_admin, opcoes_menu_admin, read(Opcao).
+opcao_escolhida_principal(1) :- 
+    writeln("Login Admin"),
+    writeln("Insira seu login:"),
+    read(Login),
+    writeln("Insira sua senha:"),
+    read(Senha),
+    login_admin(Login, Senha), 
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
 
+opcao_escolhida_principal(6) :- 
+    writeln("Encerrando o sistema"),
+    halt.
+
+opcao_escolhida_admin(9) :- 
+    opcoes_menu_principal,
+    read(Opcao),
+    opcao_escolhida_principal(Opcao).

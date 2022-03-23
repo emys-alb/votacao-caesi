@@ -16,11 +16,11 @@ verifica_na_lista(SearchedId, [H|T]):-
      id_cadastrado(SearchedId, H);
      verifica_na_lista(SearchedId, T).
 
-id_cadastrado(SearchedId, [H|T]):-
+id_cadastrado(SearchedId, [H|_]):-
     H =:= SearchedId.
 
 get_cabeca([], []).
-get_cabeca([H|T], H).
+get_cabeca([H|_], H).
 
 get_by_id(_, [], []).
 get_by_id(Id, [[H|T]|T2], Result) :-
