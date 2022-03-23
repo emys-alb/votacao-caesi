@@ -2,6 +2,6 @@
 :- include('../Models/admin.pl').
 
 login_admin(Login, Senha):-
-    getAdmin(Login, Senha).
+    verifica_login_senha(Login, Senha).
 
 
