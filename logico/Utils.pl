@@ -1,7 +1,10 @@
 read_csv(Arquivo,Lists):-
-    atom_concat('./Dados/', Arquivo, Path),
+    get_csv_path(Arquivo, Path),
     csv_read_file(Path, Rows, []),
     rows_to_lists(Rows, Lists).
+
+get_csv_path(Arquivo, Path):-
+    atom_concat('./Dados/', Arquivo, Path).
 
 rows_to_lists(Rows, Lists):- maplist(row_to_list, Rows, Lists).
 
