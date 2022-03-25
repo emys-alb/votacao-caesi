@@ -71,6 +71,16 @@ opcao_escolhida_admin(1) :-
     read(Opcao),
     opcao_escolhida_admin(Opcao).
 
+opcao_escolhida_admin(2) :- 
+    writeln("Remove administrador"),
+    writeln("Insira login do admin a ser removido:"),
+    read(Login),
+    tty_clear,
+    remove_admin(Login, R),
+    writeln(R), 
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
 
 opcao_escolhida_admin(9) :- 
     opcoes_menu_principal,
