@@ -19,17 +19,14 @@ verifica_na_lista(SearchedId, [H|T]):-
      id_cadastrado(SearchedId, H);
      verifica_na_lista(SearchedId, T).
 
-id_cadastrado(SearchedId, [H|_]):-
-    H =:= SearchedId.
+id_cadastrado(SearchedId, [SearchedId|_]).
 
 get_cabeca([], []).
 get_cabeca([H|_], H).
 
 get_by_id(_, [], []).
-get_by_id(Id, [[H|T]|T2], Result) :-
-    (H =:= Id 
-        -> Result = [H|T];
-        get_by_id(Id, T2, Result)).
+get_by_id(Id, [[Id|T]|T2], [Id|T]).
+get_by_id(Id, [[H|T]|T2], Result) :- get_by_id(Id, T2, Result).
 
 remove(X, [X|T], T).
 remove(X, [H|T], [H|T1]):- remove(X,T,T1).

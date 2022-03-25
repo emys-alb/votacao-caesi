@@ -22,7 +22,6 @@ opcoes_menu_principal() :-
     writeln("[6] Sair\n").
 
 opcoes_menu_admin() :-
-    tty_clear,
     writeln("MENU ADMIN"),
     writeln("[1] Cadastra administrador"),
     writeln("[2] Remove administrador"),
@@ -48,7 +47,8 @@ opcao_escolhida_principal(1) :-
     read(Login),
     writeln("Insira sua senha:"),
     read(Senha),
-    login_admin(Login, Senha), 
+    login_admin(Login, Senha),
+    tty_clear,
     opcoes_menu_admin,
     read(Opcao),
     opcao_escolhida_admin(Opcao).
@@ -64,7 +64,9 @@ opcao_escolhida_admin(1) :-
     read(Login),
     writeln("Insira senha do novo admin:"),
     read(Senha),
-    cadastro_admin(Login, Senha, R), 
+    tty_clear,
+    cadastro_admin(Login, Senha, R),
+    writeln(R), 
     opcoes_menu_admin,
     read(Opcao),
     opcao_escolhida_admin(Opcao).
