@@ -1,6 +1,7 @@
 :- (initialization main).
 :-include('./Utils.pl').
 :-include('Controller/AdminController.pl').
+:-include('Controller/VotacaoController.pl').
 
 main :- 
     menu_principal,
@@ -69,6 +70,14 @@ opcao_escolhida_admin(1) :-
     read(Opcao),
     opcao_escolhida_admin(Opcao).
 
+opcao_escolhida_admin(6) :-
+    writeln("Cadastro de votação"),
+    writeln("Insira a data da nova votação:"),
+    read(DataVotacao),
+    cadastro_votacao(DataVotacao, R),
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
 
 opcao_escolhida_admin(9) :- 
     opcoes_menu_principal,
