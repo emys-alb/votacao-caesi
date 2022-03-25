@@ -77,6 +77,7 @@ opcao_escolhida_admin(6) :-
     writeln("Insira a data da nova votação:"),
     read(DataVotacao),
     cadastro_votacao(DataVotacao, R),
+    tty_clear,
     writeln(R),
     opcoes_menu_admin,
     read(Opcao),
