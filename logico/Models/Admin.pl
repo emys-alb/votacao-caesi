@@ -36,6 +36,10 @@ remover_admin(Login, R) :-
     reescrever_csv_admin(ListaAtualizada),
     R = "Admin foi removido.".
 
+editar_admin(Login, NovaSenha, R) :-
+    remover_admin(Login, Result),
+    cadastrar_admin(Login, NovaSenha, R),
+    R = "Senha alterada com sucesso.".
 
 reescrever_csv_admin([]).
 reescrever_csv_admin([H|T]) :-

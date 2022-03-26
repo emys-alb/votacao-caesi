@@ -82,6 +82,19 @@ opcao_escolhida_admin(2) :-
     read(Opcao),
     opcao_escolhida_admin(Opcao).
 
+opcao_escolhida_admin(3) :- 
+    writeln("Edita senha do administrador"),
+    writeln("Insira seu login:"),
+    read(Login),
+    writeln("Insira sua nova senha:"),
+    read(NovaSenha),
+    tty_clear,
+    edita_admin(Login, NovaSenha, R),
+    writeln(R), 
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
+
 opcao_escolhida_admin(9) :- 
     opcoes_menu_principal,
     read(Opcao),
