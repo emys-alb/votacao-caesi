@@ -84,7 +84,7 @@ opcao_escolhida_admin(2) :-
 
 opcao_escolhida_admin(3) :- 
     writeln("Edita senha do administrador"),
-    writeln("Insira seu login:"),
+    writeln("Insira login do admin a ser editado:"),
     read(Login),
     writeln("Insira sua nova senha:"),
     read(NovaSenha),
