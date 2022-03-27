@@ -1,6 +1,7 @@
 :- (initialization main).
 :-include('./Utils.pl').
 :-include('Controller/AdminController.pl').
+:-include('Controller/EstudanteController.pl').
 
 main :- 
     menu_principal,
@@ -71,6 +72,27 @@ opcao_escolhida_admin(1) :-
     read(Opcao),
     opcao_escolhida_admin(Opcao).
 
+opcao_escolhida_admin(4) :- 
+    writeln("Cadastro Estudantes"),
+    writeln("Insira o caminho para o arquivo .csv que deve conter duas colunas (matricula e senha) para cada estudante"),
+    read(Caminho),
+    tty_clear,
+    cadastro_estudantes(Caminho, R),
+    writeln(R), 
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
+
+opcao_escolhida_admin(5) :- 
+    writeln("Desativar Estudante"),
+    writeln("Insira a matrícula do estudante que será desativado"),
+    read(Matricula),
+    tty_clear,
+    desativar_estudante(Matricula, R),
+    writeln(R),
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
 
 opcao_escolhida_admin(9) :- 
     opcoes_menu_principal,
