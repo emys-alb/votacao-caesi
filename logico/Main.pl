@@ -51,7 +51,7 @@ opcao_escolhida_principal(1) :-
         (tty_clear,
         opcoes_menu_admin,
         read(Opcao),
-        opcao_escolhida_admin(Opcao));
+        opcao_escolhida_admin(Opcao, Login));
         (tty_clear,
         (writeln("Admin não cadastrado"),
         opcoes_menu_principal,
@@ -64,7 +64,7 @@ opcao_escolhida_principal(6) :-
     halt.
 
 % Opcoes Admin
-opcao_escolhida_admin(1) :- 
+opcao_escolhida_admin(1, _) :- 
     writeln("Cadastro Admin"),
     writeln("Insira login do novo admin:"),
     read(Login),
@@ -77,7 +77,7 @@ opcao_escolhida_admin(1) :-
     read(Opcao),
     opcao_escolhida_admin(Opcao).
 
-opcao_escolhida_admin(2) :- 
+opcao_escolhida_admin(2, _) :- 
     writeln("Remove administrador"),
     writeln("Insira login do admin a ser removido:"),
     read(Login),
