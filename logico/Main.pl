@@ -87,7 +87,7 @@ opcao_escolhida_admin(1) :-
 
 opcao_escolhida_admin(4) :- 
     writeln("Cadastro Estudantes"),
-    writeln("Insira o caminho para o arquivo .csv que deve conter duas colunas (matricula e senha) para cada estudante"),
+    writeln("Insira o caminho (entre aspas simples ou duplas) para o arquivo .csv que deve conter duas colunas (matricula e senha) para cada estudante"),
     read(Caminho),
     tty_clear,
     cadastro_estudantes(Caminho, R),
