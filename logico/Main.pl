@@ -36,6 +36,7 @@ opcoes_menu_estudante() :-
     writeln("[1] Edita senha do estudante"),
     writeln("[2] Cadastra voto de estudante"),
     writeln("[3] Voltar para o menu principal\n").
+
 %Opcoes Principais
 opcao_escolhida_principal(1) :- 
     writeln("Login Admin"),
@@ -55,10 +56,6 @@ opcao_escolhida_principal(1) :-
         opcao_escolhida_principal(Opcao)))
     ).
 
-opcao_escolhida_principal(6) :- 
-    writeln("Encerrando o sistema"),
-    halt.
-
 opcao_escolhida_principal(2) :- 
     writeln("Login Estudante"),
     writeln("Insira sua matrícula:"),
@@ -76,6 +73,7 @@ opcao_escolhida_principal(2) :-
         read(Opcao),
         opcao_escolhida_principal(Opcao))
     ).
+
 opcao_escolhida_principal(6) :- 
     writeln("Encerrando o sistema"),
     halt.
@@ -100,6 +98,19 @@ opcao_escolhida_admin(2) :-
     read(Login),
     tty_clear,
     remove_admin(Login, R),
+    writeln(R), 
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
+
+opcao_escolhida_admin(3) :- 
+    writeln("Edita senha do administrador"),
+    writeln("Insira login do admin a ser editado:"),
+    read(Login),
+    writeln("Insira sua nova senha:"),
+    read(NovaSenha),
+    tty_clear,
+    edita_admin(Login, NovaSenha, R),
     writeln(R), 
     opcoes_menu_admin,
     read(Opcao),
