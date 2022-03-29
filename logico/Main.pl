@@ -6,14 +6,12 @@
 main :- 
     menu_principal,
     halt.
-
 menu_principal :-
+    tty_clear,
     opcoes_menu_principal,
     read(Opcao),
     opcao_escolhida_principal(Opcao).
-
 opcoes_menu_principal() :-
-    tty_clear,
     writeln("MENU PRINCIPAL"),
     writeln("[1] Login como administrador"),
     writeln("[2] Login como estudante"),
@@ -21,7 +19,6 @@ opcoes_menu_principal() :-
     writeln("[4] Lista histórico de votações"),
     writeln("[5] Compara votações"),
     writeln("[6] Sair\n").
-
 opcoes_menu_admin() :-
     writeln("MENU ADMIN"),
     writeln("[1] Cadastra administrador"),
@@ -33,14 +30,11 @@ opcoes_menu_admin() :-
     writeln("[7] Edita votação"),
     writeln("[8] Encerra votação"),
     writeln("[9] Voltar para o menu principal\n").
-
 opcoes_menu_estudante() :-
-    tty_clear,
     writeln("MENU Estudante"),
     writeln("[1] Edita senha do estudante"),
     writeln("[2] Cadastra voto de estudante"),
     writeln("[3] Voltar para o menu principal\n").
-
 %Opcoes Principais
 opcao_escolhida_principal(1) :- 
     writeln("Login Admin"),
@@ -53,11 +47,30 @@ opcao_escolhida_principal(1) :-
     opcoes_menu_admin,
     read(Opcao),
     opcao_escolhida_admin(Opcao).
-
 opcao_escolhida_principal(6) :- 
     writeln("Encerrando o sistema"),
     halt.
 
+opcao_escolhida_principal(2) :- 
+    writeln("Login Estudante"),
+    writeln("Insira sua matrícula:"),
+    read(Matricula),
+    writeln("Insira sua senha:"),
+    read(Senha),
+    (login_estudante(Matricula, Senha) -> 
+        (tty_clear,
+        opcoes_menu_estudante,
+        read(Opcao),
+        opcao_escolhida_estudante(Opcao, Matricula));
+        tty_clear,
+        (writeln("Estudante não cadastrado"),
+        opcoes_menu_principal,
+        read(Opcao),
+        opcao_escolhida_principal(Opcao))
+    ).
+opcao_escolhida_principal(6) :- 
+    writeln("Encerrando o sistema"),
+    halt.
 % Opcoes Admin
 opcao_escolhida_admin(1) :- 
     writeln("Cadastro Admin"),
@@ -95,6 +108,24 @@ opcao_escolhida_admin(5) :-
     opcao_escolhida_admin(Opcao).
 
 opcao_escolhida_admin(9) :- 
+    tty_clear,
+    opcoes_menu_principal,
+    read(Opcao),
+    opcao_escolhida_principal(Opcao).
+
+opcao_escolhida_estudante(1, Matricula) :- 
+    writeln("Edita senha do estudante"),
+    writeln("Insira nova senha:"),
+    read(NovaSenha),
+    tty_clear,
+    editar_senha_estudante(Matricula, NovaSenha, R),
+    writeln(R), 
+    opcoes_menu_estudante,
+    read(Opcao),
+    opcao_escolhida_estudante(Opcao, Matricula).
+
+opcao_escolhida_estudante(3, _) :- 
+    tty_clear,
     opcoes_menu_principal,
     read(Opcao),
     opcao_escolhida_principal(Opcao).

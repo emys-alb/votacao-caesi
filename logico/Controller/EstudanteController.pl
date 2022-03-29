@@ -1,6 +1,9 @@
 :- include('../Utils.pl').
 :- include('../Models/Estudante.pl').
 
+login_estudante(Matricula, Senha):-
+    verifica_matricula_senha(Matricula, Senha).
+
 cadastro_estudantes(Caminho, Result) :-
     (not(exists_file(Caminho)) -> 
     Result = "Erro: Arquivo não existe.";
@@ -24,5 +27,11 @@ desativar_estudante(Matricula, R) :-
         (is_votante(Matricula) -> 
             desativa_estudante(Matricula), R = "Estudante desativado";
             R = "Estudante já desativado");
+        R = "Estudante não cadastrado"
+    ).
+
+editar_senha_estudante(Matricula, NovaSenha, R) :-
+    (verifica_estudante_cadastrado(Matricula) ->
+        (edita_senha_estudante(Matricula, NovaSenha), R = "Senha editada");
         R = "Estudante não cadastrado"
     ).
