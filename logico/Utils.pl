@@ -16,8 +16,8 @@ get_by_index(I, [_|T], E):- X is I - 1, get_by_index(X, T, E).
 
 %se não funcionar, criar duas regras.
 verifica_na_lista(SearchedId, [H|T]):-
-     id_cadastrado(SearchedId, H);
-     verifica_na_lista(SearchedId, T).
+    id_cadastrado(SearchedId, H);
+    verifica_na_lista(SearchedId, T).
 
 id_cadastrado(SearchedId, [SearchedId|_]).
 
