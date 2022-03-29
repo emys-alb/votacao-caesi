@@ -43,11 +43,18 @@ opcao_escolhida_principal(1) :-
     read(Login),
     writeln("Insira sua senha:"),
     read(Senha),
-    login_admin(Login, Senha),
-    tty_clear,
-    opcoes_menu_admin,
-    read(Opcao),
-    opcao_escolhida_admin(Opcao).
+    (login_admin(Login, Senha) ->
+        (tty_clear,
+        opcoes_menu_admin,
+        read(Opcao),
+        opcao_escolhida_admin(Opcao));
+        (tty_clear,
+        (writeln("Admin não cadastrado"),
+        opcoes_menu_principal,
+        read(Opcao),
+        opcao_escolhida_principal(Opcao)))
+    ).
+
 opcao_escolhida_principal(6) :- 
     writeln("Encerrando o sistema"),
     halt.
@@ -72,6 +79,7 @@ opcao_escolhida_principal(2) :-
 opcao_escolhida_principal(6) :- 
     writeln("Encerrando o sistema"),
     halt.
+    
 % Opcoes Admin
 opcao_escolhida_admin(1) :- 
     writeln("Cadastro Admin"),
@@ -85,7 +93,18 @@ opcao_escolhida_admin(1) :-
     opcoes_menu_admin,
     read(Opcao),
     opcao_escolhida_admin(Opcao).
-    
+
+opcao_escolhida_admin(2) :- 
+    writeln("Remove administrador"),
+    writeln("Insira login do admin a ser removido:"),
+    read(Login),
+    tty_clear,
+    remove_admin(Login, R),
+    writeln(R), 
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
+
 opcao_escolhida_admin(4) :- 
     writeln("Cadastro Estudantes"),
     writeln("Insira o caminho (entre aspas simples ou duplas) para o arquivo .csv que deve conter duas colunas (matricula e senha) para cada estudante"),
