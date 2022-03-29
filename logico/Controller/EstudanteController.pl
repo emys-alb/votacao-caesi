@@ -20,6 +20,9 @@ le_e_cadastra_estudantes(Caminho) :-
     cadastraTodos(T). % remove headers
 
 desativar_estudante(Matricula, R) :-
-    (is_votante(Matricula) -> 
-    desativa_estudante(Matricula), R = "Estudante desativado";
-    R = "Estudante já desativado").
+    (verifica_estudante_cadastrado(Matricula) ->
+        (is_votante(Matricula) -> 
+            desativa_estudante(Matricula), R = "Estudante desativado";
+            R = "Estudante já desativado");
+        R = "Estudante não cadastrado"
+    ).

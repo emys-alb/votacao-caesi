@@ -12,7 +12,7 @@ verifica_estudante_cadastrado(Matricula):-
     verifica_na_lista(Matricula, Estudantes).
 
 desativa_estudante_csv([], _, []).
-desativa_estudante_csv([row(Matricula, Senha, _)|T], Id, [row(Matricula, Senha, false)|T]).
+desativa_estudante_csv([row(Matricula, Senha, _)|T], Matricula, [row(Matricula, Senha, false)|T]).
 desativa_estudante_csv([H|T], Matricula, [H|Out]) :- desativa_estudante_csv(T, Matricula, Out).
 
 desativa_estudante(Matricula) :-
