@@ -47,11 +47,17 @@ opcao_escolhida_principal(1) :-
     read(Login),
     writeln("Insira sua senha:"),
     read(Senha),
-    login_admin(Login, Senha),
-    tty_clear,
-    opcoes_menu_admin,
-    read(Opcao),
-    opcao_escolhida_admin(Opcao).
+    (login_admin(Login, Senha) ->
+        (tty_clear,
+        opcoes_menu_admin,
+        read(Opcao),
+        opcao_escolhida_admin(Opcao));
+        (tty_clear,
+        (writeln("Admin não cadastrado"),
+        opcoes_menu_principal,
+        read(Opcao),
+        opcao_escolhida_principal(Opcao)))
+    ).
 
 opcao_escolhida_principal(6) :- 
     writeln("Encerrando o sistema"),
