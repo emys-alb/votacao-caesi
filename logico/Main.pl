@@ -2,6 +2,7 @@
 :-include('./Utils.pl').
 :-include('Controller/AdminController.pl').
 :-include('Controller/EstudanteController.pl').
+:-include('Controller/VotacaoController.pl').
 
 main :- 
     menu_principal,
@@ -89,6 +90,17 @@ opcao_escolhida_admin(5) :-
     read(Matricula),
     tty_clear,
     desativar_estudante(Matricula, R),
+    writeln(R),
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
+
+opcao_escolhida_admin(6) :-
+    writeln("Cadastro de votação"),
+    writeln("Insira a data da nova votação:"),
+    read(DataVotacao),
+    cadastro_votacao(DataVotacao, R),
+    tty_clear,
     writeln(R),
     opcoes_menu_admin,
     read(Opcao),
