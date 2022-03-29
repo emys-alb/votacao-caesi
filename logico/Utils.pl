@@ -37,3 +37,9 @@ remove_by_index(I,[H|T],[H|T1]):- X is I - 1, remove_by_index(X, T, T1).
 eh_vazia(Lista) :-
     length(Lista, X),
     X =:= 0.
+
+limpar_csv(Arquivo) :-
+    get_csv_path(Arquivo, Path),
+    open(Path, write, File),
+    write(File, ''),
+    close(File).
