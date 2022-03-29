@@ -149,6 +149,17 @@ opcao_escolhida_admin(6) :-
     read(Opcao),
     opcao_escolhida_admin(Opcao).
 
+opcao_escolhida_admin(8) :-
+    writeln("Encerrar votação"),
+    writeln("Insira o id da votação que deseja encerrar:"),
+    read(IdVotacao),
+    encerra_votacao(IdVotacao, R),
+    tty_clear,
+    writeln(R),
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
+
 opcao_escolhida_admin(9) :- 
     tty_clear,
     opcoes_menu_principal,
