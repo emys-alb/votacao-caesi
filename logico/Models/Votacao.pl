@@ -24,8 +24,15 @@ gerar_id_votacao(Id) :-
     last(Lists, [H|_]),
     Id is H + 1.
 
-encerrar_votacao(IdVotacao).
-    % read_csv('votacao.csv', Lists),
-    % get_by_id(IdVotacao, List, Votacao),
-    % remove(Votacao, Lists, NewLists),
+encerrar_votacao_csv([], _, []).
+encerrar_votacao_csv([row(IdVotacao, D, _, A, N)|T], IdVotacao, [row(IdVotacao, D, true, A, N)|T]).
+encerrar_votacao_csv([H|T], IdVotacao, [H|NewTail]) :-
+    encerrar_votacao_csv(T, IdVotacao, NewTail).
+
+encerrar_votacao(IdVotacao) :-
+    atom_concat('./Dados/', 'votacao.csv', Path),
+    csv_read_file(Path, File),
+    encerrar_votacao_csv(File, IdVotacao, CsvResultante),
+    csv_write_file(Path, CsvResultante).
+    
     
