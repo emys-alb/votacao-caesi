@@ -3,6 +3,7 @@
 :-include('Controller/AdminController.pl').
 :-include('Controller/VotacaoController.pl').
 :-include('Controller/EstudanteController.pl').
+:-include('Controller/ChapaController.pl').
 
 main :- 
     menu_principal,
@@ -36,6 +37,11 @@ opcoes_menu_estudante() :-
     writeln("[1] Edita senha do estudante"),
     writeln("[2] Cadastra voto de estudante"),
     writeln("[3] Voltar para o menu principal\n").
+opcao_menu_cadastro_votacao() :-
+    writeln("MENU Votação"),
+    writeln("[1] Adiciona estudante na chapa"),
+    writeln("[2] Cadastra outra chapa"),
+    writeln("[3] Encerrar cadastro de votação\n").
 
 %Opcoes Principais
 opcao_escolhida_principal(1) :- 
@@ -77,7 +83,6 @@ opcao_escolhida_principal(2) :-
 opcao_escolhida_principal(6) :- 
     writeln("Encerrando o sistema"),
     halt.
-    
 % Opcoes Admin
 opcao_escolhida_admin(1) :- 
     writeln("Cadastro Admin"),
@@ -145,6 +150,9 @@ opcao_escolhida_admin(6) :-
     cadastro_votacao(DataVotacao, R),
     tty_clear,
     writeln(R),
+    opcao_menu_cadastro_votacao(),
+    read(Opcao),
+    opcao_escolhida_votacao(Opcao),    %fazer cadastrar chapa fica dentro da opção 1 
     opcoes_menu_admin,
     read(Opcao),
     opcao_escolhida_admin(Opcao).
@@ -165,9 +173,20 @@ opcao_escolhida_admin(9) :-
     opcoes_menu_principal,
     read(Opcao),
     opcao_escolhida_principal(Opcao).
-
+%Opcoes Estudante
 opcao_escolhida_estudante(1, Matricula) :- 
     writeln("Edita senha do estudante"),
+    writeln("Insira nova senha:"),
+    read(NovaSenha),
+    tty_clear,
+    editar_senha_estudante(Matricula, NovaSenha, R),
+    writeln(R), 
+    opcoes_menu_estudante,
+    read(Opcao),
+    opcao_escolhida_estudante(Opcao, Matricula).
+
+opcao_escolhida_estudante(2, Matricula) :- 
+    writeln("Cadastrar voto de estudante"),
     writeln("Insira nova senha:"),
     read(NovaSenha),
     tty_clear,
@@ -182,3 +201,18 @@ opcao_escolhida_estudante(3, _) :-
     opcoes_menu_principal,
     read(Opcao),
     opcao_escolhida_principal(Opcao).
+
+%Opcoes do cadastro votacao
+
+opcao_escolhida_votacao(1):-
+    writeln("Cadastrar estudante em chapa"),
+    writeln("Insira matricula do estudante:"),
+    read(Matricula),
+    writeln("Insira id da chapa:"),
+    read(Id_chapa),
+    tty_clear,
+    cadastrar_estudante_chapa(Matricula, Id_chapa, R),
+    writeln(R), 
+    opcao_menu_cadastro_votacao(),
+    read(Opcao),
+    opcao_escolhida_estudante(Opcao).
