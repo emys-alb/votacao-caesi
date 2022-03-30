@@ -103,13 +103,22 @@ imprimeEleicoes([row(IDVotacao, DataVotacao, _, Abstencoes, Nulos) | T]) :-
     write("Data da votação: "), writeln(DataVotacao),
     write("Abstencoes: "), writeln(Abstencoes),
     write("Nulos: "), writeln(Nulos),
-    writeln("-----").
-    
+    writeln("-----"),
+    imprimeEleicoes(T).
+
+opcao_escolhida_principal(4) :-
+    tty_clear,
+    writeln("Histórico de votações"),
+    get_votacoes(Result),
+    imprimeEleicoes(Result),
+    opcoes_menu_principal,
+    read(Opcao),
+    opcao_escolhida_principal(Opcao).
 
 opcao_escolhida_principal(6) :- 
     writeln("Encerrando o sistema"),
     halt.
-    
+
 % Opcoes Admin
 opcao_escolhida_admin(1) :- 
     writeln("Cadastro Admin"),

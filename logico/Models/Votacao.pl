@@ -44,3 +44,7 @@ dados_votacao(IDVotacao, Result) :-
     atom_concat('./Dados/', 'votacao.csv', Path),
     csv_read_file(Path, File),
     get_row_votacao(File, IDVotacao, Result).
+
+get_all_votacoes(Result) :-
+    atom_concat('./Dados/', 'votacao.csv', Path),
+    csv_read_file(Path, Result).
