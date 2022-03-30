@@ -82,18 +82,13 @@ opcao_escolhida_principal(3) :-
     read(IDVotacao),
     get_dados_votacao(IDVotacao, Result),
     tty_clear,
-    imprimeEleicoes(Result),
+    (eh_vazia(Result) ->
+        writeln("Votação não encontrada");
+        imprimeEleicoes(Result)
+    ),
     opcoes_menu_principal,
     read(Opcao),
     opcao_escolhida_principal(Opcao).
-
-imprimeEleicoes(row(IDVotacao, DataVotacao, _, Abstencoes, Nulos)) :-
-    writeln(""),
-    write("ID: "), writeln(IDVotacao),
-    write("Data da votação: "), writeln(DataVotacao),
-    write("Abstencoes: "), writeln(Abstencoes),
-    write("Nulos: "), writeln(Nulos),
-    writeln("-----").
 
 imprimeEleicoes([]).
 

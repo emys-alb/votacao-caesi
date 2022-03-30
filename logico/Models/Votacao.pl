@@ -36,7 +36,7 @@ encerrar_votacao(IdVotacao) :-
     csv_write_file(Path, CsvResultante).
 
 get_row_votacao([], _, []).
-get_row_votacao([row(IDVotacao, DataVotacao, Encerrada, Abstencoes, Nulos)|_], IDVotacao, row(IDVotacao, DataVotacao, Encerrada, Abstencoes, Nulos)).
+get_row_votacao([row(IDVotacao, DataVotacao, Encerrada, Abstencoes, Nulos)|_], IDVotacao, [row(IDVotacao, DataVotacao, Encerrada, Abstencoes, Nulos)]).
 get_row_votacao([H|T], IDVotacao, Result) :-
     get_row_votacao(T, IDVotacao, Result).
 
