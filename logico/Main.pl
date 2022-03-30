@@ -12,6 +12,7 @@ menu_principal :-
     opcoes_menu_principal,
     read(Opcao),
     opcao_escolhida_principal(Opcao).
+
 opcoes_menu_principal() :-
     writeln("MENU PRINCIPAL"),
     writeln("[1] Login como administrador"),
@@ -20,6 +21,7 @@ opcoes_menu_principal() :-
     writeln("[4] Lista histórico de votações"),
     writeln("[5] Compara votações"),
     writeln("[6] Sair\n").
+
 opcoes_menu_admin() :-
     writeln("MENU ADMIN"),
     writeln("[1] Cadastra administrador"),
@@ -73,6 +75,31 @@ opcao_escolhida_principal(2) :-
         read(Opcao),
         opcao_escolhida_principal(Opcao))
     ).
+
+opcao_escolhida_principal(3) :-
+    writeln("Dados de uma votação"),
+    writeln("Insira o ID da votação buscada:"),
+    read(IDVotacao),
+    get_dados_votacao(IDVotacao, Result),
+    tty_clear,
+    (eh_vazia(Result) ->
+        writeln("Votação não encontrada");
+        imprimeEleicoes(Result)
+    ),
+    opcoes_menu_principal,
+    read(Opcao),
+    opcao_escolhida_principal(Opcao).
+
+imprimeEleicoes([]).
+
+imprimeEleicoes([row(IDVotacao, DataVotacao, _, Abstencoes, Nulos) | T]) :-
+    writeln(""),
+    write("ID: "), writeln(IDVotacao),
+    write("Data da votação: "), writeln(DataVotacao),
+    write("Abstencoes: "), writeln(Abstencoes),
+    write("Nulos: "), writeln(Nulos),
+    writeln("-----").
+    
 
 opcao_escolhida_principal(6) :- 
     writeln("Encerrando o sistema"),
