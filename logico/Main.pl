@@ -5,7 +5,6 @@
 :-include('Controller/EstudanteController.pl').
 :-include('Controller/ChapaController.pl').
 
-
 main :- 
     menu_principal,
     halt.
@@ -14,6 +13,7 @@ menu_principal :-
     opcoes_menu_principal,
     read(Opcao),
     opcao_escolhida_principal(Opcao).
+
 opcoes_menu_principal() :-
     writeln("MENU PRINCIPAL"),
     writeln("[1] Login como administrador"),
@@ -22,6 +22,7 @@ opcoes_menu_principal() :-
     writeln("[4] Lista histórico de votações"),
     writeln("[5] Compara votações"),
     writeln("[6] Sair\n").
+
 opcoes_menu_admin() :-
     writeln("MENU ADMIN"),
     writeln("[1] Cadastra administrador"),
@@ -52,14 +53,17 @@ opcao_escolhida_principal(1) :-
     read(Login),
     writeln("Insira sua senha:"),
     read(Senha),
-    login_admin(Login, Senha),
-    tty_clear,
-    opcoes_menu_admin,
-    read(Opcao),
-    opcao_escolhida_admin(Opcao).
-opcao_escolhida_principal(6) :- 
-    writeln("Encerrando o sistema"),
-    halt.
+    (login_admin(Login, Senha) ->
+        (tty_clear,
+        opcoes_menu_admin,
+        read(Opcao),
+        opcao_escolhida_admin(Opcao));
+        (tty_clear,
+        (writeln("Admin não cadastrado"),
+        opcoes_menu_principal,
+        read(Opcao),
+        opcao_escolhida_principal(Opcao)))
+    ).
 
 opcao_escolhida_principal(2) :- 
     writeln("Login Estudante"),
@@ -78,9 +82,36 @@ opcao_escolhida_principal(2) :-
         read(Opcao),
         opcao_escolhida_principal(Opcao))
     ).
+
+opcao_escolhida_principal(3) :-
+    writeln("Dados de uma votação"),
+    writeln("Insira o ID da votação buscada:"),
+    read(IDVotacao),
+    get_dados_votacao(IDVotacao, Result),
+    tty_clear,
+    (eh_vazia(Result) ->
+        writeln("Votação não encontrada");
+        imprimeEleicoes(Result)
+    ),
+    opcoes_menu_principal,
+    read(Opcao),
+    opcao_escolhida_principal(Opcao).
+
+imprimeEleicoes([]).
+
+imprimeEleicoes([row(IDVotacao, DataVotacao, _, Abstencoes, Nulos) | T]) :-
+    writeln(""),
+    write("ID: "), writeln(IDVotacao),
+    write("Data da votação: "), writeln(DataVotacao),
+    write("Abstencoes: "), writeln(Abstencoes),
+    write("Nulos: "), writeln(Nulos),
+    writeln("-----").
+    
+
 opcao_escolhida_principal(6) :- 
     writeln("Encerrando o sistema"),
     halt.
+    
 % Opcoes Admin
 opcao_escolhida_admin(1) :- 
     writeln("Cadastro Admin"),
@@ -94,7 +125,31 @@ opcao_escolhida_admin(1) :-
     opcoes_menu_admin,
     read(Opcao),
     opcao_escolhida_admin(Opcao).
-    
+
+opcao_escolhida_admin(2) :- 
+    writeln("Remove administrador"),
+    writeln("Insira login do admin a ser removido:"),
+    read(Login),
+    tty_clear,
+    remove_admin(Login, R),
+    writeln(R), 
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
+
+opcao_escolhida_admin(3) :- 
+    writeln("Edita senha do administrador"),
+    writeln("Insira login do admin a ser editado:"),
+    read(Login),
+    writeln("Insira sua nova senha:"),
+    read(NovaSenha),
+    tty_clear,
+    edita_admin(Login, NovaSenha, R),
+    writeln(R), 
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
+
 opcao_escolhida_admin(4) :- 
     writeln("Cadastro Estudantes"),
     writeln("Insira o caminho (entre aspas simples ou duplas) para o arquivo .csv que deve conter duas colunas (matricula e senha) para cada estudante"),
@@ -126,11 +181,18 @@ opcao_escolhida_admin(6) :-
     writeln(R),
     opcao_menu_cadastro_votacao(),
     read(Opcao),
-    opcao_escolhida_votacao(Opcao).    %fazer cadastrar chapa fica dentro da opção 1 
+    opcao_escolhida_votacao(Opcao).
 
-
-
-
+opcao_escolhida_admin(8) :-
+    writeln("Encerrar votação"),
+    writeln("Insira o id da votação que deseja encerrar:"),
+    read(IdVotacao),
+    encerra_votacao(IdVotacao, R),
+    tty_clear,
+    writeln(R),
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
 
 opcao_escolhida_admin(9) :- 
     tty_clear,
@@ -167,4 +229,3 @@ opcao_escolhida_votacao(1) :-
     opcao_escolhida_votacao(Opcao),
     tty_clear,
     writeln(R).
-
