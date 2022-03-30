@@ -8,3 +8,7 @@ encerra_votacao(IdVotacao, "ID não encontrado.") :-
 
 encerra_votacao(IdVotacao, "Votação encerrada.") :-
     encerrar_votacao(IdVotacao).
+
+get_dados_votacao(IDVotacao, Result) :-
+    
+    dados_votacao(IDVotacao, Result).

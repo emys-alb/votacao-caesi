@@ -34,5 +34,13 @@ encerrar_votacao(IdVotacao) :-
     csv_read_file(Path, File),
     encerrar_votacao_csv(File, IdVotacao, CsvResultante),
     csv_write_file(Path, CsvResultante).
-    
-    
+
+get_row_votacao([], _, []).
+get_row_votacao([row(IDVotacao, DataVotacao, Encerrada, Abstencoes, Nulos)|_], IDVotacao, row(IDVotacao, DataVotacao, Encerrada, Abstencoes, Nulos)).
+get_row_votacao([H|T], IDVotacao, Result) :-
+    get_row_votacao(T, IDVotacao, Result).
+
+dados_votacao(IDVotacao, Result) :-
+    atom_concat('./Dados/', 'votacao.csv', Path),
+    csv_read_file(Path, File),
+    get_row_votacao(File, IDVotacao, Result).
