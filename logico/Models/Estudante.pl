@@ -45,3 +45,29 @@ edita_senha_estudante(Matricula, NovaSenha) :-
 edita_senha_estudante_csv([], _, _,[]).
 edita_senha_estudante_csv([row(Matricula, _, Votante)|T], Matricula, NovaSenha, [row(Matricula, NovaSenha, Votante)|T]).
 edita_senha_estudante_csv([H|T], Matricula, NovaSenha, [H|Out]) :- edita_senha_estudante_csv(T, Matricula, NovaSenha, Out).
+
+gerar_id_voto(1) :-
+    read_csv('voto.csv', Lists),
+    not(last(Lists, _)).
+
+gerar_id_voto(Id) :-
+    read_csv('voto.csv', Lists),
+    last(Lists, [H|_]),
+    Id is H + 1.
+
+verifica_voto_cadastrado([row(_, Matricula, IdVotacao)|T], Matricula, IdVotacao).
+verifica_voto_cadastrado([H|T], Matricula, IdVotacao) :-
+    verifica_voto_cadastrado(T, Matricula, IdVotacao).
+
+voto_cadastrado(Matricula, IdVotacao) :-
+    atom_concat('./Dados/', 'voto.csv', Path),
+    csv_read_file(Path, Rows),
+    verifica_voto_cadastrado(Rows, Matricula, IdVotacao).
+
+cadastra_voto(Matricula, IdVotacao) :-
+    not(voto_cadastrado(Matricula, IdVotacao)),
+    get_csv_path('voto.csv', Csv_Voto),
+    open(Csv_Voto, append, File),
+    gerar_id_voto(Id),
+    writeln(File, (Id, Matricula, IdVotacao)),
+    close(File).

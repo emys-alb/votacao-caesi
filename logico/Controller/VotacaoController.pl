@@ -8,3 +8,7 @@ encerra_votacao(IdVotacao, "ID não encontrado.") :-
 
 encerra_votacao(IdVotacao, "Votação encerrada.") :-
     encerrar_votacao(IdVotacao).
+
+verifica_votacao_ativa(IdVotacao) :- is_votacao_ativa(IdVotacao).
+
+adiciona_voto_nulo_votacao(IdVotacao) :- adiciona_voto_nulo(IdVotacao).

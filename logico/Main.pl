@@ -185,8 +185,34 @@ opcao_escolhida_estudante(1, Matricula) :-
     read(Opcao),
     opcao_escolhida_estudante(Opcao, Matricula).
 
+opcao_escolhida_estudante(2, Matricula) :- 
+    writeln("Cadastrar voto de estudante"),
+    get_chapas_votacoes_ativas(Chapas),
+    print_chapas(Chapas),
+    writeln("Insira o ID da votação:"),
+    read(IdVotacao),
+    (voto_cadastrado(Matricula, IdVotacao) -> 
+        tty_clear, writeln("Voto já cadastrado nessa votação");
+        writeln("Insira o número da chapa: (se o seu voto for nulo, digite 'n')"),
+        read(ChapaNum),
+        tty_clear,
+        cadastra_voto(ChapaNum, IdVotacao),
+        writeln("Voto Cadastrado")
+    ),
+    opcoes_menu_estudante,
+    read(Opcao),
+    opcao_escolhida_estudante(Opcao, Matricula).
+
+cadastra_voto('n', IdVotacao) :- adiciona_voto_nulo_votacao(IdVotacao).
+cadastra_voto(ChapaNum, IdVotacao) :- adiciona_voto_chapa(ChapaNum, IdVotacao).
+
 opcao_escolhida_estudante(3, _) :- 
     tty_clear,
     opcoes_menu_principal,
     read(Opcao),
     opcao_escolhida_principal(Opcao).
+
+print_chapas([]).
+print_chapas([row(Id,Nome,Numero,IdVotacao,_)|T]) :- 
+    format("Votacao ID ~q: ~q, ID ~q, número ~q\n", [IdVotacao, Nome, Id, Numero]),
+    print_chapas(T).

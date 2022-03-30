@@ -35,4 +35,20 @@ encerrar_votacao(IdVotacao) :-
     encerrar_votacao_csv(File, IdVotacao, CsvResultante),
     csv_write_file(Path, CsvResultante).
     
-    
+is_votacao_ativa(Id) :-
+    read_csv('votacao.csv', Votacoes),
+    get_by_id(Id, Votacoes, [_|[_|[Encerrada|_]]]),
+    not(Encerrada).
+
+adiciona_voto_nulo_csv([], _, []).
+adiciona_voto_nulo_csv([row(IdVotacao, D, E, A, N)|T], IdVotacao, Result) :-
+    NewNulos is N + 1,
+    Result = [row(IdVotacao, D, E, A, NewNulos)|T].
+adiciona_voto_nulo_csv([H|T], IdVotacao, [H|NewTail]) :-
+    adiciona_voto_nulo_csv(T, IdVotacao, NewTail).
+
+adiciona_voto_nulo(IdVotacao) :-
+    atom_concat('./Dados/', 'votacao.csv', Path),
+    csv_read_file(Path, File),
+    adiciona_voto_nulo_csv(File, IdVotacao, CsvResultante),
+    csv_write_file(Path, CsvResultante). 
