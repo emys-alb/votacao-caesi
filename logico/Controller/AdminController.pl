@@ -8,3 +8,13 @@ cadastro_admin(Login, Senha, Result) :-
     (verifica_admin_cadastrado(Login) -> 
     Result = "Erro: Admin já cadastrado.";
     cadastrar_admin(Login, Senha, Result)).
+
+remove_admin(Login, R) :-
+    (verifica_admin_cadastrado(Login) -> 
+    remover_admin(Login, R);
+    R = "Erro: Admin não está cadastrado.").
+
+edita_admin(Login, NovaSenha, R) :-
+    (verifica_admin_cadastrado(Login) -> 
+    editar_admin(Login, NovaSenha, R);
+    R = "Erro: Admin não está cadastrado.").
