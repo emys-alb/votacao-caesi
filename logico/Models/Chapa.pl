@@ -3,9 +3,9 @@
 
 
 
-verifica_chapa_cadastrada(DataChapa) :-
+verifica_chapa_cadastrada(idChapa) :-
     read_csv('chapa.csv', Lists),
-    verifica_na_lista(DataChapa, Lists).
+    verifica_na_lista(idChapa, Lists).
 
 cadastrar_chapa(Nome , Numero, "Chapa Cadastrada") :-
     get_csv_path('chapa.csv', CsvChapa),

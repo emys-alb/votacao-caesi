@@ -122,14 +122,15 @@ opcao_escolhida_admin(6) :-
     writeln("Insira a data da nova votação:"),
     read(DataVotacao),
     cadastro_votacao(DataVotacao, R),
-    tty_clear,
-    writeln(R),
+    
     opcao_menu_cadastro_votacao(),
     read(Opcao),
     opcao_escolhida_votacao(Opcao),    %fazer cadastrar chapa fica dentro da opção 1 
     opcoes_menu_admin,
     read(Opcao),
-    opcao_escolhida_admin(Opcao).
+    opcao_escolhida_admin(Opcao)
+    tty_clear,
+    writeln(R),.
 
 
 
@@ -157,3 +158,12 @@ opcao_escolhida_estudante(3, _) :-
     opcoes_menu_principal,
     read(Opcao),
     opcao_escolhida_principal(Opcao).
+
+opcao_escolhida_votacao(1) :- 
+    writeln("Cadastro Chapa"),
+    writeln("Insira o nome da Chapa"),
+    read(Nome),
+    writeln("Insira o número da Chapa"),
+    read(Numero),
+    cadastrar_chapa(Nome,Numero,R).
+

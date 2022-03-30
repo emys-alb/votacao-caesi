@@ -2,5 +2,5 @@
 
 
 
-cadastro_chapa(DataChapa, Result) :-
-    cadastrar_chapa(DataChapa, Result).
+cadastrar_chapa(Nome , Numero, "Chapa Cadastrada") :-
+    cadastrar_chapa(Nome , Numero, R) :-
