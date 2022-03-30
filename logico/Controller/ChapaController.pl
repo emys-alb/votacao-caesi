@@ -2,5 +2,5 @@
 
 
 
-cadastrar_chapa(Nome , Numero, "Chapa Cadastrada") :-
-    cadastrar_chapa(Nome , Numero, R) :-
+cadastra_chapa(Nome , Numero, R) :-
+    cadastrar_chapa(Nome , Numero,R).

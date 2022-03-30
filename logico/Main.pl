@@ -40,8 +40,8 @@ opcoes_menu_estudante() :-
     writeln("[3] Voltar para o menu principal\n").
 opcao_menu_cadastro_votacao() :-
     writeln("MENU Votação"),
-    writeln("[1] Adiciona estudante na chapa"),
-    writeln("[2] Cadastra outra chapa"),
+    writeln("[1] Cadastra chapa"),
+    writeln("[2] Adiciona estudante na chapa"),
     writeln("[3] Encerrar cadastro de votação\n").
 
 
@@ -122,15 +122,11 @@ opcao_escolhida_admin(6) :-
     writeln("Insira a data da nova votação:"),
     read(DataVotacao),
     cadastro_votacao(DataVotacao, R),
-    
+    tty_clear,
+    writeln(R),
     opcao_menu_cadastro_votacao(),
     read(Opcao),
-    opcao_escolhida_votacao(Opcao),    %fazer cadastrar chapa fica dentro da opção 1 
-    opcoes_menu_admin,
-    read(Opcao),
-    opcao_escolhida_admin(Opcao)
-    tty_clear,
-    writeln(R),.
+    opcao_escolhida_votacao(Opcao).    %fazer cadastrar chapa fica dentro da opção 1 
 
 
 
@@ -165,5 +161,10 @@ opcao_escolhida_votacao(1) :-
     read(Nome),
     writeln("Insira o número da Chapa"),
     read(Numero),
-    cadastrar_chapa(Nome,Numero,R).
+    cadastra_chapa(Nome,Numero,R),
+    opcao_menu_cadastro_votacao(),
+    read(Opcao),
+    opcao_escolhida_votacao(Opcao),
+    tty_clear,
+    writeln(R).
 
