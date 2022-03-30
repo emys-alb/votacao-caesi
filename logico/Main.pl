@@ -215,4 +215,4 @@ opcao_escolhida_votacao(1):-
     writeln(R), 
     opcao_menu_cadastro_votacao(),
     read(Opcao),
-    opcao_escolhida_estudante(Opcao).
+    opcao_escolhida_votacao(Opcao).
