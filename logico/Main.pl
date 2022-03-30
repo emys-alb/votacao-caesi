@@ -80,17 +80,31 @@ opcao_escolhida_principal(3) :-
     writeln("Dados de uma votação"),
     writeln("Insira o ID da votação buscada:"),
     read(IDVotacao),
-    get_dados_votacao(IDVotacao, row(IDVotacao, DataVotacao, _, Abstencoes, Nulos)),
+    get_dados_votacao(IDVotacao, Result),
     tty_clear,
+    imprimeEleicoes(Result),
+    opcoes_menu_principal,
+    read(Opcao),
+    opcao_escolhida_principal(Opcao).
+
+imprimeEleicoes(row(IDVotacao, DataVotacao, _, Abstencoes, Nulos)) :-
     writeln(""),
     write("ID: "), writeln(IDVotacao),
     write("Data da votação: "), writeln(DataVotacao),
     write("Abstencoes: "), writeln(Abstencoes),
     write("Nulos: "), writeln(Nulos),
+    writeln("-----").
+
+imprimeEleicoes([]).
+
+imprimeEleicoes([row(IDVotacao, DataVotacao, _, Abstencoes, Nulos) | T]) :-
     writeln(""),
-    opcoes_menu_principal,
-    read(Opcao),
-    opcao_escolhida_principal(Opcao).
+    write("ID: "), writeln(IDVotacao),
+    write("Data da votação: "), writeln(DataVotacao),
+    write("Abstencoes: "), writeln(Abstencoes),
+    write("Nulos: "), writeln(Nulos),
+    writeln("-----").
+    
 
 opcao_escolhida_principal(6) :- 
     writeln("Encerrando o sistema"),
