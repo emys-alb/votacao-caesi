@@ -126,7 +126,7 @@ opcao_escolhida_admin(6) :-
     writeln(R),
     opcao_menu_cadastro_votacao(),
     read(Opcao),
-    opcao_escolhida_votacao(Opcao),%fazer cadastrar chapa fica dentro da opção 1 
+    opcao_escolhida_votacao(Opcao),    %fazer cadastrar chapa fica dentro da opção 1 
     opcoes_menu_admin,
     read(Opcao),
     opcao_escolhida_admin(Opcao).

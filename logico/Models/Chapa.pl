@@ -2,6 +2,7 @@
 :- include('../Utils.pl').
 
 
+
 verifica_chapa_cadastrada(DataChapa) :-
     read_csv('chapa.csv', Lists),
     verifica_na_lista(DataChapa, Lists).
