@@ -3,6 +3,7 @@
 :-include('Controller/AdminController.pl').
 :-include('Controller/VotacaoController.pl').
 :-include('Controller/EstudanteController.pl').
+:-include('Controller/ChapaController.pl').
 
 main :- 
     menu_principal,
@@ -38,6 +39,12 @@ opcoes_menu_estudante() :-
     writeln("[1] Edita senha do estudante"),
     writeln("[2] Cadastra voto de estudante"),
     writeln("[3] Voltar para o menu principal\n").
+opcao_menu_cadastro_votacao() :-
+    writeln("MENU Votação"),
+    writeln("[1] Cadastra chapa"),
+    writeln("[2] Adiciona estudante na chapa"),
+    writeln("[3] Encerrar cadastro de votação\n").
+
 
 %Opcoes Principais
 opcao_escolhida_principal(1) :- 
@@ -82,18 +89,13 @@ opcao_escolhida_principal(3) :-
     read(IDVotacao),
     get_dados_votacao(IDVotacao, Result),
     tty_clear,
-    imprimeEleicoes(Result),
+    (eh_vazia(Result) ->
+        writeln("Votação não encontrada");
+        imprimeEleicoes(Result)
+    ),
     opcoes_menu_principal,
     read(Opcao),
     opcao_escolhida_principal(Opcao).
-
-imprimeEleicoes(row(IDVotacao, DataVotacao, _, Abstencoes, Nulos)) :-
-    writeln(""),
-    write("ID: "), writeln(IDVotacao),
-    write("Data da votação: "), writeln(DataVotacao),
-    write("Abstencoes: "), writeln(Abstencoes),
-    write("Nulos: "), writeln(Nulos),
-    writeln("-----").
 
 imprimeEleicoes([]).
 
@@ -118,7 +120,7 @@ opcao_escolhida_principal(4) :-
 opcao_escolhida_principal(6) :- 
     writeln("Encerrando o sistema"),
     halt.
-
+    
 % Opcoes Admin
 opcao_escolhida_admin(1) :- 
     writeln("Cadastro Admin"),
@@ -186,9 +188,9 @@ opcao_escolhida_admin(6) :-
     cadastro_votacao(DataVotacao, R),
     tty_clear,
     writeln(R),
-    opcoes_menu_admin,
+    opcao_menu_cadastro_votacao(),
     read(Opcao),
-    opcao_escolhida_admin(Opcao).
+    opcao_escolhida_votacao(Opcao).
 
 opcao_escolhida_admin(8) :-
     writeln("Encerrar votação"),
@@ -223,3 +225,16 @@ opcao_escolhida_estudante(3, _) :-
     opcoes_menu_principal,
     read(Opcao),
     opcao_escolhida_principal(Opcao).
+
+opcao_escolhida_votacao(1) :- 
+    writeln("Cadastro Chapa"),
+    writeln("Insira o nome da Chapa"),
+    read(Nome),
+    writeln("Insira o número da Chapa"),
+    read(Numero),
+    cadastra_chapa(Nome,Numero,R),
+    opcao_menu_cadastro_votacao(),
+    read(Opcao),
+    opcao_escolhida_votacao(Opcao),
+    tty_clear,
+    writeln(R).
