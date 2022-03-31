@@ -20,6 +20,11 @@ remover_estudante_chapa(Matricula, Id_chapa, R) :-
             R = "Chapa não cadastrada");
         R = "Estudante não cadastrado"
     ).
+get_chapas_votacoes_ativas(Result) :- get_chapas_ativas(Result).
 
-cadastra_chapa(Nome , Numero, R) :-
-    cadastrar_chapa(Nome , Numero,R).
+adiciona_voto_chapa(ChapaNum, IdVotacao) :- adiciona_voto(ChapaNum, IdVotacao).
+
+verifica_chapa_by_numero_e_votacao(ChapaNumero, IdVotacao) :- verifica_by_numero_votacao(ChapaNumero, IdVotacao).
+
+cadastra_chapa(Nome , Numero, IdVotacao, R) :-
+    cadastrar_chapa(Nome, Numero, IdVotacao, R).
