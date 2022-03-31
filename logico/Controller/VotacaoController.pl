@@ -12,3 +12,6 @@ encerra_votacao(IdVotacao, "Votação encerrada.") :-
 verifica_votacao_ativa(IdVotacao) :- is_votacao_ativa(IdVotacao).
 
 adiciona_voto_nulo_votacao(IdVotacao) :- adiciona_voto_nulo(IdVotacao).
+
+get_dados_votacao(IDVotacao, Result) :-
+    dados_votacao(IDVotacao, Result).

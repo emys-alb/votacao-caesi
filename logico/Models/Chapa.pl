@@ -2,9 +2,9 @@
 :- include('../Utils.pl').
 :- include('../Controller/VotacaoController.pl').
 
-verifica_chapa_cadastrada(DataChapa) :-
+verifica_chapa_cadastrada(idChapa) :-
     read_csv('chapa.csv', Lists),
-    verifica_na_lista(DataChapa, Lists).
+    verifica_na_lista(idChapa, Lists).
 
 cadastrar_chapa(Nome , Numero, "Chapa Cadastrada") :-
     get_csv_path('chapa.csv', CsvChapa),
@@ -55,3 +55,7 @@ verifica_by_numero_votacao(Numero, IdVotacao) :-
     atom_concat('./Dados/', 'chapa.csv', Path),
     csv_read_file(Path, File),
     verifica_by_numero_votacao_csv(File, Numero, IdVotacao).
+
+get_chapa(_, [], []).
+get_chapa(Id, [[Id|T]|T2], [Id|T]).
+get_chapa(Id, [[H|T]|T2], R) :- get_chapa(Id, T2, R).
