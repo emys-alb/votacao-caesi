@@ -3,6 +3,7 @@
 :-include('Controller/AdminController.pl').
 :-include('Controller/VotacaoController.pl').
 :-include('Controller/EstudanteController.pl').
+:-include('Controller/ChapaController.pl').
 
 main :- 
     menu_principal,
@@ -38,6 +39,12 @@ opcoes_menu_estudante() :-
     writeln("[1] Edita senha do estudante"),
     writeln("[2] Cadastra voto de estudante"),
     writeln("[3] Voltar para o menu principal\n").
+opcao_menu_cadastro_votacao() :-
+    writeln("MENU Votação"),
+    writeln("[1] Cadastra chapa"),
+    writeln("[2] Adiciona estudante na chapa"),
+    writeln("[3] Encerrar cadastro de votação\n").
+
 
 %Opcoes Principais
 opcao_escolhida_principal(1) :- 
@@ -172,9 +179,9 @@ opcao_escolhida_admin(6) :-
     cadastro_votacao(DataVotacao, R),
     tty_clear,
     writeln(R),
-    opcoes_menu_admin,
+    opcao_menu_cadastro_votacao(),
     read(Opcao),
-    opcao_escolhida_admin(Opcao).
+    opcao_escolhida_votacao(Opcao).
 
 opcao_escolhida_admin(8) :-
     writeln("Encerrar votação"),
@@ -209,3 +216,22 @@ opcao_escolhida_estudante(3, _) :-
     opcoes_menu_principal,
     read(Opcao),
     opcao_escolhida_principal(Opcao).
+
+opcao_escolhida_votacao(1) :- 
+    writeln("Cadastro Chapa"),
+    writeln("Insira o nome da Chapa"),
+    read(Nome),
+    writeln("Insira o número da Chapa"),
+    read(Numero),
+    cadastra_chapa(Nome,Numero,R),
+    tty_clear,
+    writeln(R),
+    opcao_menu_cadastro_votacao(),
+    read(Opcao),
+    opcao_escolhida_votacao(Opcao).
+
+opcao_escolhida_votacao(3) :- 
+    tty_clear,
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).  
