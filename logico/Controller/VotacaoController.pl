@@ -1,7 +1,7 @@
 :- include('../Models/Votacao.pl').
 
-cadastro_votacao(DataVotacao, Result) :-
-    cadastrar_votacao(DataVotacao, Result).
+cadastro_votacao(DataVotacao, IdVotacao, Result) :-
+    cadastrar_votacao(DataVotacao, IdVotacao, Result).
 
 encerra_votacao(IdVotacao, "ID não encontrado.") :-
     not(verifica_votacao_cadastrada(IdVotacao)).

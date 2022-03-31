@@ -5,7 +5,7 @@ verifica_votacao_cadastrada(IdVotacao) :-
     read_csv('votacao.csv', Lists),
     verifica_na_lista(IdVotacao, Lists).
 
-cadastrar_votacao(DataVotacao, "Votação Cadastrada") :-
+cadastrar_votacao(DataVotacao, Id, "Votação Cadastrada") :-
     get_csv_path('votacao.csv', CsvVotacao),
     open(CsvVotacao, append, File),
     gerar_id_votacao(Id),

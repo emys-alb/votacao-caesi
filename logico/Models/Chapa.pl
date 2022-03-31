@@ -6,11 +6,12 @@ verifica_chapa_cadastrada(idChapa) :-
     read_csv('chapa.csv', Lists),
     verifica_na_lista(idChapa, Lists).
 
-cadastrar_chapa(Nome , Numero, "Chapa Cadastrada") :-
+cadastrar_chapa(Nome , Numero, IdVotacao, "Chapa Cadastrada") :-
     get_csv_path('chapa.csv', CsvChapa),
     open(CsvChapa, append, File),
-    gerar_id_chapa(Id), 
-    writeln(File, (Id, Nome, Numero)),
+    gerar_id_chapa(Id),
+    NumDeVotos = 0,
+    writeln(File, (Id, Nome, Numero, IdVotacao, NumDeVotos)),
     close(File).
 
 gerar_id_chapa(1) :-
