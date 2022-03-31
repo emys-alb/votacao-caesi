@@ -37,3 +37,7 @@ editar_senha_estudante(Matricula, NovaSenha, R) :-
     ).
 
 get_quantidade_estudantes_votantes(Result) :- get_quantidade_votantes(Result).
+
+cadastra_voto_estudante(Matricula, IdVotacao) :- cadastrar_voto(Matricula, IdVotacao).
+
+eh_votante(Matricula) :- is_votante(Matricula).
