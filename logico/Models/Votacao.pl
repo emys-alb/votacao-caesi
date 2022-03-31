@@ -1,5 +1,6 @@
 :- use_module(library(csv)).
 :- include('../Utils.pl').
+:- include('../Controller/EstudanteController.pl').
 
 verifica_votacao_cadastrada(IdVotacao) :-
     read_csv('votacao.csv', Lists),
@@ -25,7 +26,8 @@ gerar_id_votacao(Id) :-
     Id is H + 1.
 
 encerrar_votacao_csv([], _, []).
-encerrar_votacao_csv([row(IdVotacao, D, _, A, N)|T], IdVotacao, [row(IdVotacao, D, true, A, N)|T]).
+encerrar_votacao_csv([row(IdVotacao, D, _, _, N)|T], IdVotacao, [row(IdVotacao, D, true, Abstencoes, N)|T]) :-
+    get_quantidade_estudantes_votantes(Abstencoes).
 encerrar_votacao_csv([H|T], IdVotacao, [H|NewTail]) :-
     encerrar_votacao_csv(T, IdVotacao, NewTail).
 

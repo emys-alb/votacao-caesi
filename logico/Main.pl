@@ -190,6 +190,8 @@ opcao_escolhida_admin(8) :-
     encerra_votacao(IdVotacao, R),
     tty_clear,
     writeln(R),
+    get_quantidade_estudantes_votantes(Qtd),
+    writeln(Qtd),
     opcoes_menu_admin,
     read(Opcao),
     opcao_escolhida_admin(Opcao).
