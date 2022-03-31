@@ -35,10 +35,13 @@ encerrar_votacao(IdVotacao) :-
     encerrar_votacao_csv(File, IdVotacao, CsvResultante),
     csv_write_file(Path, CsvResultante).
     
+verifica_eh_ativa([row(Id,_,Encerrada,_,_)|T], Id) :- not(Encerrada).
+verifica_eh_ativa([H|T],Id) :- verifica_eh_ativa(T, Id).
+
 is_votacao_ativa(Id) :-
-    read_csv('votacao.csv', Votacoes),
-    get_by_id(Id, Votacoes, [_|[_|[Encerrada|_]]]),
-    not(Encerrada).
+    atom_concat('./Dados/', 'votacao.csv', Path),
+    csv_read_file(Path, Rows),
+    verifica_eh_ativa(Rows, Id).
 
 adiciona_voto_nulo_csv([], _, []).
 adiciona_voto_nulo_csv([row(IdVotacao, D, E, A, N)|T], IdVotacao, Result) :-

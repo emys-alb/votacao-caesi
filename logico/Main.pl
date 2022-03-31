@@ -185,19 +185,32 @@ opcao_escolhida_estudante(1, Matricula) :-
     read(Opcao),
     opcao_escolhida_estudante(Opcao, Matricula).
 
-opcao_escolhida_estudante(2, Matricula) :- 
-    writeln("Cadastrar voto de estudante"),
-    get_chapas_votacoes_ativas(Chapas),
-    print_chapas(Chapas),
-    writeln("Insira o ID da votação:"),
-    read(IdVotacao),
-    (voto_cadastrado(Matricula, IdVotacao) -> 
-        tty_clear, writeln("Voto já cadastrado nessa votação");
-        writeln("Insira o número da chapa: (se o seu voto for nulo, digite 'n')"),
-        read(ChapaNum),
-        tty_clear,
-        cadastra_voto(ChapaNum, IdVotacao),
-        writeln("Voto Cadastrado")
+opcao_escolhida_estudante(2, Matricula) :-
+    (eh_votante(Matricula) ->
+        (writeln("Cadastrar voto de estudante"),
+        get_chapas_votacoes_ativas(Chapas),
+        print_chapas(Chapas),
+        writeln("Insira o ID da votação:"),
+        read(IdVotacao),
+        (verifica_votacao_ativa(IdVotacao) ->
+            (voto_cadastrado(Matricula, IdVotacao) -> 
+                (tty_clear, writeln("Voto já cadastrado nessa votação"));
+                writeln("Insira o número da chapa: (se o seu voto for nulo, digite 'n')"),
+                read(ChapaNum),
+                tty_clear,
+                (verifica_chapa_by_numero_e_votacao(ChapaNum, IdVotacao) ->
+                    (
+                    cadastra_voto_estudante(Matricula, IdVotacao),
+                    cadastra_voto(ChapaNum, IdVotacao),
+                    writeln("Voto Cadastrado")
+                    );
+                    writeln("Chapa não encontrada")
+                )
+            );
+            tty_clear,writeln("Votação encerrada ou inexistente")
+        )
+        );
+        tty_clear,writeln("Estudante não é votante")    
     ),
     opcoes_menu_estudante,
     read(Opcao),

@@ -31,10 +31,14 @@ desativa_estudante(Matricula) :-
     desativa_estudante_csv(File, Matricula, Saida),
     csv_write_file(Path, Saida).
 
+verifica_eh_votante([row(Matricula, _, Votante)|T], Matricula) :- Votante.
+verifica_eh_votante([H|T], Matricula) :-
+    verifica_eh_votante(T, Matricula).
+
 is_votante(Matricula) :-
-    read_csv('estudante.csv', Estudantes),
-    get_by_id(Matricula, Estudantes, [_|[_|[Votante]]]),
-    Votante.
+    atom_concat('./Dados/', 'estudante.csv', Path),
+    csv_read_file(Path, Rows),
+    verifica_eh_votante(Rows, Matricula).
 
 edita_senha_estudante(Matricula, NovaSenha) :-
     atom_concat('./Dados/', 'estudante.csv', Path),
@@ -64,7 +68,7 @@ voto_cadastrado(Matricula, IdVotacao) :-
     csv_read_file(Path, Rows),
     verifica_voto_cadastrado(Rows, Matricula, IdVotacao).
 
-cadastra_voto(Matricula, IdVotacao) :-
+cadastrar_voto(Matricula, IdVotacao) :-
     not(voto_cadastrado(Matricula, IdVotacao)),
     get_csv_path('voto.csv', Csv_Voto),
     open(Csv_Voto, append, File),

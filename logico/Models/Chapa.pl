@@ -46,4 +46,12 @@ adiciona_voto(ChapaNumero, IdVotacao) :-
     atom_concat('./Dados/', 'chapa.csv', Path),
     csv_read_file(Path, File),
     adiciona_voto_csv(File, ChapaNumero, IdVotacao, CsvResultante),
-    csv_write_file(Path, CsvResultante). 
+    csv_write_file(Path, CsvResultante).
+
+verifica_by_numero_votacao_csv([row(Id,Nome,Numero,IdVotacao,Votos)|T], Numero, IdVotacao).
+verifica_by_numero_votacao_csv([H|T], Numero, IdVotacao) :- verifica_by_numero_votacao_csv(T, Numero, IdVotacao).
+
+verifica_by_numero_votacao(Numero, IdVotacao) :-
+    atom_concat('./Dados/', 'chapa.csv', Path),
+    csv_read_file(Path, File),
+    verifica_by_numero_votacao_csv(File, Numero, IdVotacao).
