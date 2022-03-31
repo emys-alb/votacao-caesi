@@ -1,12 +1,6 @@
 :- use_module(library(csv)).
 :- include('../Utils.pl').
 
-
-
-verifica_chapa_cadastrada(idChapa) :-
-    read_csv('chapa.csv', Lists),
-    verifica_na_lista(idChapa, Lists).
-
 cadastrar_chapa(Nome , Numero, "Chapa Cadastrada") :-
     get_csv_path('chapa.csv', CsvChapa),
     open(CsvChapa, append, File),
@@ -38,3 +32,19 @@ cadastra_estudante_chapa(Matricula, Id_chapa):-
     open(Csv_Estudante_chapa, append, File),
     writeln(File, (Matricula, Id_chapa)),
     close(File).
+
+remove_estudante_chapa(Matricula, Id_chapa):-
+    atom_concat('./Dados/', 'estudanteChapa.csv', Path),
+    csv_read_file(Path, Rows),
+    %get_estudante_chapa(EstudantesChapa, Matricula, Id_chapa, R),
+    removeTupla(Matricula, Id_chapa, Rows, ListaAtualizada),
+    csv_write_file(Path, ListaAtualizada).
+    
+verifica_chapa_cadastrada([row(Id_chapa, _, _)|T], Id_chapa).
+verifica_chapa_cadastrada([H|T], Id_chapa) :-
+    verifica_chapa_cadastrada(T, Id_chapa).
+
+chapa_cadastrada(Id_chapa) :-
+    atom_concat('./Dados/', 'chapa.csv', Path),
+    csv_read_file(Path, Rows),
+    verifica_chapa_cadastrada(Rows, Id_chapa).
