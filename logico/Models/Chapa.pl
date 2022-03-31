@@ -22,3 +22,7 @@ gerar_id_chapa(Id) :-
     read_csv('chapa.csv', Lists),
     last(Lists, [H|_]),
     Id is H + 1.
+
+get_chapa(_, [], []).
+get_chapa(Id, [[Id|T]|T2], [Id|T]).
+get_chapa(Id, [[H|T]|T2], R) :- get_chapa(Id, T2, R).
