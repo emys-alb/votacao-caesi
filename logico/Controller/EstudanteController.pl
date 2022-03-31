@@ -35,3 +35,7 @@ editar_senha_estudante(Matricula, NovaSenha, R) :-
         (edita_senha_estudante(Matricula, NovaSenha), R = "Senha editada");
         R = "Estudante não cadastrado"
     ).
+
+cadastra_voto_estudante(Matricula, IdVotacao) :- cadastrar_voto(Matricula, IdVotacao).
+
+eh_votante(Matricula) :- is_votante(Matricula).
