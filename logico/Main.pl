@@ -44,6 +44,13 @@ opcao_menu_cadastro_votacao() :-
     writeln("[1] Cadastra chapa"),
     writeln("[2] Adiciona estudante na chapa"),
     writeln("[3] Encerrar cadastro de votação\n").
+opcao_menu_edita_votacao() :-
+    writeln("MENU Votação"),
+    writeln("[1] Cadastra chapa"),
+    writeln("[2] Edita informações da chapa"),
+    writeln("[3] Remove chapa"),
+    writeln("[4] Adiciona estudante na chapa"),
+    writeln("[5] Remove estudante na chapa").
 
 
 %Opcoes Principais
@@ -183,6 +190,19 @@ opcao_escolhida_admin(6) :-
     read(Opcao),
     opcao_escolhida_votacao(Opcao, IdVotacao).
 
+opcao_escolhida_admin(7) :-
+    writeln("Edita Votação"),
+    writeln("Insira o ID da votação que deseja editar:"),
+    read(IdVotacao),
+    opcao_menu_edita_votacao(),
+    read(Opcao),
+    opcao_escolhida_edita_votacao(Opcao, IdVotacao, R),
+    tty_clear,
+    writeln(R),
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
+
 opcao_escolhida_admin(8) :-
     writeln("Encerrar votação"),
     writeln("Insira o id da votação que deseja encerrar:"),
@@ -277,3 +297,28 @@ opcao_escolhida_votacao(1, IdVotacao) :-
     opcoes_menu_admin,
     read(Opcao),
     opcao_escolhida_admin(Opcao).  
+
+opcao_escolhida_edita_votacao(1, IdVotacao, _) :-
+    opcao_escolhida_votacao(1, IdVotacao).
+
+opcao_escolhida_edita_votacao(2, IdVotacao, R) :-
+    writeln("Insira o id da chapa que deseja encerrar:"),
+    read(IdChapa),
+    writeln("MENU Edita Chapa"),
+    writeln("[1] Edita nome da chapa"),
+    writeln("[2] Edita número da chapa"),
+    read(Opcao),
+    (Opcao =:= 1 -> 
+        writeln("Insira o novo nome da chapa:"),
+        (read(Nome),
+        edita_nome_chapa(IdChapa, Nome, R));
+        writeln("Insira o novo número da chapa:"),
+        read(Numero),
+        edita_numero_chapa(IdChapa, Numero, R)
+    ).
+
+opcao_escolhida_edita_votacao(3, IdVotacao, _).
+
+opcao_escolhida_edita_votacao(4, IdVotacao, _).
+
+opcao_escolhida_edita_votacao(5, IdVotacao, _).

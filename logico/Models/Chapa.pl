@@ -28,6 +28,13 @@ get_chapas_ativas(Result) :-
     csv_read_file(Path, Rows),
     filter_chapas_votacao_ativa(Rows, Result).
 
+get_all(Chapa, Id, Nome, Numero, IdVotacao, NumDeVotos) :-
+    get_by_index(0, Chapa, Id),
+    get_by_index(1, Chapa, Nome),
+    get_by_index(2, Chapa, Numero),
+    get_by_index(3, Chapa, IdVotacao),
+    get_by_index(4, Chapa, NumDeVotos).
+
 filter_chapas_votacao_ativa([], []).
 filter_chapas_votacao_ativa([row(Id,Nome,Numero,IdVotacao,Votos)|T], [row(Id,Nome,Numero,IdVotacao,Votos)|R]) :- 
     verifica_votacao_ativa(IdVotacao),
@@ -60,3 +67,31 @@ verifica_by_numero_votacao(Numero, IdVotacao) :-
 get_chapa(_, [], []).
 get_chapa(Id, [[Id|T]|T2], [Id|T]).
 get_chapa(Id, [[H|T]|T2], R) :- get_chapa(Id, T2, R).
+
+edita_nome(IdChapa, NovoNome, "Chapa alterada com sucesso") :-
+    get_chapas_ativas(Chapas),
+    get_chapa(IdChapa, Chapas, [Id, Nome, Numero, IdVotacao, NumDeVotos]),
+    remove(IdChapa, Chapas, Lista),  %troca por remove_chapa
+    limpar_csv('chapa.csv'),
+    reescrever_csv_chapa(Lista),
+    recadastra_chapa(Id, NovoNome, Numero, IdVotacao, NumDeVotos).
+
+edita_numero(IdChapa, NovoNumero, "Chapa alterada com sucesso") :-
+    get_chapas_ativas(Chapas),
+    get_chapa(IdChapa, Chapas, [Id, Nome, Numero, IdVotacao, NumDeVotos]).
+    remove(IdChapa, Chapas, Lista), %troca por remove_chapa
+    limpar_csv('chapa.csv'),
+    reescrever_csv_chapa(Lista),
+    recadastra_chapa(Id, Nome, NovoNumero, IdVotacao, NumDeVotos).
+
+reescrever_csv_chapa([]).
+reescrever_csv_chapa([H|T]) :-
+    get_all(H, Id, Nome, Numero, IdVotacao, NumDeVotos),
+    recadastra_chapa(Id, Nome, Numero, IdVotacao, NumDeVotos),
+    reescrever_csv_chapa(T).
+
+recadastra_chapa(Id, Nome, Numero, IdVotacao, NumDeVotos) :-
+    get_csv_path('chapa.csv', CsvChapa),
+    open(CsvChapa, append, File),
+    writeln(File, (Id, Nome, Numero, IdVotacao, NumDeVotos)),
+    close(File).
