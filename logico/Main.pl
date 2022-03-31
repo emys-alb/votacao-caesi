@@ -224,8 +224,14 @@ opcao_escolhida_votacao(1) :-
     writeln("Insira o número da Chapa"),
     read(Numero),
     cadastra_chapa(Nome,Numero,R),
+    tty_clear,
+    writeln(R),
     opcao_menu_cadastro_votacao(),
     read(Opcao),
-    opcao_escolhida_votacao(Opcao),
+    opcao_escolhida_votacao(Opcao).
+
+opcao_escolhida_votacao(3) :- 
     tty_clear,
-    writeln(R).
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).  
