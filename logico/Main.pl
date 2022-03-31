@@ -274,4 +274,6 @@ opcao_escolhida_votacao(1, IdVotacao) :-
     read(Opcao),
     opcao_escolhida_votacao(Opcao, IdVotacao),
     tty_clear,
-    writeln(R).
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).  
