@@ -216,3 +216,9 @@ opcao_escolhida_votacao(1):-
     opcao_menu_cadastro_votacao(),
     read(Opcao),
     opcao_escolhida_votacao(Opcao).
+
+opcao_escolhida_votacao(3) :- 
+    tty_clear,
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).  
