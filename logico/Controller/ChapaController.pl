@@ -1,8 +1,8 @@
 :- include('../Models/Chapa.pl').
 :- include('../Models/Estudante.pl').
 
-cadastro_chapa(DataChapa, Result) :-
-    cadastrar_chapa(DataChapa, Result).
+cadastra_chapa(Nome, Numero, R) :-
+    cadastrar_chapa(Nome, Numero, R).
 
 cadastrar_estudante_chapa(Matricula, Id_chapa, R) :-
     (estudante_cadastrado(Matricula) ->
