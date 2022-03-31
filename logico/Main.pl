@@ -117,6 +117,27 @@ opcao_escolhida_principal(4) :-
     read(Opcao),
     opcao_escolhida_principal(Opcao).
 
+opcao_escolhida_principal(5) :-
+    tty_clear,
+    writeln("Comparação de eleições"),
+    writeln("Insira o ID da primeira votação:"),
+    read(IDVotacao1),
+    writeln("Insira o ID da segunda votação:"),
+    read(IDVotacao2),
+    get_dados_votacao(IDVotacao1, Votacao1),
+    get_dados_votacao(IDVotacao2, Votacao2),
+    (eh_vazia(Votacao1) ->
+        writeln("Primeira votação não encontrada");
+        imprimeEleicoes(Votacao1)
+    ),
+    (eh_vazia(Votacao2) ->
+        writeln("Segunda votação não encontrada");
+        imprimeEleicoes(Votacao2)
+    ),
+    opcoes_menu_principal,
+    read(Opcao),
+    opcao_escolhida_principal(Opcao).
+
 opcao_escolhida_principal(6) :- 
     writeln("Encerrando o sistema"),
     halt.
