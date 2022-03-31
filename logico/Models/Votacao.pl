@@ -1,9 +1,14 @@
 :- use_module(library(csv)).
 :- include('../Utils.pl').
 
+verifica_votacao_csv(IdVotacao, [row(IdVotacao, _, _, _, _)|_]).
+verifica_votacao_csv(IdVotacao, [H|T]) :-
+    verifica_votacao_csv(IdVotacao, T).
+
 verifica_votacao_cadastrada(IdVotacao) :-
-    read_csv('votacao.csv', Lists),
-    verifica_na_lista(IdVotacao, Lists).
+    atom_concat('./Dados/', 'votacao.csv', Path),
+    csv_read_file(Path, File),
+    verifica_votacao_csv(IdVotacao, File).
 
 cadastrar_votacao(DataVotacao, "Votação Cadastrada") :-
     get_csv_path('votacao.csv', CsvVotacao),
