@@ -49,6 +49,15 @@ edita_senha_estudante_csv([], _, _,[]).
 edita_senha_estudante_csv([row(Matricula, _, Votante)|T], Matricula, NovaSenha, [row(Matricula, NovaSenha, Votante)|T]).
 edita_senha_estudante_csv([H|T], Matricula, NovaSenha, [H|Out]) :- edita_senha_estudante_csv(T, Matricula, NovaSenha, Out).
 
+get_votantes_csv([], 0).
+get_votantes_csv([row(_,_,true)|T], R) :- get_votantes_csv(T, R1), R is R1 + 1.
+get_votantes_csv([H|T], R) :- get_votantes_csv(T,R).
+
+get_quantidade_votantes(Qtd) :-
+    atom_concat('./Dados/', 'estudante.csv', Path),
+    csv_read_file(Path, File),
+    get_votantes_csv(File, Qtd).
+
 verifica_estudante_cadastrado_row([row(Matricula,_,_)|T], Matricula).
 verifica_estudante_cadastrado_row([H|T], Matricula) :-
     verifica_estudante_cadastrado_row(T, Matricula).
