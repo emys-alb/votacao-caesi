@@ -49,7 +49,7 @@ opcao_menu_edita_votacao() :-
     writeln("[3] Remove chapa"),
     writeln("[4] Adiciona estudante na chapa"),
     writeln("[5] Remove estudante na chapa"),
-    writeln("[6] Voltar para o menu principal\n").
+    writeln("[6] Voltar\n").
 
 %Opcoes Principais
 opcao_escolhida_principal(1) :- 
@@ -330,8 +330,8 @@ opcao_escolhida_edita_votacao(3, _, _):-
     read(Opcao),
     opcao_escolhida_edita_votacao(Opcao, _, _).
 
-opcao_escolhida_edita_votacao(6) :- 
+opcao_escolhida_edita_votacao(6, _, _) :- 
     tty_clear,
-    opcoes_menu_principal,
+    opcoes_menu_admin,
     read(Opcao),
-    opcao_escolhida_principal(Opcao).
+    opcao_escolhida_admin(Opcao).
