@@ -71,6 +71,13 @@ dados_votacao(IDVotacao, Result) :-
     csv_read_file(Path, File),
     get_row_votacao(File, IDVotacao, Result).
 
-get_all_votacoes(Result) :-
+get_votacoes_encerradas([], []).
+get_votacoes_encerradas([row(IDVotacao, DataVotacao, true, Abstencoes, Nulos)|T], [row(IDVotacao, DataVotacao, true, Abstencoes, Nulos)|TailResult]) :-
+    get_votacoes_encerradas(T, TailResult).
+get_votacoes_encerradas([H|T], Result) :-
+    get_votacoes_encerradas(T, Result).
+
+get_all_votacoes_encerradas(Result) :-
     atom_concat('./Dados/', 'votacao.csv', Path),
-    csv_read_file(Path, Result).
+    csv_read_file(Path, File),
+    get_votacoes_encerradas(File, Result).

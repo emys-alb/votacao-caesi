@@ -91,11 +91,16 @@ opcao_escolhida_principal(3) :-
     writeln("Dados de uma votação"),
     writeln("Insira o ID da votação buscada:"),
     read(IDVotacao),
-    get_dados_votacao(IDVotacao, Result),
-    tty_clear,
-    (eh_vazia(Result) ->
-        writeln("Votação não encontrada");
-        imprimeEleicoes(Result)
+    (verifica_votacao_ativa(IDVotacao) ->
+        (tty_clear,
+        writeln("Votação ainda não foi encerrada."));
+        (
+            get_dados_votacao(IDVotacao, Result),
+            tty_clear,
+            (eh_vazia(Result) ->
+            writeln("Votação não encontrada");
+            imprimeEleicoes(Result))
+        )
     ),
     opcoes_menu_principal,
     read(Opcao),
@@ -120,7 +125,7 @@ imprimeEleicoes([row(IDVotacao, DataVotacao, _, Abstencoes, Nulos) | T]) :-
 opcao_escolhida_principal(4) :-
     tty_clear,
     writeln("Histórico de votações"),
-    get_votacoes(Result),
+    get_votacoes_encerradas(Result),
     imprimeEleicoes(Result),
     opcoes_menu_principal,
     read(Opcao),

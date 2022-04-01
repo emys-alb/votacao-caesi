@@ -16,5 +16,5 @@ adiciona_voto_nulo_votacao(IdVotacao) :- adiciona_voto_nulo(IdVotacao).
 get_dados_votacao(IDVotacao, Result) :-
     dados_votacao(IDVotacao, Result).
 
-get_votacoes(Result) :-
-    get_all_votacoes(Result).
+get_votacoes_encerradas(Result) :-
+    get_all_votacoes_encerradas(Result).
