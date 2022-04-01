@@ -92,3 +92,24 @@ verifica_by_numero_votacao(Numero, IdVotacao) :-
 get_chapa(_, [], []).
 get_chapa(Id, [[Id|T]|T2], [Id|T]).
 get_chapa(Id, [[H|T]|T2], R) :- get_chapa(Id, T2, R).
+
+get_chapa_csv(_, [], []).
+get_chapa_csv(ID, [row(ID,Nome,Numero,IdVotacao,Votos)|T], row(ID,Nome,Numero,IdVotacao,Votos)).
+get_chapa_csv(ID, [H|T], Chapa) :-
+    get_chapa_csv(ID, T, Chapa).
+
+get_chapa_by_id(ID, Chapa) :-
+    atom_concat('./Dados/', 'chapa.csv', Path),
+    csv_read_file(Path, File),
+    get_chapa_csv(ID, File, Chapa).
+
+filtra_chapas_por_votacao(_, [], []).
+filtra_chapas_por_votacao(IDVotacao, [row(IDChapa, Nome, Num, IDVotacao, NumVotos) | T], [row(IDChapa, Nome, Num, IDVotacao, NumVotos) | TailResult]) :-
+    filtra_chapas_por_votacao(IDVotacao, T, TailResult).
+filtra_chapas_por_votacao(IDVotacao, [H|T], Chapas) :-
+    filtra_chapas_por_votacao(IDVotacao, T, Chapas).
+
+get_chapas_by_votacao(IDVotacao, Chapas) :-
+    atom_concat('./Dados/', 'chapa.csv', Path),
+    csv_read_file(Path, File),
+    filtra_chapas_por_votacao(IDVotacao, File, Chapas).

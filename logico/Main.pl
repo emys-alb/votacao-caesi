@@ -109,6 +109,11 @@ imprimeEleicoes([row(IDVotacao, DataVotacao, _, Abstencoes, Nulos) | T]) :-
     write("Data da votação: "), writeln(DataVotacao),
     write("Abstencoes: "), writeln(Abstencoes),
     write("Nulos: "), writeln(Nulos),
+    (get_chapa_vencedora(IDVotacao, row(IDChapa, Nome, Num, IDVotacao, NumVotos)) ->
+        (write("Chapa Vencedora:"), writeln(Nome),
+        write("Quantidade de votos:"), writeln(NumVotos));
+        writeln("")
+    ),
     writeln("-----"),
     imprimeEleicoes(T).
 
