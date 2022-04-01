@@ -2,9 +2,14 @@
 :- include('../Utils.pl').
 :- include('../Controller/EstudanteController.pl').
 
+verifica_votacao_csv(IdVotacao, [row(IdVotacao, _, _, _, _)|_]).
+verifica_votacao_csv(IdVotacao, [H|T]) :-
+    verifica_votacao_csv(IdVotacao, T).
+
 verifica_votacao_cadastrada(IdVotacao) :-
-    read_csv('votacao.csv', Lists),
-    verifica_na_lista(IdVotacao, Lists).
+    atom_concat('./Dados/', 'votacao.csv', Path),
+    csv_read_file(Path, File),
+    verifica_votacao_csv(IdVotacao, File).
 
 cadastrar_votacao(DataVotacao, Id, "Votação Cadastrada") :-
     get_csv_path('votacao.csv', CsvVotacao),
@@ -68,3 +73,14 @@ dados_votacao(IDVotacao, Result) :-
     atom_concat('./Dados/', 'votacao.csv', Path),
     csv_read_file(Path, File),
     get_row_votacao(File, IDVotacao, Result).
+
+get_votacoes_encerradas([], []).
+get_votacoes_encerradas([row(IDVotacao, DataVotacao, true, Abstencoes, Nulos)|T], [row(IDVotacao, DataVotacao, true, Abstencoes, Nulos)|TailResult]) :-
+    get_votacoes_encerradas(T, TailResult).
+get_votacoes_encerradas([H|T], Result) :-
+    get_votacoes_encerradas(T, Result).
+
+get_all_votacoes_encerradas(Result) :-
+    atom_concat('./Dados/', 'votacao.csv', Path),
+    csv_read_file(Path, File),
+    get_votacoes_encerradas(File, Result).

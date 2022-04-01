@@ -88,9 +88,75 @@ opcao_escolhida_principal(2) :-
         opcao_escolhida_principal(Opcao))
     ).
 
+opcao_escolhida_principal(3) :-
+    writeln("Dados de uma votação"),
+    writeln("Insira o ID da votação buscada:"),
+    read(IDVotacao),
+    (verifica_votacao_ativa(IDVotacao) ->
+        (tty_clear,
+        writeln("Votação ainda não foi encerrada."));
+        (
+            get_dados_votacao(IDVotacao, Result),
+            tty_clear,
+            (eh_vazia(Result) ->
+            writeln("Votação não encontrada");
+            imprimeEleicoes(Result))
+        )
+    ),
+    opcoes_menu_principal,
+    read(Opcao),
+    opcao_escolhida_principal(Opcao).
+
+imprimeEleicoes([]).
+
+imprimeEleicoes([row(IDVotacao, DataVotacao, _, Abstencoes, Nulos) | T]) :-
+    writeln(""),
+    write("ID: "), writeln(IDVotacao),
+    write("Data da votação: "), writeln(DataVotacao),
+    write("Abstencoes: "), writeln(Abstencoes),
+    write("Nulos: "), writeln(Nulos),
+    (get_chapa_vencedora(IDVotacao, row(IDChapa, Nome, Num, IDVotacao, NumVotos)) ->
+        (write("Chapa Vencedora:"), writeln(Nome),
+        write("Quantidade de votos:"), writeln(NumVotos));
+        writeln("")
+    ),
+    writeln("-----"),
+    imprimeEleicoes(T).
+
+opcao_escolhida_principal(4) :-
+    tty_clear,
+    writeln("Histórico de votações"),
+    get_votacoes_encerradas(Result),
+    imprimeEleicoes(Result),
+    opcoes_menu_principal,
+    read(Opcao),
+    opcao_escolhida_principal(Opcao).
+
+opcao_escolhida_principal(5) :-
+    tty_clear,
+    writeln("Comparação de eleições"),
+    writeln("Insira o ID da primeira votação:"),
+    read(IDVotacao1),
+    writeln("Insira o ID da segunda votação:"),
+    read(IDVotacao2),
+    get_dados_votacao(IDVotacao1, Votacao1),
+    get_dados_votacao(IDVotacao2, Votacao2),
+    (eh_vazia(Votacao1) ->
+        writeln("Primeira votação não encontrada");
+        imprimeEleicoes(Votacao1)
+    ),
+    (eh_vazia(Votacao2) ->
+        writeln("Segunda votação não encontrada");
+        imprimeEleicoes(Votacao2)
+    ),
+    opcoes_menu_principal,
+    read(Opcao),
+    opcao_escolhida_principal(Opcao).
+
 opcao_escolhida_principal(6) :- 
     writeln("Encerrando o sistema"),
     halt.
+
 % Opcoes Admin
 opcao_escolhida_admin(1) :- 
     writeln("Cadastro Admin"),
