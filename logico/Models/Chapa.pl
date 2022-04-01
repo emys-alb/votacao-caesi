@@ -102,15 +102,15 @@ get_chapa(Id, [[H|T]|T2], R) :- get_chapa(Id, T2, R).
 edita_nome(IdChapa, NovoNome, "Chapa alterada com sucesso") :-
     get_chapas_ativas(Chapas),
     get_chapa(IdChapa, Chapas, [Id, Nome, Numero, IdVotacao, NumDeVotos]),
-    remove_chapa(IdChapa),
+    remover_chapa(IdChapa, Chapas, Lista),
     limpar_csv('chapa.csv'),
     reescrever_csv_chapa(Lista),
     recadastra_chapa(Id, NovoNome, Numero, IdVotacao, NumDeVotos).
 
 edita_numero(IdChapa, NovoNumero, "Chapa alterada com sucesso") :-
     get_chapas_ativas(Chapas),
-    get_chapa(IdChapa, Chapas, [Id, Nome, Numero, IdVotacao, NumDeVotos]).
-    remove_chapa(IdChapa),
+    get_chapa(IdChapa, Chapas, [Id, Nome, Numero, IdVotacao, NumDeVotos]),
+    remover_chapa(IdChapa, Chapas, Lista),
     limpar_csv('chapa.csv'),
     reescrever_csv_chapa(Lista),
     recadastra_chapa(Id, Nome, NovoNumero, IdVotacao, NumDeVotos).
