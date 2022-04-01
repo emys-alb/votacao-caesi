@@ -313,3 +313,14 @@ opcao_escolhida_edita_votacao(5, _, _):-
     opcao_menu_edita_votacao(),
     read(Opcao),
     opcao_escolhida_edita_votacao(Opcao, _, _).
+
+opcao_escolhida_edita_votacao(3, _, _):-
+    writeln("Remove chapa"),
+    writeln("Insira id da chapa:"),
+    read(Id),
+    tty_clear,
+    remover_chapa(Id,R),
+    writeln(R), 
+    opcao_menu_edita_votacao(),
+    read(Opcao),
+    opcao_escolhida_edita_votacao(Opcao, _, _).
