@@ -64,7 +64,6 @@ get_chapa(Id, [[H|T]|T2], R) :- get_chapa(Id, T2, R).
 remover_chapa(Id, [row(Id,_,_,_,_)|T], T).
 remover_chapa(X, [H|T], [H|T1]):- remover_chapa(X,T,T1).
 
-
 remove_chapa(Id):-
     atom_concat('./Dados/', 'chapa.csv', Path),
     csv_read_file(Path, Rows),
