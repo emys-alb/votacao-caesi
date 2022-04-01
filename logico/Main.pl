@@ -171,8 +171,8 @@ opcao_escolhida_admin(7) :-
     tty_clear,
     writeln(R),
     opcoes_menu_admin,
-    read(Opcao),
-    opcao_escolhida_admin(Opcao).
+    read(Opcao2),
+    opcao_escolhida_admin(Opcao2).
 
 opcao_escolhida_admin(8) :-
     writeln("Encerrar votação"),
@@ -303,7 +303,7 @@ opcao_escolhida_edita_votacao(1, IdVotacao, _) :-
     opcao_escolhida_votacao(1, IdVotacao).
 
 opcao_escolhida_edita_votacao(2, IdVotacao, R) :-
-    writeln("Insira o id da chapa que deseja encerrar:"),
+    writeln("Insira o id da chapa que deseja editar:"),
     read(IdChapa),
     writeln("MENU Edita Chapa"),
     writeln("[1] Edita nome da chapa"),
