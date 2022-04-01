@@ -91,11 +91,12 @@ Mantemos todas nossas informações em um banco de dados, é possivel acessá-lo
 ```
 psql -h "ec2-54-235-108-217.compute-1.amazonaws.com" -p 5432 -d "dbehln4jerq4b" -U "jzrhucvekfwaal"
 Password for user jzrhucvekfwaal: fc13fbfff03b8b15a7186f8cabf894bcb3bacee463dd080a803690d72658217d
+```
 
 ## ⚠️ Pré-requisitos para usar o sistema lógico⚠️
 Devem estar instalado na máquina:
 swipl
-```
+
 ## Usando o sistema lógico
 ```bash
     git clone https://github.com/emys-alb/votacao-caesi.git
