@@ -1,5 +1,6 @@
 :- use_module(library(csv)).
 :- include('../Utils.pl').
+:- include('../Controller/EstudanteController.pl').
 
 verifica_votacao_csv(IdVotacao, [row(IdVotacao, _, _, _, _)|_]).
 verifica_votacao_csv(IdVotacao, [H|T]) :-
@@ -29,15 +30,17 @@ gerar_id_votacao(Id) :-
     last(Lists, [H|_]),
     Id is H + 1.
 
-encerrar_votacao_csv([], _, []).
-encerrar_votacao_csv([row(IdVotacao, D, _, A, N)|T], IdVotacao, [row(IdVotacao, D, true, A, N)|T]).
-encerrar_votacao_csv([H|T], IdVotacao, [H|NewTail]) :-
-    encerrar_votacao_csv(T, IdVotacao, NewTail).
+encerrar_votacao_csv([], _, _, _, []).
+encerrar_votacao_csv([row(IdVotacao, D, _, _, Nulos)|T], IdVotacao, Votantes, VotosChapas, [row(IdVotacao, D, true, Abstencoes, Nulos)|T]):-
+    VotosTotais is VotosChapas + Nulos,
+    Abstencoes is Votantes - VotosTotais.
+encerrar_votacao_csv([H|T], IdVotacao, Votantes, VotosChapas, [H|NewTail]) :-
+    encerrar_votacao_csv(T, IdVotacao, Votantes, VotosChapas, NewTail).
 
-encerrar_votacao(IdVotacao) :-
+encerrar_votacao(IdVotacao, Votantes, VotosChapas) :-
     atom_concat('./Dados/', 'votacao.csv', Path),
     csv_read_file(Path, File),
-    encerrar_votacao_csv(File, IdVotacao, CsvResultante),
+    encerrar_votacao_csv(File, IdVotacao, Votantes, VotosChapas, CsvResultante),
     csv_write_file(Path, CsvResultante).
     
 verifica_eh_ativa([row(Id,_,Encerrada,_,_)|T], Id) :- not(Encerrada).
