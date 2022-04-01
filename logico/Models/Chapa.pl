@@ -52,7 +52,7 @@ adiciona_voto_csv([row(Id,Nome,Numero,IdVotacao,Votos)|T], Numero, IdVotacao, Re
     NewVotos is Votos + 1,
     Result = [row(Id,Nome,Numero,IdVotacao,NewVotos)|T].
 adiciona_voto_csv([H|T], Numero, IdVotacao, [H|R]) :-
-    adiciona_voto_csv(T, Numero, IdVotacao, [H|R]).
+    adiciona_voto_csv(T, Numero, IdVotacao, R).
 
 adiciona_voto(ChapaNumero, IdVotacao) :-
     atom_concat('./Dados/', 'chapa.csv', Path),
@@ -60,7 +60,7 @@ adiciona_voto(ChapaNumero, IdVotacao) :-
     adiciona_voto_csv(File, ChapaNumero, IdVotacao, CsvResultante),
     csv_write_file(Path, CsvResultante).
 
-verifica_by_numero_votacao_csv([row(Id,Nome,Numero,IdVotacao,Votos)|T], Numero, IdVotacao).
+verifica_by_numero_votacao_csv([row(_,_,Numero,IdVotacao,_)|T], Numero, IdVotacao).
 verifica_by_numero_votacao_csv([H|T], Numero, IdVotacao) :- verifica_by_numero_votacao_csv(T, Numero, IdVotacao).
 
 verifica_by_numero_votacao(Numero, IdVotacao) :-

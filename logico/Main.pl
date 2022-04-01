@@ -279,3 +279,9 @@ opcao_escolhida_votacao(1, IdVotacao) :-
     opcoes_menu_admin,
     read(Opcao),
     opcao_escolhida_admin(Opcao).  
+
+opcao_escolhida_votacao(3, _) :-
+    tty_clear,
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
