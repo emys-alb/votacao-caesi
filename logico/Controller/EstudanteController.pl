@@ -11,15 +11,15 @@ cadastro_estudantes(Caminho, Result) :-
     Result = "Estudantes cadastrados").
 
 cadastraTodos([]).
-cadastraTodos([[Matricula|[Senha|_]]|T]) :-
+cadastraTodos([row(Matricula,Senha)|T]) :-
     (verifica_estudante_cadastrado(Matricula) -> 
     format("Estudante com matrícula ~q já cadastrado\n", [Matricula]);
     cadastrar_estudante(Matricula,Senha)),
     cadastraTodos(T).
 
 le_e_cadastra_estudantes(Caminho) :-
-    csv_read_file(Caminho, Rows, []),
-    rows_to_lists(Rows, [H|T]),
+    csv_read_file(Caminho, [H|T]),
+    % rows_to_lists(Rows, [H|T]),
     cadastraTodos(T). % remove headers
 
 desativar_estudante(Matricula, R) :-
