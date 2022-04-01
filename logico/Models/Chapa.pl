@@ -71,6 +71,13 @@ get_chapas_ativas(Result) :-
     csv_read_file(Path, Rows),
     filter_chapas_votacao_ativa(Rows, Result).
 
+get_all(Chapa, Id, Nome, Numero, IdVotacao, NumDeVotos) :-
+    get_by_index(0, Chapa, Id),
+    get_by_index(1, Chapa, Nome),
+    get_by_index(2, Chapa, Numero),
+    get_by_index(3, Chapa, IdVotacao),
+    get_by_index(4, Chapa, NumDeVotos).
+
 filter_chapas_votacao_ativa([], []).
 filter_chapas_votacao_ativa([row(Id,Nome,Numero,IdVotacao,Votos)|T], [row(Id,Nome,Numero,IdVotacao,Votos)|R]) :- 
     verifica_votacao_ativa(IdVotacao),
@@ -102,7 +109,46 @@ verifica_by_numero_votacao(Numero, IdVotacao) :-
 
 get_chapa(_, [], []).
 get_chapa(Id, [[Id|T]|T2], [Id|T]).
-get_chapa(Id, [[H|T]|T2], R) :- get_chapa(Id, T2, R).
+get_chapa(Id, [[H|T]|T2], R) :- 
+    get_chapa(Id, T2, R).
+
+get_chapa_rows(_, [], []).
+get_chapa_rows(Id, [row(Id,Nome,Numero,IdVotacao,Votos)|T], row(Id,Nome,Numero,IdVotacao,Votos)).
+get_chapa_rows(Id, [_|T], R) :- get_chapa_rows(Id, T, R).
+
+edita_nome_csv([], _, []).
+edita_nome_csv([row(Id,_,Numero,IdVotacao,Votos)|T], Id, NovoNome, [row(Id,NovoNome,Numero,IdVotacao,Votos)|T]).
+edita_nome_csv([H|T], Id, NovoNome, [H|Out]) :- edita_nome_csv(T, Id, NovoNome, Out).
+
+edita_nome(IdChapa, NovoNome, R) :-
+    atom_concat('./Dados/', 'chapa.csv', Path),
+    csv_read_file(Path, File),
+    edita_nome_csv(File, IdChapa, NovoNome, Saida),
+    csv_write_file(Path, Saida),
+    R = "Chapa alterada com sucesso".
+
+edita_numero_csv([], _, []).
+edita_numero_csv([row(Id,Nome,_,IdVotacao,Votos)|T], Id, NovoNumero, [row(Id,Nome,NovoNumero,IdVotacao,Votos)|T]).
+edita_numero_csv([H|T], Id, NovoNome, [H|Out]) :- edita_numero_csv(T, Id, NovoNumero, Out).
+
+edita_numero(IdChapa, NovoNumero, R) :-
+    atom_concat('./Dados/', 'chapa.csv', Path),
+    csv_read_file(Path, File),
+    edita_numero_csv(File, IdChapa, NovoNumero, Saida),
+    csv_write_file(Path, Saida),
+    R = "Chapa alterada com sucesso".
+
+reescrever_csv_chapa([]).
+reescrever_csv_chapa([H|T]) :-
+    get_all(H, Id, Nome, Numero, IdVotacao, NumDeVotos),
+    recadastra_chapa(Id, Nome, Numero, IdVotacao, NumDeVotos),
+    reescrever_csv_chapa(T).
+
+recadastra_chapa(Id, Nome, Numero, IdVotacao, NumDeVotos) :-
+    get_csv_path('chapa.csv', CsvChapa),
+    open(CsvChapa, append, File),
+    writeln(File, (Id, Nome, Numero, IdVotacao, NumDeVotos)),
+    close(File).
 
 get_chapa_csv(_, [], []).
 get_chapa_csv(ID, [row(ID,Nome,Numero,IdVotacao,Votos)|T], row(ID,Nome,Numero,IdVotacao,Votos)).

@@ -29,6 +29,12 @@ verifica_chapa_by_numero_e_votacao(ChapaNumero, IdVotacao) :- verifica_by_numero
 cadastra_chapa(Nome , Numero, IdVotacao, R) :-
     cadastrar_chapa(Nome, Numero, IdVotacao, R).
 
+edita_nome_chapa(IdChapa, Nome, R) :-
+    edita_nome(IdChapa, Nome, R).
+
+edita_numero_chapa(IdChapa, Numero, R) :-
+    edita_numero(IdChapa, Numero, R).
+
 get_chapa_vencedora(IDVotacao, ChapaVencedora) :-
     get_chapas_by_votacao(IDVotacao, Chapas),
     get_id_chapa_mais_votos(Chapas, IDChapaVencedora),
