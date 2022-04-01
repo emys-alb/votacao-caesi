@@ -39,12 +39,16 @@ opcoes_menu_estudante() :-
     writeln("[3] Voltar para o menu principal\n").
 opcao_menu_cadastro_votacao() :-
     writeln("MENU Votação"),
-    writeln("[1] Adiciona estudante na chapa"),
-    writeln("[2] Cadastra outra chapa"),
+    writeln("[1] Cadastra chapa"),
+    writeln("[2] Adiciona estudante na chapa"),
     writeln("[3] Encerrar cadastro de votação\n").
 opcao_menu_edita_votacao() :-
     writeln("MENU Votação"),
-    writeln("[1] Remove estudante da chapa\n").
+    writeln("[1] Cadastra chapa"),
+    writeln("[2] Edita informações da chapa"),
+    writeln("[3] Remove chapa"),
+    writeln("[4] Adiciona estudante na chapa"),
+    writeln("[5] Remove estudante na chapa").
 
 %Opcoes Principais
 opcao_escolhida_principal(1) :- 
@@ -157,6 +161,19 @@ opcao_escolhida_admin(6) :-
     read(Opcao),
     opcao_escolhida_votacao(Opcao, IdVotacao).
 
+opcao_escolhida_admin(7) :-
+    writeln("Edita Votação"),
+    writeln("Insira o ID da votação que deseja editar:"),
+    read(IdVotacao),
+    opcao_menu_edita_votacao(),
+    read(Opcao),
+    opcao_escolhida_edita_votacao(Opcao, IdVotacao, R),
+    tty_clear,
+    writeln(R),
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
+
 opcao_escolhida_admin(8) :-
     writeln("Encerrar votação"),
     writeln("Insira o id da votação que deseja encerrar:"),
@@ -248,19 +265,6 @@ opcao_escolhida_estudante(3, _) :-
 
 %Opcoes do cadastro votacao
 
-opcao_escolhida_votacao(2, _):-
-    writeln("Cadastrar estudante em chapa"),
-    writeln("Insira matricula do estudante:"),
-    read(Matricula),
-    writeln("Insira id da chapa:"),
-    read(Id_chapa),
-    tty_clear,
-    cadastrar_estudante_chapa(Matricula, Id_chapa, R),
-    writeln(R),
-    opcao_menu_cadastro_votacao(),
-    read(Opcao),
-    opcao_escolhida_votacao(Opcao, IdVotacao).
-
 opcao_escolhida_votacao(1, IdVotacao) :- 
     writeln("Cadastro Chapa"),
     writeln("Insira o nome da Chapa"),
@@ -275,9 +279,29 @@ opcao_escolhida_votacao(1, IdVotacao) :-
     read(Opcao),
     opcao_escolhida_votacao(Opcao, IdVotacao).  
 
+opcao_escolhida_votacao(2, _):-
+    writeln("Cadastrar estudante em chapa"),
+    writeln("Insira matricula do estudante:"),
+    read(Matricula),
+    writeln("Insira id da chapa:"),
+    read(Id_chapa),
+    tty_clear,
+    cadastrar_estudante_chapa(Matricula, Id_chapa, R),
+    writeln(R),
+    opcao_menu_cadastro_votacao(),
+    read(Opcao),
+    opcao_escolhida_votacao(Opcao, IdVotacao).
+
+
+opcao_escolhida_votacao(3, _) :- 
+    tty_clear,
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
+
 %Opcoes do edicao votacao
 
-opcao_escolhida_edita_votacao(1):-
+opcao_escolhida_edita_votacao(5, _, _):-
     writeln("Remove estudante de chapa"),
     writeln("Insira matricula do estudante:"),
     read(Matricula),
@@ -288,5 +312,4 @@ opcao_escolhida_edita_votacao(1):-
     writeln(R), 
     opcao_menu_edita_votacao(),
     read(Opcao),
-    opcao_escolhida_votacao(Opcao).
-
+    opcao_escolhida_edita_votacao(Opcao, _, _).
