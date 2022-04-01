@@ -43,3 +43,6 @@ limpar_csv(Arquivo) :-
     open(Path, write, File),
     write(File, ''),
     close(File).
+
+removeTupla(X, Y, [row(X,Y)|T], T).
+removeTupla(X, Y, [H|T], [H|T1]):- removeTupla(X,Y,T,T1).
