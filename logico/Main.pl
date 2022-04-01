@@ -13,7 +13,6 @@ menu_principal :-
     opcoes_menu_principal,
     read(Opcao),
     opcao_escolhida_principal(Opcao).
-
 opcoes_menu_principal() :-
     writeln("MENU PRINCIPAL"),
     writeln("[1] Login como administrador"),
@@ -22,7 +21,6 @@ opcoes_menu_principal() :-
     writeln("[4] Lista histórico de votações"),
     writeln("[5] Compara votações"),
     writeln("[6] Sair\n").
-
 opcoes_menu_admin() :-
     writeln("MENU ADMIN"),
     writeln("[1] Cadastra administrador"),
@@ -44,7 +42,13 @@ opcao_menu_cadastro_votacao() :-
     writeln("[1] Cadastra chapa"),
     writeln("[2] Adiciona estudante na chapa"),
     writeln("[3] Encerrar cadastro de votação\n").
-
+opcao_menu_edita_votacao() :-
+    writeln("MENU Votação"),
+    writeln("[1] Cadastra chapa"),
+    writeln("[2] Edita informações da chapa"),
+    writeln("[3] Remove chapa"),
+    writeln("[4] Adiciona estudante na chapa"),
+    writeln("[5] Remove estudante na chapa").
 
 %Opcoes Principais
 opcao_escolhida_principal(1) :- 
@@ -141,7 +145,7 @@ opcao_escolhida_principal(5) :-
 opcao_escolhida_principal(6) :- 
     writeln("Encerrando o sistema"),
     halt.
-    
+
 % Opcoes Admin
 opcao_escolhida_admin(1) :- 
     writeln("Cadastro Admin"),
@@ -206,12 +210,25 @@ opcao_escolhida_admin(6) :-
     writeln("Cadastro de votação"),
     writeln("Insira a data da nova votação:"),
     read(DataVotacao),
-    cadastro_votacao(DataVotacao, R),
+    cadastro_votacao(DataVotacao, IdVotacao, R),
     tty_clear,
     writeln(R),
     opcao_menu_cadastro_votacao(),
     read(Opcao),
-    opcao_escolhida_votacao(Opcao).
+    opcao_escolhida_votacao(Opcao, IdVotacao).
+
+opcao_escolhida_admin(7) :-
+    writeln("Edita Votação"),
+    writeln("Insira o ID da votação que deseja editar:"),
+    read(IdVotacao),
+    opcao_menu_edita_votacao(),
+    read(Opcao),
+    opcao_escolhida_edita_votacao(Opcao, IdVotacao, R),
+    tty_clear,
+    writeln(R),
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
 
 opcao_escolhida_admin(8) :-
     writeln("Encerrar votação"),
@@ -230,6 +247,7 @@ opcao_escolhida_admin(9) :-
     read(Opcao),
     opcao_escolhida_principal(Opcao).
 
+%Opcoes Estudante
 opcao_escolhida_estudante(1, Matricula) :- 
     writeln("Edita senha do estudante"),
     writeln("Insira nova senha:"),
@@ -241,21 +259,113 @@ opcao_escolhida_estudante(1, Matricula) :-
     read(Opcao),
     opcao_escolhida_estudante(Opcao, Matricula).
 
+opcao_escolhida_estudante(1, Matricula) :- 
+    writeln("Cadastrar voto de estudante"),
+    writeln("Insira nova senha:"),
+    read(NovaSenha),
+    tty_clear,
+    editar_senha_estudante(Matricula, NovaSenha, R),
+    writeln(R),
+    opcoes_menu_estudante,
+    read(Opcao),
+    opcao_escolhida_estudante(Opcao, Matricula).
+
+opcao_escolhida_estudante(2, Matricula) :-
+    (eh_votante(Matricula) ->
+        (writeln("Cadastrar voto de estudante"),
+        get_chapas_votacoes_ativas(Chapas),
+        print_chapas(Chapas),
+        writeln("Insira o ID da votação:"),
+        read(IdVotacao),
+        (verifica_votacao_ativa(IdVotacao) ->
+            (voto_cadastrado(Matricula, IdVotacao) -> 
+                (tty_clear, writeln("Voto já cadastrado nessa votação"));
+                writeln("Insira o número da chapa: (se o seu voto for nulo, digite 'n')"),
+                read(ChapaNum),
+                tty_clear,
+                cadastra_voto(ChapaNum, Matricula, IdVotacao)
+            );
+            tty_clear,writeln("Votação encerrada ou inexistente")
+        )
+        );
+        tty_clear,writeln("Estudante não é votante")    
+    ),
+    opcoes_menu_estudante,
+    read(Opcao),
+    opcao_escolhida_estudante(Opcao, Matricula).
+
+cadastra_voto('n', Matricula, IdVotacao) :-
+    cadastra_voto_estudante(Matricula, IdVotacao),
+    adiciona_voto_nulo_votacao(IdVotacao),
+    writeln("Voto Cadastrado").
+cadastra_voto(ChapaNum, Matricula, IdVotacao) :- 
+    (verifica_chapa_by_numero_e_votacao(ChapaNum, IdVotacao) ->
+        (
+            cadastra_voto_estudante(Matricula, IdVotacao),
+            adiciona_voto_chapa(ChapaNum, IdVotacao),
+            writeln("Voto Cadastrado")
+        );
+        writeln("Chapa não encontrada")
+    ).
+
+print_chapas([]).
+print_chapas([row(Id,Nome,Numero,IdVotacao,_)|T]) :- 
+    format("Votacao ID ~q: ~q, ID ~q, número ~q\n", [IdVotacao, Nome, Id, Numero]),
+    print_chapas(T).
+
 opcao_escolhida_estudante(3, _) :- 
     tty_clear,
     opcoes_menu_principal,
     read(Opcao),
     opcao_escolhida_principal(Opcao).
 
-opcao_escolhida_votacao(1) :- 
+%Opcoes do cadastro votacao
+
+opcao_escolhida_votacao(1, IdVotacao) :- 
     writeln("Cadastro Chapa"),
     writeln("Insira o nome da Chapa"),
     read(Nome),
     writeln("Insira o número da Chapa"),
     read(Numero),
-    cadastra_chapa(Nome,Numero,R),
+    (verifica_by_numero_votacao(Numero,IdVotacao) -> 
+        (tty_clear,format("Chapa de numero ~q já cadastrada nessa votação\n", [Numero]));
+        cadastra_chapa(Nome,Numero,IdVotacao,R)
+    ),
     opcao_menu_cadastro_votacao(),
     read(Opcao),
-    opcao_escolhida_votacao(Opcao),
+    opcao_escolhida_votacao(Opcao, IdVotacao).  
+
+opcao_escolhida_votacao(2, _):-
+    writeln("Cadastrar estudante em chapa"),
+    writeln("Insira matricula do estudante:"),
+    read(Matricula),
+    writeln("Insira id da chapa:"),
+    read(Id_chapa),
     tty_clear,
-    writeln(R).
+    cadastrar_estudante_chapa(Matricula, Id_chapa, R),
+    writeln(R),
+    opcao_menu_cadastro_votacao(),
+    read(Opcao),
+    opcao_escolhida_votacao(Opcao, IdVotacao).
+
+
+opcao_escolhida_votacao(3, _) :- 
+    tty_clear,
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).
+
+%Opcoes do edicao votacao
+
+opcao_escolhida_edita_votacao(5, _, _):-
+    writeln("Remove estudante de chapa"),
+    writeln("Insira matricula do estudante:"),
+    read(Matricula),
+    writeln("Insira id da chapa:"),
+    read(Id_chapa),
+    tty_clear,
+    remover_estudante_chapa(Matricula, Id_chapa, R),
+    writeln(R), 
+    opcao_menu_edita_votacao(),
+    read(Opcao),
+    opcao_escolhida_edita_votacao(Opcao, _, _).
