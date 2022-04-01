@@ -318,7 +318,16 @@ opcao_escolhida_edita_votacao(2, IdVotacao, R) :-
         edita_numero_chapa(IdChapa, Numero, R)
     ).
 
-opcao_escolhida_edita_votacao(3, _, _).
+opcao_escolhida_edita_votacao(3, _, _):-
+    writeln("Remove chapa"),
+    writeln("Insira id da chapa:"),
+    read(Id),
+    tty_clear,
+    remover_chapa(Id,R),
+    writeln(R), 
+    opcao_menu_edita_votacao(),
+    read(Opcao),
+    opcao_escolhida_edita_votacao(Opcao, _, _).
 
 opcao_escolhida_edita_votacao(4, IdVotacao, _) :-
     opcao_escolhida_votacao(2, _).

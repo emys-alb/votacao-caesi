@@ -34,3 +34,8 @@ edita_nome_chapa(IdChapa, Nome, R) :-
 
 edita_numero_chapa(IdChapa, Numero, R) :-
     edita_numero(IdChapa, Numero, R).
+
+remover_chapa(Id, R) :-
+    (chapa_cadastrada(Id) -> 
+        remove_chapa(Id), R = "Chapa removida";
+    R = "Chapa não cadastrada").
