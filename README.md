@@ -35,7 +35,7 @@ O sistema tem dois atores: os administradores do sistema e o estudante. Os admin
 2. Ver informações de uma eleição especifica
 3. Listar histórico de eleições
 
-## ⚠️ Pré-requisitos para usar o sistema ⚠️
+## ⚠️ Pré-requisitos para usar o sistema funcional⚠️
 Devem estar instalados na máquina:
 - [GHC 8.10.7](https://www.haskell.org/ghc/): the Glasgow Haskell Compiler
 - [cabal 3.6.2.0](https://cabal.readthedocs.io/): the Cabal installation tool for managing Haskell software
@@ -91,4 +91,16 @@ Mantemos todas nossas informações em um banco de dados, é possivel acessá-lo
 ```
 psql -h "ec2-54-235-108-217.compute-1.amazonaws.com" -p 5432 -d "dbehln4jerq4b" -U "jzrhucvekfwaal"
 Password for user jzrhucvekfwaal: fc13fbfff03b8b15a7186f8cabf894bcb3bacee463dd080a803690d72658217d
+
+## ⚠️ Pré-requisitos para usar o sistema lógico⚠️
+Devem estar instalado na máquina:
+swipl
+```
+## Usando o sistema lógico
+```bash
+    git clone https://github.com/emys-alb/votacao-caesi.git
+    cd votacao-caesi/
+    cd logico/
+    
+    swipl Main.pl
 ```
