@@ -1,5 +1,25 @@
 :- include('../Models/Chapa.pl').
+:- include('../Models/Estudante.pl').
 
+cadastrar_estudante_chapa(Matricula, Id_chapa, R) :-
+    (estudante_cadastrado(Matricula) ->
+        (chapa_cadastrada(Id_chapa) -> 
+            (not(verifica_estudante_em_chapa(Matricula, Id_chapa)) -> 
+                cadastra_estudante_chapa(Matricula, Id_chapa), R = "Estudante cadastrado na chapa";
+                R = "Estudante já cadastrado na chapa");
+            R = "Chapa não cadastrada");
+        R = "Estudante não cadastrado"
+    ).
+
+remover_estudante_chapa(Matricula, Id_chapa, R) :-
+    (estudante_cadastrado(Matricula) ->
+        (chapa_cadastrada(Id_chapa) -> 
+            (verifica_estudante_em_chapa(Matricula, Id_chapa) -> 
+                remove_estudante_chapa(Matricula, Id_chapa), R = "Estudante removido da chapa";
+                R = "Estudante não está cadastrado na chapa");
+            R = "Chapa não cadastrada");
+        R = "Estudante não cadastrado"
+    ).
 get_chapas_votacoes_ativas(Result) :- get_chapas_ativas(Result).
 
 adiciona_voto_chapa(ChapaNum, IdVotacao) :- adiciona_voto(ChapaNum, IdVotacao).
@@ -10,3 +30,8 @@ cadastra_chapa(Nome , Numero, IdVotacao, R) :-
     cadastrar_chapa(Nome, Numero, IdVotacao, R).
 
 get_votos_chapas_votacao(IdVotacao, Result) :- get_soma_votos_chapas_votacao(IdVotacao, Result).
+
+remover_chapa(Id, R) :-
+    (chapa_cadastrada(Id) -> 
+        remove_chapa(Id), R = "Chapa removida";
+    R = "Chapa não cadastrada").

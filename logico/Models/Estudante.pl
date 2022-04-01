@@ -8,8 +8,7 @@ verifica_matricula_senha(Matricula, Senha):-
 
 get_estudante([], _, _, []).
 get_estudante([[Matricula|[Senha|T1]]|T], Matricula, Senha, [Matricula|[Senha|T1]]).
-get_estudante([_|T], Matricula, Senha, R) :- 
-    get_estudante(T, Matricula, Senha, R).
+get_estudante([_|T], Matricula, Senha, R) :- get_estudante(T, Matricula, Senha, R).
 
 cadastrar_estudante(Matricula, Senha) :-
     get_csv_path('estudante.csv', Csv_Estudante),
@@ -58,6 +57,15 @@ get_quantidade_votantes(Qtd) :-
     atom_concat('./Dados/', 'estudante.csv', Path),
     csv_read_file(Path, File),
     get_votantes_csv(File, Qtd).
+
+verifica_estudante_cadastrado_row([row(Matricula,_,_)|T], Matricula).
+verifica_estudante_cadastrado_row([H|T], Matricula) :-
+    verifica_estudante_cadastrado_row(T, Matricula).
+
+estudante_cadastrado(Matricula) :-
+    atom_concat('./Dados/', 'estudante.csv', Path),
+    csv_read_file(Path, Rows),
+    verifica_estudante_cadastrado_row(Rows, Matricula).
 gerar_id_voto(1) :-
     read_csv('voto.csv', Lists),
     not(last(Lists, _)).

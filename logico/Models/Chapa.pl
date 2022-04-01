@@ -34,6 +34,38 @@ get_soma_votos_chapas_votacao(IdVotacao, Result) :-
     atom_concat('./Dados/', 'chapa.csv', Path),
     csv_read_file(Path, File),
     get_soma_votos_chapas_votacao_csv(File, IdVotacao, Result).
+
+verifica_estudante_em_chapa(Matricula, Id_chapa):-
+    read_csv('estudanteChapa.csv', Lists),
+    get_estudante_chapa(Lists, Matricula, Id_chapa, R),
+    not(eh_vazia(R)).
+
+get_estudante_chapa([], _, _, []).
+get_estudante_chapa([[Matricula|[Id_chapa|T1]]|T], Matricula, Id_chapa, [Matricula|[Id_chapa|T1]]).
+get_estudante_chapa([_|T], Matricula, Id_chapa, R) :- 
+    get_estudante_chapa(T, Matricula, Id_chapa, R).
+
+cadastra_estudante_chapa(Matricula, Id_chapa):-
+    get_csv_path('estudanteChapa.csv', Csv_Estudante_chapa),
+    open(Csv_Estudante_chapa, append, File),
+    writeln(File, (Matricula, Id_chapa)),
+    close(File).
+
+remove_estudante_chapa(Matricula, Id_chapa):-
+    atom_concat('./Dados/', 'estudanteChapa.csv', Path),
+    csv_read_file(Path, Rows),
+    %get_estudante_chapa(EstudantesChapa, Matricula, Id_chapa, R),
+    removeTupla(Matricula, Id_chapa, Rows, ListaAtualizada),
+    csv_write_file(Path, ListaAtualizada).
+    
+verifica_chapa_cadastrada([row(Id_chapa, _, _, _, _)|T], Id_chapa).
+verifica_chapa_cadastrada([H|T], Id_chapa) :-
+    verifica_chapa_cadastrada(T, Id_chapa).
+
+chapa_cadastrada(Id_chapa) :-
+    atom_concat('./Dados/', 'chapa.csv', Path),
+    csv_read_file(Path, Rows),
+    verifica_chapa_cadastrada(Rows, Id_chapa).
 get_chapas_ativas(Result) :- 
     atom_concat('./Dados/', 'chapa.csv', Path),
     csv_read_file(Path, Rows),
@@ -71,3 +103,21 @@ verifica_by_numero_votacao(Numero, IdVotacao) :-
 get_chapa(_, [], []).
 get_chapa(Id, [[Id|T]|T2], [Id|T]).
 get_chapa(Id, [[H|T]|T2], R) :- get_chapa(Id, T2, R).
+
+remover_chapa(Id, [row(Id,_,_,_,_)|T], T).
+remover_chapa(X, [H|T], [H|T1]):- remover_chapa(X,T,T1).
+
+remove_chapa(Id):-
+    atom_concat('./Dados/', 'chapa.csv', Path),
+    csv_read_file(Path, Rows),
+    remover_chapa(Id, Rows, ListaAtualizada),
+    csv_write_file(Path, ListaAtualizada).
+
+verifica_chapa_cadastrada([row(Id_chapa, _, _, _, _)|T], Id_chapa).
+verifica_chapa_cadastrada([H|T], Id_chapa) :-
+    verifica_chapa_cadastrada(T, Id_chapa).
+
+chapa_cadastrada(Id_chapa) :-
+    atom_concat('./Dados/', 'chapa.csv', Path),
+    csv_read_file(Path, Rows),
+    verifica_chapa_cadastrada(Rows, Id_chapa).
