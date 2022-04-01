@@ -48,7 +48,8 @@ opcao_menu_edita_votacao() :-
     writeln("[2] Edita informações da chapa"),
     writeln("[3] Remove chapa"),
     writeln("[4] Adiciona estudante na chapa"),
-    writeln("[5] Remove estudante na chapa").
+    writeln("[5] Remove estudante na chapa"),
+    writeln("[6] Voltar\n").
 
 %Opcoes Principais
 opcao_escolhida_principal(1) :- 
@@ -244,9 +245,13 @@ opcao_escolhida_admin(8) :-
     writeln("Encerrar votação"),
     writeln("Insira o id da votação que deseja encerrar:"),
     read(IdVotacao),
-    encerra_votacao(IdVotacao, R),
+    get_quantidade_estudantes_votantes(Votantes),
+    get_votos_chapas_votacao(IdVotacao, VotosChapas),
+    encerra_votacao(IdVotacao, Votantes, VotosChapas, R),
     tty_clear,
     writeln(R),
+    get_quantidade_estudantes_votantes(Qtd),
+    writeln(Qtd),
     opcoes_menu_admin,
     read(Opcao),
     opcao_escolhida_admin(Opcao).
@@ -390,3 +395,9 @@ opcao_escolhida_edita_votacao(3, _, _):-
     opcao_menu_edita_votacao(),
     read(Opcao),
     opcao_escolhida_edita_votacao(Opcao, _, _).
+
+opcao_escolhida_edita_votacao(6, _, _) :- 
+    tty_clear,
+    opcoes_menu_admin,
+    read(Opcao),
+    opcao_escolhida_admin(Opcao).

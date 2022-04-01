@@ -24,6 +24,17 @@ gerar_id_chapa(Id) :-
     last(Lists, [H|_]),
     Id is H + 1.
 
+get_soma_votos_chapas_votacao_csv([], _, 0).
+get_soma_votos_chapas_votacao_csv([row(_,_,_,IdVotacao,Votos)|T], IdVotacao, R) :-
+    get_soma_votos_chapas_votacao_csv(T, IdVotacao, R1),
+    R is R1 + Votos.
+get_soma_votos_chapas_votacao_csv([H|T], IdVotacao, R) :-
+    get_soma_votos_chapas_votacao_csv(T, IdVotacao, R).
+
+get_soma_votos_chapas_votacao(IdVotacao, Result) :-
+    atom_concat('./Dados/', 'chapa.csv', Path),
+    csv_read_file(Path, File),
+    get_soma_votos_chapas_votacao_csv(File, IdVotacao, Result).
 
 verifica_estudante_em_chapa(Matricula, Id_chapa):-
     read_csv('estudanteChapa.csv', Lists),
@@ -73,7 +84,7 @@ adiciona_voto_csv([row(Id,Nome,Numero,IdVotacao,Votos)|T], Numero, IdVotacao, Re
     NewVotos is Votos + 1,
     Result = [row(Id,Nome,Numero,IdVotacao,NewVotos)|T].
 adiciona_voto_csv([H|T], Numero, IdVotacao, [H|R]) :-
-    adiciona_voto_csv(T, Numero, IdVotacao, [H|R]).
+    adiciona_voto_csv(T, Numero, IdVotacao, R).
 
 adiciona_voto(ChapaNumero, IdVotacao) :-
     atom_concat('./Dados/', 'chapa.csv', Path),
@@ -81,7 +92,7 @@ adiciona_voto(ChapaNumero, IdVotacao) :-
     adiciona_voto_csv(File, ChapaNumero, IdVotacao, CsvResultante),
     csv_write_file(Path, CsvResultante).
 
-verifica_by_numero_votacao_csv([row(Id,Nome,Numero,IdVotacao,Votos)|T], Numero, IdVotacao).
+verifica_by_numero_votacao_csv([row(_,_,Numero,IdVotacao,_)|T], Numero, IdVotacao).
 verifica_by_numero_votacao_csv([H|T], Numero, IdVotacao) :- verifica_by_numero_votacao_csv(T, Numero, IdVotacao).
 
 verifica_by_numero_votacao(Numero, IdVotacao) :-
