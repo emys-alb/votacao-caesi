@@ -48,3 +48,8 @@ get_mais_votos_rec([row(IDChapa, _, _, _, NumVotos) | T], MaiorQtdVotos, IDMaior
         get_mais_votos_rec(T, NumVotos, IDChapa, IDChapaVencedora);
         get_mais_votos_rec(T, MaiorQtdVotos, IDMaiorChapaAtual, IDChapaVencedora)
     ).
+
+remover_chapa(Id, R) :-
+    (chapa_cadastrada(Id) -> 
+        remove_chapa(Id), R = "Chapa removida";
+    R = "Chapa não cadastrada").

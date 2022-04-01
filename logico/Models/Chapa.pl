@@ -113,3 +113,21 @@ get_chapas_by_votacao(IDVotacao, Chapas) :-
     atom_concat('./Dados/', 'chapa.csv', Path),
     csv_read_file(Path, File),
     filtra_chapas_por_votacao(IDVotacao, File, Chapas).
+
+remover_chapa(Id, [row(Id,_,_,_,_)|T], T).
+remover_chapa(X, [H|T], [H|T1]):- remover_chapa(X,T,T1).
+
+remove_chapa(Id):-
+    atom_concat('./Dados/', 'chapa.csv', Path),
+    csv_read_file(Path, Rows),
+    remover_chapa(Id, Rows, ListaAtualizada),
+    csv_write_file(Path, ListaAtualizada).
+
+verifica_chapa_cadastrada([row(Id_chapa, _, _, _, _)|T], Id_chapa).
+verifica_chapa_cadastrada([H|T], Id_chapa) :-
+    verifica_chapa_cadastrada(T, Id_chapa).
+
+chapa_cadastrada(Id_chapa) :-
+    atom_concat('./Dados/', 'chapa.csv', Path),
+    csv_read_file(Path, Rows),
+    verifica_chapa_cadastrada(Rows, Id_chapa).
