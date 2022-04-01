@@ -6,6 +6,7 @@ verifica_chapa_cadastrada(idChapa) :-
     read_csv('chapa.csv', Lists),
     verifica_na_lista(idChapa, Lists).
 
+
 cadastrar_chapa(Nome , Numero, IdVotacao, "Chapa Cadastrada") :-
     get_csv_path('chapa.csv', CsvChapa),
     open(CsvChapa, append, File),
@@ -22,6 +23,18 @@ gerar_id_chapa(Id) :-
     read_csv('chapa.csv', Lists),
     last(Lists, [H|_]),
     Id is H + 1.
+
+get_soma_votos_chapas_votacao_csv([], _, 0).
+get_soma_votos_chapas_votacao_csv([row(_,_,_,IdVotacao,Votos)|T], IdVotacao, R) :-
+    get_soma_votos_chapas_votacao_csv(T, IdVotacao, R1),
+    R is R1 + Votos.
+get_soma_votos_chapas_votacao_csv([H|T], IdVotacao, R) :-
+    get_soma_votos_chapas_votacao_csv(T, IdVotacao, R).
+
+get_soma_votos_chapas_votacao(IdVotacao, Result) :-
+    atom_concat('./Dados/', 'chapa.csv', Path),
+    csv_read_file(Path, File),
+    get_soma_votos_chapas_votacao_csv(File, IdVotacao, Result).
 
 verifica_estudante_em_chapa(Matricula, Id_chapa):-
     read_csv('estudanteChapa.csv', Lists),
@@ -42,7 +55,6 @@ cadastra_estudante_chapa(Matricula, Id_chapa):-
 remove_estudante_chapa(Matricula, Id_chapa):-
     atom_concat('./Dados/', 'estudanteChapa.csv', Path),
     csv_read_file(Path, Rows),
-    %get_estudante_chapa(EstudantesChapa, Matricula, Id_chapa, R),
     removeTupla(Matricula, Id_chapa, Rows, ListaAtualizada),
     csv_write_file(Path, ListaAtualizada).
     
@@ -79,7 +91,7 @@ adiciona_voto_csv([row(Id,Nome,Numero,IdVotacao,Votos)|T], Numero, IdVotacao, Re
     NewVotos is Votos + 1,
     Result = [row(Id,Nome,Numero,IdVotacao,NewVotos)|T].
 adiciona_voto_csv([H|T], Numero, IdVotacao, [H|R]) :-
-    adiciona_voto_csv(T, Numero, IdVotacao, [H|R]).
+    adiciona_voto_csv(T, Numero, IdVotacao, R).
 
 adiciona_voto(ChapaNumero, IdVotacao) :-
     atom_concat('./Dados/', 'chapa.csv', Path),
@@ -87,7 +99,7 @@ adiciona_voto(ChapaNumero, IdVotacao) :-
     adiciona_voto_csv(File, ChapaNumero, IdVotacao, CsvResultante),
     csv_write_file(Path, CsvResultante).
 
-verifica_by_numero_votacao_csv([row(Id,Nome,Numero,IdVotacao,Votos)|T], Numero, IdVotacao).
+verifica_by_numero_votacao_csv([row(_,_,Numero,IdVotacao,_)|T], Numero, IdVotacao).
 verifica_by_numero_votacao_csv([H|T], Numero, IdVotacao) :- verifica_by_numero_votacao_csv(T, Numero, IdVotacao).
 
 verifica_by_numero_votacao(Numero, IdVotacao) :-
@@ -137,6 +149,27 @@ recadastra_chapa(Id, Nome, Numero, IdVotacao, NumDeVotos) :-
     open(CsvChapa, append, File),
     writeln(File, (Id, Nome, Numero, IdVotacao, NumDeVotos)),
     close(File).
+
+get_chapa_csv(_, [], []).
+get_chapa_csv(ID, [row(ID,Nome,Numero,IdVotacao,Votos)|T], row(ID,Nome,Numero,IdVotacao,Votos)).
+get_chapa_csv(ID, [H|T], Chapa) :-
+    get_chapa_csv(ID, T, Chapa).
+
+get_chapa_by_id(ID, Chapa) :-
+    atom_concat('./Dados/', 'chapa.csv', Path),
+    csv_read_file(Path, File),
+    get_chapa_csv(ID, File, Chapa).
+
+filtra_chapas_por_votacao(_, [], []).
+filtra_chapas_por_votacao(IDVotacao, [row(IDChapa, Nome, Num, IDVotacao, NumVotos) | T], [row(IDChapa, Nome, Num, IDVotacao, NumVotos) | TailResult]) :-
+    filtra_chapas_por_votacao(IDVotacao, T, TailResult).
+filtra_chapas_por_votacao(IDVotacao, [H|T], Chapas) :-
+    filtra_chapas_por_votacao(IDVotacao, T, Chapas).
+
+get_chapas_by_votacao(IDVotacao, Chapas) :-
+    atom_concat('./Dados/', 'chapa.csv', Path),
+    csv_read_file(Path, File),
+    filtra_chapas_por_votacao(IDVotacao, File, Chapas).
 
 remover_chapa(Id, [row(Id,_,_,_,_)|T], T).
 remover_chapa(X, [H|T], [H|T1]):- remover_chapa(X,T,T1).
